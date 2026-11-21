@@ -1,0 +1,11 @@
+Bumpproof
+Copyright 2026 Muhammad Aiman
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Bumpproof calls these tools as separate programs. They are not bundled or
+redistributed here, and each has its own license and terms:
+- Kane CLI (@testmuai/kane-cli), by TestMu AI. "Kane CLI" is a trademark of its
+  owner; Bumpproof uses the name only to say which tool it runs.
+- Claude Code, by Anthropic.
+- Docker, GitHub CLI, Google Chrome / Chrome for Testing.
