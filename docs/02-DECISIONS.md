@@ -40,3 +40,17 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   `npx @puppeteer/browsers install chrome@stable --path ~/.local/share/bumpproof/chrome`), then the names Kane CLI itself
   looks for on `PATH`.
 - **Why:** the build host has no system Chrome. Chrome for Testing is a pinned, unpacked build that needs no package manager.
+
+## 6. The demo shop (21 Nov 2026)
+
+- **Chosen:** `examples/shop`, a small Vite + React 18 shop in plain JavaScript, written during the hackathon against older major
+  versions pinned exactly: `react-router-dom` 6.30, `@tanstack/react-query` 4.36, `date-fns` 2.30, `clsx` 1.2. Dependabot watches
+  it daily (`.github/dependabot.yml`) and ignores React and Vite, so its pull requests are about the libraries the shop uses.
+- **Why:** Bumpproof needs real Dependabot pull requests on a repository we own. The shop uses each library the way older apps do:
+  relative links inside a splat route, `status === 'loading'` checks, default imports from `date-fns` subpaths. Whether a given
+  upgrade really breaks the shop is checked with the real new version before any claim is made. Nothing in the shop reads a
+  version number.
+- **Text:** the shop is a test fixture, not a product, so it is English only. Its words are in `src/strings.json` and its prices,
+  shipping rules and date format in `public/data/*.json`.
+- **CI:** a separate job installs and builds the shop, the same check most projects run on a Dependabot pull request.
+- **Undo:** delete `.github/dependabot.yml` to stop new pull requests; the shop folder can be removed without touching the CLI.
