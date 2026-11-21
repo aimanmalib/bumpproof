@@ -31,7 +31,15 @@
       "chromium-browser"
     ],
     "credit_hard_stop": 9000,
-    "census_budget": 4000
+    "census_budget": 4000,
+    "testmd_args": [
+      "--agent",
+      "--headless",
+      "--bug-detection",
+      "continue"
+    ],
+    "ledger_path": "census/kredit.json",
+    "bug_result_code": 740
   },
   "fixer": {
     "command": "claude",
@@ -49,6 +57,86 @@
     "email_allowlist": [
       "example.com",
       "noreply.github.com"
+    ],
+    "strip_keys": [
+      "email",
+      "user_email",
+      "username",
+      "user_name",
+      "ran_by",
+      "run_by",
+      "test_url",
+      "share_url",
+      "cookie",
+      "set-cookie",
+      "authorization",
+      "proxy-authorization",
+      "access_key",
+      "accesskey",
+      "x-api-key"
+    ],
+    "email_ignore_tlds": [
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "svg",
+      "webp",
+      "avif",
+      "js",
+      "mjs",
+      "css",
+      "map",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "private_url_patterns": [
+      "https?://[a-z0-9.-]*lambdatest(?:internal)?\\.com[^\\s\"'<>)\\]]*",
+      "https?://[a-z0-9.-]*test-manager[^\\s\"'<>)\\]]*"
+    ],
+    "secret_env": [
+      "KANE_USERNAME",
+      "BUMPPROOF_PRIVATE_EMAILS"
+    ],
+    "scan_dirs": [
+      "docs",
+      "census"
+    ],
+    "scan_exts": [
+      "html",
+      "htm",
+      "json",
+      "ndjson",
+      "md",
+      "txt",
+      "js",
+      "css",
+      "svg",
+      "xml",
+      "csv"
+    ]
+  },
+  "bump": {
+    "dep_fields": [
+      "dependencies",
+      "devDependencies",
+      "optionalDependencies",
+      "peerDependencies"
+    ]
+  },
+  "compare": {
+    "console_errors_fail": false,
+    "network_errors_fail": false,
+    "network_min_status": 400,
+    "inconclusive_retries": 1
+  },
+  "evidence": {
+    "image_exts": [
+      "png",
+      "jpg",
+      "jpeg",
+      "webp"
     ]
   }
 }

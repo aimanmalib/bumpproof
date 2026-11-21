@@ -25,11 +25,20 @@ export interface Config {
   kane: {
     command: string; chrome_path: string; chrome_dir: string; chrome_names: string[];
     credit_hard_stop: number; census_budget: number;
+    testmd_args: string[]; ledger_path: string; bug_result_code: number;
   };
+  bump: { dep_fields: string[] };
+  compare: {
+    console_errors_fail: boolean; network_errors_fail: boolean; network_min_status: number; inconclusive_retries: number;
+  };
+  evidence: { image_exts: string[] };
   fixer: { command: string; model: string; max_attempts: number; max_patch_lines: number };
   github: { command: string };
   doctor: { timeout_ms: number };
-  publish: { email_allowlist: string[] };
+  publish: {
+    email_allowlist: string[]; strip_keys: string[]; email_ignore_tlds: string[]; private_url_patterns: string[];
+    secret_env: string[]; scan_dirs: string[]; scan_exts: string[];
+  };
 }
 
 export function isObject(v: unknown): v is JsonObject {
