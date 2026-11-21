@@ -42,5 +42,27 @@
     "summary_ok": "Semua {n} semakan lulus.",
     "summary_fail": "{failed} daripada {n} semakan gagal.",
     "timeout": "tamat masa"
+  },
+  "verdict": {
+    "safe": "Selamat",
+    "fixed": "Dibaiki",
+    "broken": "Rosak",
+    "unrunnable": "Tidak dapat dijalankan"
+  },
+  "outcome": {
+    "same": "Sama",
+    "shifted_ok": "UI beralih, masih berfungsi",
+    "regression": "Regresi",
+    "inconclusive": "Tidak muktamad",
+    "unrunnable": "Tidak dapat dijalankan",
+    "baseline_red": "Gagal di cawangan asas juga"
+  },
+  "reason": {
+    "base_build_failed": "Cawangan asas tidak dapat dibina atau dimulakan.",
+    "no_baseline_journey": "Tiada perjalanan yang lulus di cawangan asas.",
+    "head_build_failed": "Pull request ini tidak dapat dibina atau dimulakan.",
+    "regression": "Perjalanan yang lulus di cawangan asas gagal pada pull request ini.",
+    "all_inconclusive": "Kane CLI tidak dapat menamatkan sebarang perjalanan pada pull request ini.",
+    "ok": "Setiap perjalanan berkelakuan sama seperti di cawangan asas."
   }
 }

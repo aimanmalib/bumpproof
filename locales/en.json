@@ -42,5 +42,27 @@
     "summary_ok": "All {n} checks passed.",
     "summary_fail": "{failed} of {n} checks failed.",
     "timeout": "timed out"
+  },
+  "verdict": {
+    "safe": "Safe",
+    "fixed": "Fixed",
+    "broken": "Broken",
+    "unrunnable": "Could not run"
+  },
+  "outcome": {
+    "same": "Same",
+    "shifted_ok": "UI moved, still works",
+    "regression": "Regression",
+    "inconclusive": "Inconclusive",
+    "unrunnable": "Could not run",
+    "baseline_red": "Fails on the base branch too"
+  },
+  "reason": {
+    "base_build_failed": "The base branch did not build or start.",
+    "no_baseline_journey": "No journey passed on the base branch.",
+    "head_build_failed": "The pull request did not build or start.",
+    "regression": "A journey that passes on the base branch fails on the pull request.",
+    "all_inconclusive": "Kane CLI could not finish any journey on the pull request.",
+    "ok": "Every journey behaves as it does on the base branch."
   }
 }
