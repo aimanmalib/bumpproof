@@ -21,7 +21,14 @@ export interface Config {
   sandbox: {
     image: string; work_dir: string; min_free_gb: number; disk_path: string;
     cpus: number; memory: string; pids_limit: number; label: string;
+    user: string; container_prefix: string; setup_timeout_s: number; serve_timeout_s: number; poll_ms: number;
+    health_path: string; health_max_status: number; log_tail_lines: number; home: string;
+    env: Record<string, string>; lockfiles: Record<string, string>; install: Record<string, string>;
+    run_script: Record<string, string>; build_script: string;
+    serve_presets: { dependency: string; command: string }[]; serve_scripts: string[];
   };
+  /** Per-app overrides: subfolder inside the repository and explicit commands (empty = detect). */
+  app: { dir: string; install: string; build: string; serve: string };
   kane: {
     command: string; chrome_path: string; chrome_dir: string; chrome_names: string[];
     credit_hard_stop: number; census_budget: number;

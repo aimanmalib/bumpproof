@@ -18,7 +18,53 @@
     "cpus": 2,
     "memory": "3g",
     "pids_limit": 512,
-    "label": "bumpproof=1"
+    "label": "bumpproof=1",
+    "user": "",
+    "container_prefix": "bumpproof",
+    "setup_timeout_s": 900,
+    "serve_timeout_s": 90,
+    "poll_ms": 1000,
+    "health_path": "/",
+    "health_max_status": 399,
+    "log_tail_lines": 40,
+    "home": "/tmp/home",
+    "env": {
+      "CI": "1",
+      "NODE_ENV": "production",
+      "npm_config_update_notifier": "false"
+    },
+    "lockfiles": {
+      "package-lock.json": "npm",
+      "npm-shrinkwrap.json": "npm",
+      "yarn.lock": "yarn",
+      "pnpm-lock.yaml": "pnpm"
+    },
+    "install": {
+      "npm": "npm ci --ignore-scripts --include=dev --no-audit --no-fund",
+      "yarn": "corepack yarn install --frozen-lockfile --ignore-scripts --production=false",
+      "pnpm": "corepack pnpm install --frozen-lockfile --ignore-scripts --prod=false"
+    },
+    "run_script": {
+      "npm": "npm run",
+      "yarn": "corepack yarn run",
+      "pnpm": "corepack pnpm run"
+    },
+    "build_script": "build",
+    "serve_presets": [
+      {
+        "dependency": "vite",
+        "command": "npx --no-install vite preview --host 0.0.0.0 --port {port} --strictPort"
+      },
+      {
+        "dependency": "next",
+        "command": "npx --no-install next start -H 0.0.0.0 -p {port}"
+      }
+    ],
+    "serve_scripts": [
+      "start",
+      "serve",
+      "preview"
+    ]
   },
   "kane": {
     "command": "kane-cli",
@@ -138,5 +184,11 @@
       "jpeg",
       "webp"
     ]
+  },
+  "app": {
+    "dir": "",
+    "install": "",
+    "build": "",
+    "serve": ""
   }
 }
