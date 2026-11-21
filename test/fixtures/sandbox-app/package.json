@@ -1,0 +1,11 @@
+{
+  "name": "bumpproof-sandbox-fixture",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Smallest app the sandbox tests build and serve. No dependencies, so the install works offline.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node server.js"
+  }
+}
