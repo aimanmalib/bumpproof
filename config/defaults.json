@@ -211,6 +211,11 @@
       "https?://[a-z0-9.-]*lambdatest(?:internal)?\\.com[^\\s\"'<>)\\]]*",
       "https?://[a-z0-9.-]*test-manager[^\\s\"'<>)\\]]*"
     ],
+    "public_strings": [
+      "github.com/aimanmalib/bumpproof",
+      "github:aimanmalib/bumpproof",
+      "aimanmalib.github.io/bumpproof"
+    ],
     "secret_env": [
       "KANE_USERNAME",
       "BUMPPROOF_PRIVATE_EMAILS"
@@ -260,5 +265,40 @@
     "install": "",
     "build": "",
     "serve": ""
+  },
+  "report": {
+    "out_dir": "docs",
+    "runs_dir": "docs/runs",
+    "census_path": "census/results.json",
+    "repo_url": "https://github.com/aimanmalib/bumpproof",
+    "pages_url": "https://aimanmalib.github.io/bumpproof/",
+    "install_command": "npm install -g github:aimanmalib/bumpproof\nbumpproof doctor\nbumpproof pr <owner>/<repo>#<number> --fix",
+    "replay_command": "npx github:aimanmalib/bumpproof replay docs/runs/{id}",
+    "proof_links": [
+      {
+        "key": "judges_rules",
+        "path": "src/compare.ts"
+      },
+      {
+        "key": "judges_guards",
+        "path": "test/guards.test.ts"
+      },
+      {
+        "key": "judges_sandbox",
+        "path": "src/sandbox.ts"
+      },
+      {
+        "key": "judges_kane",
+        "path": "src/kane.ts"
+      },
+      {
+        "key": "judges_decisions",
+        "path": "docs/02-DECISIONS.md"
+      }
+    ]
+  },
+  "replay": {
+    "speed": 40,
+    "max_gap_ms": 900
   }
 }

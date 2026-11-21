@@ -80,6 +80,17 @@ test('publication scan is red on each mutant: account user name, owner e-mail, o
   assert.equal(f.match.includes(USER), false, 'findings must not print the secret');
 });
 
+test('a secret inside a public string (the repository URL) is not a finding; elsewhere it still is', () => {
+  const rules: PublishRules = { ...RULES, public_strings: ['github.com/ownerx/tool'] };
+  assert.deepEqual(scanText('a.html', 'Code: https://github.com/ownerx/tool', rules, ['ownerx']), []);
+  const hits = scanText('a.html', 'https://github.com/ownerx/tool, run by ownerx', rules, ['ownerx']);
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0]!.kind, 'secret');
+  assert.equal(scanText('a.html', 'https://github.com/ownerx/other', rules, ['ownerx']).length, 1, 'only the exact string is public');
+  assert.equal(scrubText('github.com/ownerx/tool by ownerx', rules, ['ownerx']), 'github.com/ownerx/tool by [redacted]');
+  assert.equal(scrubText('a.b (ownerx)', { ...rules, public_strings: ['a.b'] }, ['ownerx']), 'a.b ([redacted])', 'regex characters are literal');
+});
+
 test('secretsFromEnv reads the configured variables and splits lists', () => {
   const env = { KANE_USERNAME: 'abc123', BUMPPROOF_PRIVATE_EMAILS: 'a@b.test, c@d.test', OTHER: 'zzz' };
   assert.deepEqual(secretsFromEnv(env, PUB.secret_env), ['abc123', 'a@b.test', 'c@d.test']);

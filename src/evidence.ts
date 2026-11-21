@@ -14,6 +14,11 @@ export interface PublishRules {
   email_ignore_tlds: string[];
   /** Regular expressions (case-insensitive) for private links; matches are replaced. */
   private_url_patterns: string[];
+  /**
+   * Exact strings that are public anyway, such as the repository's own URL. A secret value inside one of them is not
+   * a leak (the Kane user name can equal the GitHub owner name); the same value anywhere else still is.
+   */
+  public_strings?: string[];
 }
 
 export const REDACTED = '[redacted]';
@@ -34,8 +39,26 @@ function isFileName(domain: string, rules: PublishRules): boolean {
   return rules.email_ignore_tlds.includes(tld);
 }
 
+/** Applies `fn` to the text between occurrences of the public strings, leaving those strings as they are. */
+export function outsidePublic(text: string, publics: string[] | undefined, fn: (part: string) => string): string {
+  const list = (publics ?? []).filter((p) => p.length > 0);
+  if (list.length === 0) return fn(text);
+  const re = new RegExp(list.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  let out = '';
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    out += fn(text.slice(last, m.index)) + m[0];
+    last = m.index + m[0].length;
+  }
+  return out + fn(text.slice(last));
+}
+
 /** Replaces secrets given by value, private links and e-mail addresses outside the allowlist. */
 export function scrubText(text: string, rules: PublishRules, secrets: string[] = []): string {
+  return outsidePublic(text, rules.public_strings, (part) => scrubPart(part, rules, secrets));
+}
+
+function scrubPart(text: string, rules: PublishRules, secrets: string[]): string {
   let out = text;
   for (const s of secrets) if (s.length >= 3) out = out.split(s).join(REDACTED);
   for (const p of rules.private_url_patterns) out = out.replace(new RegExp(p, 'gi'), REDACTED);
@@ -134,7 +157,9 @@ export function scanText(file: string, text: string, rules: PublishRules, secret
   const strip = rules.strip_keys.map((k) => k.toLowerCase());
   text.split('\n').forEach((lineText, i) => {
     const line = i + 1;
-    for (const s of secrets) if (s.length >= 3 && lineText.includes(s)) out.push({ file, line, kind: 'secret', match: mask(s) });
+    const parts: string[] = [];
+    outsidePublic(lineText, rules.public_strings, (part) => { parts.push(part); return part; });
+    for (const s of secrets) if (s.length >= 3 && parts.some((p) => p.includes(s))) out.push({ file, line, kind: 'secret', match: mask(s) });
     const starts = new Set<number>(); // two patterns matching the same link count once
     for (const p of rules.private_url_patterns) {
       for (const m of lineText.matchAll(new RegExp(p, 'gi'))) {

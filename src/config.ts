@@ -53,8 +53,15 @@ export interface Config {
   doctor: { timeout_ms: number };
   publish: {
     email_allowlist: string[]; strip_keys: string[]; email_ignore_tlds: string[]; private_url_patterns: string[];
+    public_strings: string[];
     secret_env: string[]; scan_dirs: string[]; scan_exts: string[];
   };
+  report: {
+    out_dir: string; runs_dir: string; census_path: string; repo_url: string; pages_url: string;
+    install_command: string; replay_command: string; proof_links: { key: string; path: string }[];
+  };
+  /** `speed` = recorded seconds per real second (0 = no pauses). */
+  replay: { speed: number; max_gap_ms: number };
 }
 
 export function isObject(v: unknown): v is JsonObject {
