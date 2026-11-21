@@ -4,6 +4,7 @@ import { readFileSync, realpathSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
+import { runCanary } from './canary.ts';
 import { exitCodeOf, newRunId, renderCheck, renderRefusal, runCheck, saveRecord } from './check.ts';
 import { ROOT, loadConfig, type Config } from './config.ts';
 import { freeBytesOf, renderChecks, runChecks } from './doctor.ts';
@@ -37,6 +38,7 @@ export function helpText(t: Translate): string {
     `  --head <ref>    ${t('cli.opt_head')}`,
     `  --dir <path>    ${t('cli.opt_dir')}`,
     `  --repo <path>   ${t('cli.opt_repo')}`,
+    `  --canary        ${t('cli.opt_canary')}`,
     `  -h, --help      ${t('cli.opt_help')}`,
     `  -v, --version   ${t('cli.opt_version')}`,
   ].join('\n');
@@ -56,6 +58,7 @@ export async function main(argv: string[], io: Io): Promise<number> {
       head: { type: 'string' },
       dir: { type: 'string' },
       repo: { type: 'string' },
+      canary: { type: 'boolean' },
     },
   });
   const cfg: Config = loadConfig(io.cwd);
@@ -113,6 +116,17 @@ export async function main(argv: string[], io: Io): Promise<number> {
       else throw e;
       return 2;
     }
+  }
+  if (cmd === 'fix') {
+    if (!values.canary) {
+      io.err(t('fix.need_check'));
+      return 2;
+    }
+    io.out(t('fix.canary_running'));
+    const r = await runCanary({ cfg, run, env: io.env });
+    io.out(t(`fix.canary_${r.status}`, { date: r.date, detail: r.detail }));
+    if (r.denied_tools.length > 0) io.out(t('fix.denied', { tools: r.denied_tools.join(', ') }));
+    return r.status === 'pass' ? 0 : r.status === 'leak' ? 1 : 2;
   }
   io.err(t('cli.not_built', { name: cmd }));
   return 2;

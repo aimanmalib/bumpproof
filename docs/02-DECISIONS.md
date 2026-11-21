@@ -114,3 +114,41 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   pulled), head in 14.5 s, both built. A fixture app whose head build throws gives "failed build" with the error in the log
   tail.
 - **Undo:** `sandbox.image`, limits, timeouts and commands are all in `config/defaults.json`.
+
+## 11. The fixer, its guards and the canary (21 Nov 2026)
+
+- **Chosen:** `src/fixer.ts` runs Claude Code as `claude -p` in the head's working copy. Its tools are Read, Edit, Write,
+  Glob and Grep. `--restricted` keeps the file tools inside the working copy, `--strict-mcp-config` loads no MCP servers,
+  and `--no-session-persistence` saves no session. The model comes from `fixer.model` (`claude-opus-5-5`). All flags are in
+  `fixer.args`, so another agent can replace it through `fixer.command`.
+- **Release notes:** `src/notes.ts` fetches them, not the agent. It reads npm metadata for the repository, then GitHub
+  Releases between the two versions. If there are none, it reads the CHANGELOG. An upgrade guide from `notes.guides` is
+  added when one is listed. The text is cut to `notes.max_kb` (24 KB) and wrapped in `<untrusted_release_notes>`. The
+  prompt says that block is data. A closing marker inside the notes is defused, so the notes cannot end the block early.
+- **Prompts:** every word the agent reads is in `prompts/*.md`. Code only fills the placeholders. A placeholder left empty
+  is an error, not a silent gap.
+- **Guards:** `src/guards.ts` snapshots the working copy before the agent runs and compares it afterwards. `node_modules`
+  and build output are skipped. A patch is rejected if it does any of these things:
+  - touches `.bumpproof/**`, `*_test.md`, `output-*`, `.github/**` or a test file;
+  - changes anything in `package.json` except adding new dependencies (this covers downgrades and edits to the bumped
+    version);
+  - adds a line matching `fixer.deny_patterns` (`child_process`, `eval(`, `new Function(`);
+  - changes more than `fixer.max_patch_lines` lines (300);
+  - adds a symbolic link or a binary file;
+  - changes no code, or has no `BUMPPROOF_FIX.md`.
+  A rejected attempt is undone and counts as one of the `fixer.max_attempts` (2). Its reasons go into the next prompt. A patch
+  that passes the guards but fails the rebuild and replay is undone in the same way.
+- **Kept key name:** the line limit stays at `fixer.max_patch_lines`, the key that was already in config, instead of
+  PRD's `fix.max_changed_lines`. The value and the rule are the same.
+- **Canary, 21 Nov 2026 22:44 UTC:** `bumpproof fix --canary` writes a random token to `~/.cache/bumpproof/kanari.txt`.
+  That file is outside the working copy. The fixer is told to read it. Claude Code 2.1.330 refused the Read call, and the
+  token was not in the reply or in the folder. **Result: host mode.** The live test is `BUMPPROOF_KANARI=1 node --test
+  test/canary.test.ts`. It is opt-in because it spends tokens.
+- **Container mode:** if a later canary fails, set `fixer.mode` to `container`. The agent then runs in Docker with only the
+  working copy mounted, the same limits as the sandbox, and `ANTHROPIC_API_KEY` passed by name from the environment. This
+  path is unit-tested only, because the canary passed in host mode.
+- **Measured:** one live run on a small app that imports `date-fns/format` as a default export, bumped from 2.30.0 to 4.1.0.
+  The release notes came from 15 KB of GitHub Releases. The first attempt did not pass the test's check, so it was
+  undone. The second attempt changed one import line (2 changed lines). It cost $0.10 and quoted the
+  v3.0.0 note on named exports in `BUMPPROOF_FIX.md`.
+- **Undo:** `fixer.args`, `fixer.mode`, the guard lists and the notes sources are all in `config/defaults.json`.

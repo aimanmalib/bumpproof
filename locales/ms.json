@@ -21,7 +21,8 @@
     "opt_base": "Ref asas untuk check (cawangan, tag atau komit)",
     "opt_head": "Ref kepala untuk check (naik taraf)",
     "opt_dir": "Folder aplikasi dalam repositori (lalai: config app.dir)",
-    "opt_repo": "Folder repositori (lalai: folder semasa)"
+    "opt_repo": "Folder repositori (lalai: folder semasa)",
+    "opt_canary": "Bersama fix: jalankan ujian kanari yang memilih mod hos atau kontena untuk fixer"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -101,5 +102,13 @@
     "refused_disk": "ruang cakera tidak cukup ({detail})",
     "refused_port": "port sedang digunakan ({detail})",
     "refused_docker": "Docker enggan memulakan kontena ({detail})"
+  },
+  "fix": {
+    "need_check": "fix memerlukan larian check dengan regresi atau binaan gagal. Gelung fix penuh datang bersama perjalanan Kane CLI; buat masa ini hanya `bumpproof fix --canary` berjalan.",
+    "canary_running": "Kanari: meminta fixer membaca fail di luar salinan kerjanya…",
+    "canary_pass": "Kanari lulus: token kekal di luar. Mod fixer: hos. ({date})",
+    "canary_leak": "Kanari gagal: token sampai kepada ejen. Mod hos ditolak; tetapkan fixer.mode kepada \"container\". ({date})",
+    "canary_error": "Kanari tidak dapat menjalankan fixer: {detail}",
+    "denied": "Panggilan alat ditolak: {tools}"
   }
 }

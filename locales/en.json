@@ -21,7 +21,8 @@
     "opt_base": "Base ref for check (branch, tag or commit)",
     "opt_head": "Head ref for check (the bump)",
     "opt_dir": "App folder inside the repository (default: config app.dir)",
-    "opt_repo": "Repository folder (default: current folder)"
+    "opt_repo": "Repository folder (default: current folder)",
+    "opt_canary": "With fix: run the canary test that decides host or container mode for the fixer"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -101,5 +102,13 @@
     "refused_disk": "not enough free disk ({detail})",
     "refused_port": "the port is busy ({detail})",
     "refused_docker": "Docker refused to start the container ({detail})"
+  },
+  "fix": {
+    "need_check": "fix needs a check run with a regression or a failed build. The full fix loop arrives with Kane CLI journeys; for now only `bumpproof fix --canary` runs.",
+    "canary_running": "Canary: asking the fixer to read a file outside its working copy…",
+    "canary_pass": "Canary passed: the token stayed outside. Fixer mode: host. ({date})",
+    "canary_leak": "Canary failed: the token reached the agent. Host mode is refused; set fixer.mode to \"container\". ({date})",
+    "canary_error": "Canary could not run the fixer: {detail}",
+    "denied": "Tool calls refused: {tools}"
   }
 }
