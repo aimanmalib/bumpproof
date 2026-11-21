@@ -39,7 +39,16 @@ export interface Config {
     console_errors_fail: boolean; network_errors_fail: boolean; network_min_status: number; inconclusive_retries: number;
   };
   evidence: { image_exts: string[] };
-  fixer: { command: string; model: string; max_attempts: number; max_patch_lines: number };
+  fixer: {
+    command: string; model: string; max_attempts: number; max_patch_lines: number;
+    mode: 'host' | 'container'; timeout_s: number; args: string[]; explanation_file: string;
+    protected_paths: string[]; deny_patterns: string[]; snapshot_skip: string[]; build_log_lines: number;
+    canary_path: string; container: { image: string; command: string[]; work_dir: string; env: string[] };
+  };
+  notes: {
+    registry: string; max_kb: number; timeout_ms: number; max_releases: number;
+    changelog_files: string[]; guides: Record<string, string>;
+  };
   github: { command: string };
   doctor: { timeout_ms: number };
   publish: {

@@ -10,7 +10,7 @@ export interface ProcResult {
   error?: string;
 }
 
-export type Runner = (cmd: string, args: string[], opts?: { timeoutMs?: number; env?: NodeJS.ProcessEnv }) => Promise<ProcResult>;
+export type Runner = (cmd: string, args: string[], opts?: { timeoutMs?: number; env?: NodeJS.ProcessEnv; cwd?: string }) => Promise<ProcResult>;
 
 /** Async so that slow tools (some CLIs wait on the network even for --version) can run side by side. */
 export const run: Runner = (cmd, args, opts = {}) =>
@@ -20,6 +20,7 @@ export const run: Runner = (cmd, args, opts = {}) =>
     let error: string | undefined;
     const child = spawn(cmd, args, {
       env: opts.env ?? process.env,
+      ...(opts.cwd ? { cwd: opts.cwd } : {}),
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: opts.timeoutMs ?? 20000,
       killSignal: 'SIGKILL',
