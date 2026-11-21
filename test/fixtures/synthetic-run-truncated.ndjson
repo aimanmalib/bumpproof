@@ -1,0 +1,4 @@
+{"type":"stream_start","cli_version":"0.10.7","surface":"run","pid":105,"v":1}
+{"type":"step_start","index":0,"objective":"Open the home page","v":1}
+not json at all
+{"type":"step_end","index":0,"status":"pass

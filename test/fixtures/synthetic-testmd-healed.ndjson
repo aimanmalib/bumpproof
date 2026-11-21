@@ -1,0 +1,6 @@
+{"type":"stream_start","cli_version":"0.10.7","surface":"testmd","pid":102,"v":1}
+{"type":"test_md_step_start","step_index":0,"heading":"Open the account page","v":1}
+{"type":"test_md_adaptive_heal","shrink_count":1,"final_author_boundary":0,"complete_reauthor":false,"v":1}
+{"type":"run_end","status":"passed","duration":9,"credits_consumed":3.5,"result_code":0,"v":1}
+{"type":"test_md_step_end","step_index":0,"status":"passed","duration_s":9,"v":1}
+{"type":"test_md_done","overall_status":"passed","duration_s":9,"session_id":"synthetic-2","v":1}

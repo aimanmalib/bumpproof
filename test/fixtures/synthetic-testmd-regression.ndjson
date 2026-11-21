@@ -1,0 +1,9 @@
+{"type":"stream_start","cli_version":"0.10.7","surface":"testmd","pid":103,"v":1}
+{"type":"test_md_step_start","step_index":0,"heading":"Open order 1001","v":1}
+{"type":"run_end","status":"passed","duration":3,"credits_consumed":1.25,"result_code":0,"v":1}
+{"type":"test_md_step_end","step_index":0,"status":"passed","duration_s":3,"v":1}
+{"type":"test_md_step_start","step_index":1,"heading":"Open the Orders tab","v":1}
+{"type":"run_end","status":"failed","duration":12,"credits_consumed":6.5,"result_code":740,"reason":"The Orders tab leads to a page that does not exist.","v":1}
+{"type":"test_md_bug_verdict","step_index":1,"confirmed":true,"bug_title":"Orders tab link is broken","one_liner":"Relative link resolves to /account/orders/1001/orders.","v":1}
+{"type":"test_md_step_end","step_index":1,"status":"failed","duration_s":12,"failed_sub_step_index":0,"v":1}
+{"type":"test_md_done","overall_status":"failed","duration_s":15,"session_id":"synthetic-3","v":1}

@@ -1,0 +1,9 @@
+{"type":"stream_start","cli_version":"0.10.7","surface":"testmd","pid":101,"v":1,"ts":"2026-11-21T10:00:00.000Z"}
+{"type":"test_md_step_start","step_index":0,"heading":"Open the shop","v":1,"ts":"2026-11-21T10:00:01.000Z"}
+{"type":"run_end","status":"passed","duration":4,"credits_consumed":0,"result_code":0,"v":1,"ts":"2026-11-21T10:00:05.000Z"}
+{"type":"test_md_step_end","step_index":0,"status":"passed","duration_s":4,"ref_kind":null,"v":1,"ts":"2026-11-21T10:00:05.000Z"}
+{"type":"test_md_step_start","step_index":1,"heading":"Add the first product to the cart","v":1,"ts":"2026-11-21T10:00:05.000Z"}
+{"type":"some_future_event","anything":true,"v":1}
+{"type":"run_end","status":"passed","duration":6,"credits_consumed":0,"result_code":0,"v":1,"ts":"2026-11-21T10:00:11.000Z"}
+{"type":"test_md_step_end","step_index":1,"status":"passed","duration_s":6,"v":1,"ts":"2026-11-21T10:00:11.000Z"}
+{"type":"test_md_done","overall_status":"passed","duration_s":11,"session_id":"synthetic-1","v":1,"ts":"2026-11-21T10:00:11.000Z"}
