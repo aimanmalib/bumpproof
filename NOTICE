@@ -9,3 +9,7 @@ redistributed here, and each has its own license and terms:
   owner; Bumpproof uses the name only to say which tool it runs.
 - Claude Code, by Anthropic.
 - Docker, GitHub CLI, Google Chrome / Chrome for Testing.
+
+The report pages ship IBM Plex Sans, IBM Plex Sans Condensed and IBM Plex Mono
+(latin subsets, woff2, from the @fontsource packages), copyright IBM Corp.,
+under the SIL Open Font License 1.1 (see docs/assets/fonts/OFL.txt).

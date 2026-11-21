@@ -152,3 +152,34 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   undone. The second attempt changed one import line (2 changed lines). It cost $0.10 and quoted the
   v3.0.0 note on named exports in `BUMPPROOF_FIX.md`.
 - **Undo:** `fixer.args`, `fixer.mode`, the guard lists and the notes sources are all in `config/defaults.json`.
+
+## 12. Report pages, PR comment and replay (21 Nov 2026)
+
+- **One record:** `docs/runs/<id>/run.json` is the published run record (`schema_version` 1). The PR comment, the pages
+  and `replay` read only this file. `src/report/run.ts` checks every field on the way in. A broken record stops
+  `bumpproof report` instead of being skipped. File names inside a record (run id, patch, screenshots) must be plain
+  relative names, so a record cannot point outside its folder.
+- **Words, not sentences, in the record:** timeline lines hold a locale key and values. The same run reads in English
+  or Malay in the terminal, the comment and the page.
+- **Pages:** plain HTML, one CSS file and one small script, written by `bumpproof report` to `docs/` (PRD D11). Each page
+  holds an English and a Malay copy, and the switch shows one. With scripts off, English shows. The CSS, script and fonts
+  live once, in `docs/assets/`. The package ships that folder, and a report written elsewhere gets a copy.
+  Fonts are IBM Plex Sans, Sans Condensed and Mono (OFL 1.1), served from the site with no font CDN.
+  No `backdrop-filter` and no animated blur, because WebKit crashes on them.
+- **Look:** a proof ledger. Warm paper, ink, hairline rules, and one coloured stamp per verdict. The direction comes
+  from the PRD alone; nobody was asked to choose between options.
+- **Publication scan before writing:** every page goes through the same scan as evidence packs (§9). One finding (an
+  e-mail outside the allowlist, a Kane username, a private Test Manager link) means no page is written.
+- **Honest examples:** the test fixture `test/fixtures/synthetic-run` is marked `"synthetic": true`. Pages and replay
+  show a banner on it. The PR comment for it has no public link. "For judges" offers a replay command only for a real run.
+- **Staleness check:** a test builds the site again and compares it with the committed `docs/` pages. A template change
+  without `bumpproof report` fails the suite.
+- **`replay`:** reads one local file. No Kane CLI, no credits, no network. Pauses follow the recorded gaps at
+  `replay.speed` (40 recorded seconds per real second), capped at `replay.max_gap_ms` (900 ms). `--speed 0` prints at once.
+  Checked from a clean copy in a Docker container with `--network none`.
+- **Install from GitHub:** `package.json` gains a `prepare` script, so `npx github:aimanmalib/bumpproof` builds `dist/`
+  on install.
+- **Public strings in the scan:** the Kane user name can be the same as the GitHub owner name, and the owner name is
+  in the repository URL on every page. `publish.public_strings` lists the exact public strings (the repository URL,
+  `github:` install name and Pages host). A secret inside one of them is not a finding. The same value anywhere else
+  still is, and is still redacted.
