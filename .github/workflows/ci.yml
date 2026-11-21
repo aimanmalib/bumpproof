@@ -35,3 +35,20 @@ jobs:
       - run: npx tsc -p tsconfig.build.json
       - run: node dist/cli.js --version
       - run: node dist/cli.js --help
+
+  example-shop:
+    name: Build the demo shop
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: examples/shop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: examples/shop/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build

@@ -1,0 +1,14 @@
+# Dependabot opens real upgrade pull requests against the demo shop.
+# Bumpproof checks those pull requests in a real browser.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/examples/shop"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: react
+      - dependency-name: react-dom
+      - dependency-name: vite
+      - dependency-name: "@vitejs/plugin-react"
