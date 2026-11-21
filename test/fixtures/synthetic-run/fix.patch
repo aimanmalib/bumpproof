@@ -1,0 +1,4 @@
+--- a/src/pages/Account.jsx
++++ b/src/pages/Account.jsx
+-        <td>{format(order.placed, 'd MMM yyyy')}</td>
++        <td>{format(parseISO(order.placed), 'd MMM yyyy')}</td>

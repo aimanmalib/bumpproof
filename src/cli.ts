@@ -13,6 +13,7 @@ import { GitError } from './git.ts';
 import { run } from './proc.ts';
 import { httpStatus, portFree, SandboxError } from './sandbox.ts';
 import { makePaint, useColor } from './ui.ts';
+import { runReplay, runReport } from './report-cli.ts';
 
 export const COMMANDS = ['doctor', 'init', 'check', 'fix', 'pr', 'census', 'report', 'replay'] as const;
 
@@ -39,6 +40,9 @@ export function helpText(t: Translate): string {
     `  --dir <path>    ${t('cli.opt_dir')}`,
     `  --repo <path>   ${t('cli.opt_repo')}`,
     `  --canary        ${t('cli.opt_canary')}`,
+    `  --out <dir>     ${t('cli.opt_out')}`,
+    `  --comment <run> ${t('cli.opt_comment')}`,
+    `  --speed <n>     ${t('cli.opt_speed')}`,
     `  -h, --help      ${t('cli.opt_help')}`,
     `  -v, --version   ${t('cli.opt_version')}`,
   ].join('\n');
@@ -59,6 +63,11 @@ export async function main(argv: string[], io: Io): Promise<number> {
       dir: { type: 'string' },
       repo: { type: 'string' },
       canary: { type: 'boolean' },
+      out: { type: 'string' },
+      runs: { type: 'string' },
+      census: { type: 'string' },
+      comment: { type: 'string' },
+      speed: { type: 'string' },
     },
   });
   const cfg: Config = loadConfig(io.cwd);
@@ -128,6 +137,8 @@ export async function main(argv: string[], io: Io): Promise<number> {
     if (r.denied_tools.length > 0) io.out(t('fix.denied', { tools: r.denied_tools.join(', ') }));
     return r.status === 'pass' ? 0 : r.status === 'leak' ? 1 : 2;
   }
+  if (cmd === 'report') return runReport(cfg, t, values, io);
+  if (cmd === 'replay') return runReplay(cfg, t, positionals[1], values.speed, io);
   io.err(t('cli.not_built', { name: cmd }));
   return 2;
 }

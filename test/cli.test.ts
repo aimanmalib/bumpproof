@@ -40,7 +40,7 @@ test('unknown command and unsupported language exit 2', async () => {
 
 test('commands that are not built yet say so instead of pretending', async () => {
   const o = io();
-  assert.equal(await main(['replay'], o), 2);
+  assert.equal(await main(['census'], o), 2);
   assert.match(o.stderr[0] ?? '', /not built yet/);
 });
 

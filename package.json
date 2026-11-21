@@ -9,6 +9,7 @@
   },
   "files": [
     "dist/",
+    "docs/assets/",
     "config/",
     "locales/",
     "prompts/",
@@ -19,6 +20,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "prepare": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node --test \"test/**/*.test.ts\""
   },
