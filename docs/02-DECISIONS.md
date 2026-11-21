@@ -14,7 +14,7 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
 
 ## 2. Runtime dependencies (21 Nov 2026)
 
-- **Chosen:** none yet. The only runtime dependency allowed is `fflate`, added when evidence packs are read.
+- **Chosen:** `fflate` 0.8.3 (MIT), pinned exactly, to read Kane CLI evidence packs (zip files). Nothing else.
 - **Why:** less to audit; the CLI runs on code pulled from other people's pull requests, so a small surface matters.
 
 ## 3. Values live in config, text lives in locales (21 Nov 2026)
@@ -54,3 +54,39 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   shipping rules and date format in `public/data/*.json`.
 - **CI:** a separate job installs and builds the shop, the same check most projects run on a Dependabot pull request.
 - **Undo:** delete `.github/dependabot.yml` to stop new pull requests; the shop folder can be removed without touching the CLI.
+
+## 7. Verdict rules are code, and the edge cases are written down (21 Nov 2026)
+
+- **Chosen:** `src/compare.ts` maps Kane CLI exit codes to an outcome per journey, then to one verdict per pull request.
+  Exit code first: 0 pass, 1 fail, anything else is inconclusive and is retried once (`compare.inconclusive_retries`).
+  A pass with an adaptive heal event is "UI moved, still works", not "same".
+- **Edge cases decided here:**
+  - A journey that does not pass on the base branch is left out and reported. It can never count against the pull request.
+  - `check` without `fix` reports a regression or a failed build as **broken**. **Fixed** needs a fixer run after which every
+    journey passes again.
+  - If the base branch does not build, the verdict is **could not run**, even if a fix was attempted.
+  - New console errors and new failed requests (4xx/5xx) on the head are warnings. They become failures only when
+    `compare.console_errors_fail` or `compare.network_errors_fail` is `true`.
+- **Undo:** the rules are one pure function each (`compareJourney`, `prVerdict`) with a test per branch.
+
+## 8. Reading Kane CLI output without trusting its shape too much (21 Nov 2026)
+
+- **Chosen:** `src/kane.ts` reads the JSON lines Kane CLI prints, one event per line. Lines that are not JSON are counted, not fatal. Unknown event types
+  are ignored. The event names used (`stream_start`, `test_md_step_start`, `test_md_step_end`, `test_md_adaptive_heal`,
+  `test_md_bug_verdict`, `run_end`, `test_md_done`) were read from the installed Kane CLI 0.10.7.
+- **Credits:** an agent `run` reports `credits_consumed` on its `run_end`. For `testmd`, the sum of the per-step `run_end`
+  events is used, unless `test_md_done` carries its own total. The first recorded real run checks this, and the test
+  fixtures named `recorded-*` will replace the `synthetic-*` ones where they differ.
+- **Budget:** every run is added to `census/kredit.json`. Totals are recomputed from the entries on every read, and a run
+  is refused once `kane.credit_hard_stop` (or, for the census, `kane.census_budget`) is reached.
+
+## 9. What leaves an evidence pack (21 Nov 2026)
+
+- **Chosen:** `src/evidence.ts` never copies a pack. It reads console errors, failed requests (path only, no query string)
+  and screenshot names, then removes the keys in `publish.strip_keys` (who ran it, `test_url`, cookies, auth headers),
+  replaces private Test Manager links (`publish.private_url_patterns`) and e-mail addresses outside
+  `publish.email_allowlist`.
+- **Publication scan:** a test walks `docs/` and `census/` and fails on any of: the value of `KANE_USERNAME`, any address in
+  `BUMPPROOF_PRIVATE_EMAILS`, other e-mail addresses, private links, or identity keys. Findings show a masked hint, never
+  the value. On a machine without those variables, the scan still checks e-mail, links and keys.
+- **Undo:** add a domain to `publish.email_allowlist` or a key to `publish.strip_keys` in `.bumpproof/config.json`.
