@@ -6,3 +6,8 @@ dist/
 *.log
 .testmuai/
 /tmp/
+dalaman/
+NEXT.md
+CLAUDE.md
+CLAUDE.local.md
+.bumpproof/runs/

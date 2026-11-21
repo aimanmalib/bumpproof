@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "enabled": true,
+  "lang": "en",
+  "languages": [
+    "en",
+    "ms"
+  ],
+  "port": 4173,
+  "node": {
+    "min_major": 20
+  },
+  "sandbox": {
+    "image": "node:22-bookworm-slim",
+    "work_dir": "",
+    "min_free_gb": 25,
+    "disk_path": "/",
+    "cpus": 2,
+    "memory": "3g",
+    "pids_limit": 512,
+    "label": "bumpproof=1"
+  },
+  "kane": {
+    "command": "kane-cli",
+    "chrome_path": "",
+    "chrome_dir": "~/.local/share/bumpproof/chrome",
+    "chrome_names": [
+      "google-chrome",
+      "google-chrome-stable",
+      "chromium",
+      "chromium-browser"
+    ],
+    "credit_hard_stop": 9000,
+    "census_budget": 4000
+  },
+  "fixer": {
+    "command": "claude",
+    "model": "claude-opus-5-5",
+    "max_attempts": 2,
+    "max_patch_lines": 300
+  },
+  "github": {
+    "command": "gh"
+  },
+  "doctor": {
+    "timeout_ms": 45000
+  },
+  "publish": {
+    "email_allowlist": [
+      "example.com",
+      "noreply.github.com"
+    ]
+  }
+}

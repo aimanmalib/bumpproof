@@ -1,0 +1,29 @@
+{
+  "name": "bumpproof",
+  "version": "0.0.0",
+  "description": "Checks dependency-bump pull requests in a real browser with Kane CLI, and has a coding agent fix what breaks.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "bumpproof": "dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "config/",
+    "locales/",
+    "prompts/",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test \"test/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}

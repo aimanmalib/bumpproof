@@ -1,0 +1,74 @@
+// Loads config/defaults.json and deep-merges the project's .bumpproof/config.json over it.
+// Code reads values from here; it does not hold them.
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/** Package root: works from src/ (tests) and dist/ (installed), both one level down. */
+export const ROOT = fileURLToPath(new URL('..', import.meta.url));
+
+export type Json = null | boolean | number | string | Json[] | { [k: string]: Json };
+export type JsonObject = { [k: string]: Json };
+
+export interface Config {
+  schema_version: number;
+  enabled: boolean;
+  lang: string;
+  languages: string[];
+  port: number;
+  node: { min_major: number };
+  sandbox: {
+    image: string; work_dir: string; min_free_gb: number; disk_path: string;
+    cpus: number; memory: string; pids_limit: number; label: string;
+  };
+  kane: {
+    command: string; chrome_path: string; chrome_dir: string; chrome_names: string[];
+    credit_hard_stop: number; census_budget: number;
+  };
+  fixer: { command: string; model: string; max_attempts: number; max_patch_lines: number };
+  github: { command: string };
+  doctor: { timeout_ms: number };
+  publish: { email_allowlist: string[] };
+}
+
+export function isObject(v: unknown): v is JsonObject {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
+/** Objects merge key by key; arrays and scalars from `over` replace `base`. */
+export function deepMerge(base: JsonObject, over: JsonObject): JsonObject {
+  const out: JsonObject = { ...base };
+  for (const [k, v] of Object.entries(over)) {
+    const b = out[k];
+    out[k] = isObject(b) && isObject(v) ? deepMerge(b, v) : v;
+  }
+  return out;
+}
+
+export function expandHome(p: string, home: string = homedir()): string {
+  if (p === '~') return home;
+  return p.startsWith('~/') ? join(home, p.slice(2)) : p;
+}
+
+export function readJson(path: string): Json {
+  return JSON.parse(readFileSync(path, 'utf8')) as Json;
+}
+
+export function loadDefaults(root: string = ROOT): JsonObject {
+  const d = readJson(join(root, 'config', 'defaults.json'));
+  if (!isObject(d)) throw new Error('config/defaults.json must hold an object');
+  return d;
+}
+
+/** Defaults, then `<projectDir>/.bumpproof/config.json` when present. */
+export function loadConfig(projectDir: string = process.cwd(), root: string = ROOT): Config {
+  let merged = loadDefaults(root);
+  const local = join(projectDir, '.bumpproof', 'config.json');
+  if (existsSync(local)) {
+    const o = readJson(local);
+    if (!isObject(o)) throw new Error(`${local} must hold an object`);
+    merged = deepMerge(merged, o);
+  }
+  return merged as unknown as Config;
+}
