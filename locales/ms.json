@@ -25,7 +25,10 @@
     "opt_canary": "Bersama fix: jalankan ujian kanari yang memilih mod hos atau kontena untuk fixer",
     "opt_out": "report: folder untuk menulis laman (lalai docs)",
     "opt_comment": "report: cetak komen pull request untuk satu folder larian",
-    "opt_speed": "replay: saat direkod setiap saat sebenar (0 = tanpa jeda)"
+    "opt_speed": "replay: saat direkod setiap saat sebenar (0 = tanpa jeda)",
+    "opt_markdown": "dengan check: tulis juga komen pull request dalam Markdown ke fail ini",
+    "opt_min_free_gb": "dengan check: enggan bermula bila ruang cakera kosong kurang daripada ini (GB)",
+    "bad_number": "{option} perlukan nombor sifar atau lebih, diberi \"{value}\"."
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -262,5 +265,11 @@
     "judges_sandbox": "Bendera kotak pasir Docker",
     "judges_kane": "Pembaca output Kane CLI",
     "judges_decisions": "Log keputusan"
+  },
+  "action": {
+    "title": "Semakan binaan Bumpproof",
+    "no_journeys": "Action ini membina dan menghidupkan asas dan pull request ini dalam bekas Docker yang dikunci. Ia tidak menjalankan perjalanan pelayar atau pembaikan, dan tidak memegang kunci LLM. Untuk perjalanan Kane CLI dan pembaikan, jalankan `bumpproof pr <owner>/<repo>#<number> --fix` pada mesin anda sendiri.",
+    "footer": "Bumpproof {version} · {url}",
+    "log": "{side}: baris akhir log"
   }
 }

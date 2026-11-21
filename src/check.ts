@@ -7,7 +7,7 @@ import { expandHome, type Config } from './config.ts';
 import { cleanSubdir, exportTree, resolveRef, shortSha, sideDir } from './git.ts';
 import type { Translate } from './i18n.ts';
 import type { Runner } from './proc.ts';
-import { removeLabelled, SandboxError, startApp, stopApp, type SandboxDeps, type SideResult } from './sandbox.ts';
+import { removeLabelled, startApp, stopApp, type SandboxDeps, type SideResult } from './sandbox.ts';
 import type { Paint } from './ui.ts';
 
 export type BuildOutcome = 'both_built' | 'head_build_failed' | 'base_build_failed';
@@ -125,8 +125,4 @@ export function renderCheck(rec: CheckRecord, t: Translate, p: Paint): string {
   lines.push('', t(`check.outcome_${rec.outcome}`));
   if (!rec.journeys_run) lines.push(p.dim(t('check.journeys_not_run')));
   return lines.join('\n');
-}
-
-export function renderRefusal(e: SandboxError, t: Translate): string {
-  return t('check.refused', { reason: t(`sandbox.refused_${e.code}`, { detail: e.message }) });
 }

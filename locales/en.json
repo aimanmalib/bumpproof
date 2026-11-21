@@ -25,7 +25,10 @@
     "opt_canary": "With fix: run the canary test that decides host or container mode for the fixer",
     "opt_out": "report: folder to write the site to (default docs)",
     "opt_comment": "report: print the pull request comment for one run folder",
-    "opt_speed": "replay: recorded seconds per real second (0 = no pauses)"
+    "opt_speed": "replay: recorded seconds per real second (0 = no pauses)",
+    "opt_markdown": "with check: also write a pull request comment in Markdown to this file",
+    "opt_min_free_gb": "with check: refuse to start below this much free disk (GB)",
+    "bad_number": "{option} needs a number of zero or more, got \"{value}\"."
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -262,5 +265,11 @@
     "judges_sandbox": "Docker sandbox flags",
     "judges_kane": "Kane CLI output parser",
     "judges_decisions": "Decision log"
+  },
+  "action": {
+    "title": "Bumpproof build check",
+    "no_journeys": "This Action builds and starts the base and this pull request in a locked-down Docker container. It does not run browser journeys or fixes, and it holds no LLM key. For Kane CLI journeys and fixes, run `bumpproof pr <owner>/<repo>#<number> --fix` on your own machine.",
+    "footer": "Bumpproof {version} · {url}",
+    "log": "{side}: last lines of the log"
   }
 }

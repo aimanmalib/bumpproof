@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // Entry point: parses arguments, picks the language, dispatches commands.
-import { readFileSync, realpathSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { runCanary } from './canary.ts';
-import { exitCodeOf, newRunId, renderCheck, renderRefusal, runCheck, saveRecord } from './check.ts';
+import { renderCheckComment, renderRefusalComment, type CheckCommentOptions } from './check-comment.ts';
+import { exitCodeOf, newRunId, renderCheck, runCheck, saveRecord } from './check.ts';
 import { ROOT, loadConfig, type Config } from './config.ts';
 import { freeBytesOf, renderChecks, runChecks } from './doctor.ts';
 import { makeTranslator, pickLang, type Translate } from './i18n.ts';
@@ -39,6 +40,8 @@ export function helpText(t: Translate): string {
     `  --head <ref>    ${t('cli.opt_head')}`,
     `  --dir <path>    ${t('cli.opt_dir')}`,
     `  --repo <path>   ${t('cli.opt_repo')}`,
+    `  --markdown <f>  ${t('cli.opt_markdown')}`,
+    `  --min-free-gb <n> ${t('cli.opt_min_free_gb')}`,
     `  --canary        ${t('cli.opt_canary')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
     `  --comment <run> ${t('cli.opt_comment')}`,
@@ -63,6 +66,8 @@ export async function main(argv: string[], io: Io): Promise<number> {
       dir: { type: 'string' },
       repo: { type: 'string' },
       canary: { type: 'boolean' },
+      markdown: { type: 'string' },
+      'min-free-gb': { type: 'string' },
       out: { type: 'string' },
       runs: { type: 'string' },
       census: { type: 'string' },
@@ -108,8 +113,22 @@ export async function main(argv: string[], io: Io): Promise<number> {
       io.err(t('check.need_refs'));
       return 2;
     }
+    const minFree = str(values['min-free-gb']);
+    if (minFree !== undefined) {
+      const n = Number(minFree);
+      if (!Number.isFinite(n) || n < 0) {
+        io.err(t('cli.bad_number', { option: '--min-free-gb', value: minFree }));
+        return 2;
+      }
+      cfg.sandbox.min_free_gb = n;
+    }
     const repo = str(values.repo) ?? io.cwd;
     const paint = makePaint(useColor(io.env, io.isTTY));
+    const md = str(values.markdown);
+    const mdOpts: CheckCommentOptions = { version: version(), repoUrl: cfg.report.repo_url, logLines: cfg.sandbox.log_tail_lines };
+    const writeMd = (text: string) => {
+      if (md) writeFileSync(resolve(io.cwd, md), text);
+    };
     try {
       const rec = await runCheck(
         { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
@@ -118,11 +137,15 @@ export async function main(argv: string[], io: Io): Promise<number> {
       );
       io.out(renderCheck(rec, t, paint));
       io.out(t('check.record', { path: saveRecord(repo, rec) }));
+      writeMd(renderCheckComment(rec, t, mdOpts));
       return exitCodeOf(rec.outcome);
     } catch (e) {
-      if (e instanceof SandboxError) io.err(renderRefusal(e, t));
-      else if (e instanceof GitError) io.err(t('check.git_error', { detail: e.message }));
+      let reason: string;
+      if (e instanceof SandboxError) reason = t(`sandbox.refused_${e.code}`, { detail: e.message });
+      else if (e instanceof GitError) reason = t('check.git_error', { detail: e.message });
       else throw e;
+      io.err(e instanceof SandboxError ? t('check.refused', { reason }) : reason);
+      writeMd(renderRefusalComment(reason, t, mdOpts));
       return 2;
     }
   }
