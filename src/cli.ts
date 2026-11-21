@@ -4,10 +4,13 @@ import { readFileSync, realpathSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
+import { exitCodeOf, newRunId, renderCheck, renderRefusal, runCheck, saveRecord } from './check.ts';
 import { ROOT, loadConfig, type Config } from './config.ts';
 import { freeBytesOf, renderChecks, runChecks } from './doctor.ts';
 import { makeTranslator, pickLang, type Translate } from './i18n.ts';
+import { GitError } from './git.ts';
 import { run } from './proc.ts';
+import { httpStatus, portFree, SandboxError } from './sandbox.ts';
 import { makePaint, useColor } from './ui.ts';
 
 export const COMMANDS = ['doctor', 'init', 'check', 'fix', 'pr', 'census', 'report', 'replay'] as const;
@@ -30,6 +33,10 @@ export function helpText(t: Translate): string {
   return [
     t('cli.usage'), '', t('cli.commands_title'), ...rows, '', t('cli.options_title'),
     `  --lang <en|ms>  ${t('cli.opt_lang')}`,
+    `  --base <ref>    ${t('cli.opt_base')}`,
+    `  --head <ref>    ${t('cli.opt_head')}`,
+    `  --dir <path>    ${t('cli.opt_dir')}`,
+    `  --repo <path>   ${t('cli.opt_repo')}`,
     `  -h, --help      ${t('cli.opt_help')}`,
     `  -v, --version   ${t('cli.opt_version')}`,
   ].join('\n');
@@ -45,6 +52,10 @@ export async function main(argv: string[], io: Io): Promise<number> {
       lang: { type: 'string' },
       help: { type: 'boolean', short: 'h' },
       version: { type: 'boolean', short: 'v' },
+      base: { type: 'string' },
+      head: { type: 'string' },
+      dir: { type: 'string' },
+      repo: { type: 'string' },
     },
   });
   const cfg: Config = loadConfig(io.cwd);
@@ -76,6 +87,32 @@ export async function main(argv: string[], io: Io): Promise<number> {
     const checks = await runChecks({ cfg, t, run, env: io.env, nodeVersion: process.version, freeBytes: freeBytesOf });
     io.out(renderChecks(checks, t, makePaint(useColor(io.env, io.isTTY))));
     return checks.every((c) => c.ok) ? 0 : 1;
+  }
+  if (cmd === 'check') {
+    const str = (v: unknown) => (typeof v === 'string' && v !== '' ? v : undefined);
+    const base = str(values.base);
+    const head = str(values.head);
+    if (!base || !head) {
+      io.err(t('check.need_refs'));
+      return 2;
+    }
+    const repo = str(values.repo) ?? io.cwd;
+    const paint = makePaint(useColor(io.env, io.isTTY));
+    try {
+      const rec = await runCheck(
+        { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
+          sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
+        { repo, base, head, dir: str(values.dir) ?? cfg.app.dir, runId: newRunId() },
+      );
+      io.out(renderCheck(rec, t, paint));
+      io.out(t('check.record', { path: saveRecord(repo, rec) }));
+      return exitCodeOf(rec.outcome);
+    } catch (e) {
+      if (e instanceof SandboxError) io.err(renderRefusal(e, t));
+      else if (e instanceof GitError) io.err(t('check.git_error', { detail: e.message }));
+      else throw e;
+      return 2;
+    }
   }
   io.err(t('cli.not_built', { name: cmd }));
   return 2;

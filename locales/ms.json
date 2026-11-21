@@ -17,7 +17,11 @@
     "unknown_command": "Arahan tidak dikenali: {name}",
     "not_built": "Arahan '{name}' belum dibina.",
     "bad_lang": "Bahasa '{lang}' tidak disokong. Guna salah satu: {list}.",
-    "disabled": "Bumpproof dimatikan dalam config (\"enabled\": false). Tiada apa dibuat."
+    "disabled": "Bumpproof dimatikan dalam config (\"enabled\": false). Tiada apa dibuat.",
+    "opt_base": "Ref asas untuk check (cawangan, tag atau komit)",
+    "opt_head": "Ref kepala untuk check (naik taraf)",
+    "opt_dir": "Folder aplikasi dalam repositori (lalai: config app.dir)",
+    "opt_repo": "Folder repositori (lalai: folder semasa)"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -64,5 +68,38 @@
     "regression": "Perjalanan yang lulus di cawangan asas gagal pada pull request ini.",
     "all_inconclusive": "Kane CLI tidak dapat menamatkan sebarang perjalanan pada pull request ini.",
     "ok": "Setiap perjalanan berkelakuan sama seperti di cawangan asas."
+  },
+  "check": {
+    "need_refs": "check memerlukan --base <ref> dan --head <ref>.",
+    "title": "Semakan Bumpproof: {base} → {head}",
+    "app_dir": "Folder aplikasi: {dir}",
+    "side_base": "Asas",
+    "side_head": "Kepala",
+    "side_ok": "{side}: dipasang, dibina dan menjawab pada port selepas {s} s",
+    "side_fail": "{side}: {where} (selepas {s} s)",
+    "exit_code": "Kod keluar kontena: {code}",
+    "head_skipped": "Kepala tidak dimulakan: asas mesti dibina dahulu.",
+    "outcome_both_built": "Keputusan: kedua-dua belah dibina dan bermula.",
+    "outcome_head_build_failed": "Keputusan: naik taraf ini tidak dapat dibina atau dimulakan. Ini dikira sebagai binaan gagal.",
+    "outcome_base_build_failed": "Keputusan: tidak dapat dijalankan. Asas tidak dapat dibina atau dimulakan, jadi tiada apa untuk dibandingkan.",
+    "journeys_not_run": "Perjalanan pelayar tidak dijalankan dalam semakan ini.",
+    "record": "Rekod larian: {path}",
+    "refused": "Tidak dimulakan: {reason}",
+    "git_error": "Ralat git: {detail}"
+  },
+  "sandbox": {
+    "failed_install": "pemasangan kebergantungan gagal",
+    "failed_build": "binaan gagal",
+    "failed_serve": "aplikasi berhenti semasa bermula",
+    "failed_start": "kontena tidak bermula",
+    "failed_health": "aplikasi bermula tetapi tidak menjawab HTTP dalam masa",
+    "plan_no_package_json": "tiada package.json dalam folder aplikasi",
+    "plan_bad_package_json": "package.json bukan JSON yang sah",
+    "plan_no_lockfile": "tiada fail kunci (package-lock.json, yarn.lock atau pnpm-lock.yaml), jadi pemasangan tidak dapat dipin",
+    "plan_no_serve": "tiada cara untuk menghidangkan aplikasi: tetapkan app.serve dalam .bumpproof/config.json",
+    "plan_unknown": "aplikasi tidak dapat dirancang",
+    "refused_disk": "ruang cakera tidak cukup ({detail})",
+    "refused_port": "port sedang digunakan ({detail})",
+    "refused_docker": "Docker enggan memulakan kontena ({detail})"
   }
 }

@@ -90,3 +90,27 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   `BUMPPROOF_PRIVATE_EMAILS`, other e-mail addresses, private links, or identity keys. Findings show a masked hint, never
   the value. On a machine without those variables, the scan still checks e-mail, links and keys.
 - **Undo:** add a domain to `publish.email_allowlist` or a key to `publish.strip_keys` in `.bumpproof/config.json`.
+
+## 10. The Docker sandbox (21 Nov 2026)
+
+- **Chosen:** `src/sandbox.ts` runs the app under test in `node:22-bookworm-slim`. One container per side runs install, build
+  and serve in that order. The base goes first, then the head, on the same port (4173 by default). Flags: the host user's
+  uid:gid (never root), `--cap-drop ALL`, `no-new-privileges`, 2 CPUs, 3 GB memory, 512 processes, and the port published on
+  `127.0.0.1` only. The container gets a short list of environment variables from `sandbox.env`, never the host environment.
+  Installs use the lockfile and `--ignore-scripts`.
+- **What goes in:** `src/git.ts` exports the app folder at each commit with `git archive` into a temporary folder. The
+  container sees that folder and nothing else: no `.git`, no history, no credentials.
+- **Failed build:** the setup script prints a marker before each phase. When the container exits, the last marker says
+  where it stopped (install, build or serve). A server that is up but does not answer HTTP in `sandbox.serve_timeout_s` also
+  counts as a failed build. A full disk, a busy port or Docker refusing to start are reported as host problems, not as a
+  failed build.
+- **Serving:** Vite and Next.js apps are served with their own preview servers bound to `0.0.0.0`. Many apps' own
+  `preview` scripts bind `127.0.0.1`, which cannot be reached through a published port. Other apps use their `start`,
+  `serve` or `preview` script with `HOST` and `PORT` set. `app.serve` in `.bumpproof/config.json` overrides all of this.
+- **Cleanup:** each container is removed with its volumes right after its side. Before a run, any container with the
+  `bumpproof=1` label is removed. A run that was cut off may have left one, and it would hold the port. Nothing else
+  is ever removed, and images are never pruned. A run is refused when less than `sandbox.min_free_gb` is free.
+- **Measured:** the demo shop at `d54d329` against Dependabot's date-fns 4.4.0 branch: base up in 23 s (first run, image
+  pulled), head in 14.5 s, both built. A fixture app whose head build throws gives "failed build" with the error in the log
+  tail.
+- **Undo:** `sandbox.image`, limits, timeouts and commands are all in `config/defaults.json`.

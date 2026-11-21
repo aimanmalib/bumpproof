@@ -17,7 +17,11 @@
     "unknown_command": "Unknown command: {name}",
     "not_built": "The '{name}' command is not built yet.",
     "bad_lang": "Unsupported language '{lang}'. Use one of: {list}.",
-    "disabled": "Bumpproof is disabled in config (\"enabled\": false). Nothing to do."
+    "disabled": "Bumpproof is disabled in config (\"enabled\": false). Nothing to do.",
+    "opt_base": "Base ref for check (branch, tag or commit)",
+    "opt_head": "Head ref for check (the bump)",
+    "opt_dir": "App folder inside the repository (default: config app.dir)",
+    "opt_repo": "Repository folder (default: current folder)"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -64,5 +68,38 @@
     "regression": "A journey that passes on the base branch fails on the pull request.",
     "all_inconclusive": "Kane CLI could not finish any journey on the pull request.",
     "ok": "Every journey behaves as it does on the base branch."
+  },
+  "check": {
+    "need_refs": "check needs both --base <ref> and --head <ref>.",
+    "title": "Bumpproof check: {base} → {head}",
+    "app_dir": "App folder: {dir}",
+    "side_base": "Base",
+    "side_head": "Head",
+    "side_ok": "{side}: installed, built and answering on the port after {s} s",
+    "side_fail": "{side}: {where} (after {s} s)",
+    "exit_code": "Container exit code: {code}",
+    "head_skipped": "Head not started: the base must build first.",
+    "outcome_both_built": "Result: both sides build and start.",
+    "outcome_head_build_failed": "Result: the bump does not build or start. This counts as a failed build.",
+    "outcome_base_build_failed": "Result: could not run. The base does not build or start, so there is nothing to compare against.",
+    "journeys_not_run": "Browser journeys were not run in this check.",
+    "record": "Run record: {path}",
+    "refused": "Not started: {reason}",
+    "git_error": "Git error: {detail}"
+  },
+  "sandbox": {
+    "failed_install": "dependency install failed",
+    "failed_build": "build failed",
+    "failed_serve": "the app stopped while starting",
+    "failed_start": "the container did not start",
+    "failed_health": "the app started but did not answer HTTP in time",
+    "plan_no_package_json": "no package.json in the app folder",
+    "plan_bad_package_json": "package.json is not valid JSON",
+    "plan_no_lockfile": "no lockfile (package-lock.json, yarn.lock or pnpm-lock.yaml), so the install cannot be pinned",
+    "plan_no_serve": "no way to serve the app: set app.serve in .bumpproof/config.json",
+    "plan_unknown": "the app could not be planned",
+    "refused_disk": "not enough free disk ({detail})",
+    "refused_port": "the port is busy ({detail})",
+    "refused_docker": "Docker refused to start the container ({detail})"
   }
 }

@@ -76,3 +76,14 @@ test('the entry point also runs through a symlink, as npm installs the bin', () 
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('check needs both refs, and a bad ref is a git error, not a crash', async () => {
+  const a = io();
+  assert.equal(await main(['check', '--base', 'main'], a), 2);
+  assert.match(a.stderr.join('\n'), /--base <ref> and --head <ref>/);
+  const b = io();
+  b.cwd = mkdtempSync(join(tmpdir(), 'bumpproof-nogit-'));
+  assert.equal(await main(['check', '--base', 'a', '--head', 'b', '--repo', b.cwd], b), 2);
+  assert.match(b.stderr.join('\n'), /^Git error: /);
+  rmSync(b.cwd, { recursive: true, force: true });
+});
