@@ -1,0 +1,149 @@
+name: Bumpproof build check
+description: Builds and starts the base and the pull request in a locked-down Docker container and comments the result. Check only, no LLM key.
+branding:
+  icon: shield
+  color: green
+
+# Check and comment only (docs/02-DECISIONS.md). Kane CLI journeys and Claude Code fixes run on a developer machine
+# with `bumpproof pr ... --fix`, so no LLM key or account key ever goes into GitHub.
+# Untrusted values (refs, inputs) reach the scripts through `env`, never through `${{ }}` inside `run`.
+
+inputs:
+  dir:
+    description: App folder inside the repository. Empty means the repository root, or `app.dir` from .bumpproof/config.json.
+    required: false
+    default: ''
+  base:
+    description: Base commit. Empty means the pull request base commit.
+    required: false
+    default: ''
+  head:
+    description: Head commit. Empty means the pull request head commit.
+    required: false
+    default: ''
+  comment:
+    description: Post the result as a pull request comment, updating the earlier one. Needs `pull-requests write`.
+    required: false
+    default: 'true'
+  fail-on-break:
+    description: Fail the job when the pull request does not build or start.
+    required: false
+    default: 'true'
+  lang:
+    description: Language of the comment, `en` or `ms`.
+    required: false
+    default: en
+  min-free-gb:
+    description: Refuse to start below this much free disk, in GB.
+    required: false
+    default: '10'
+  node-version:
+    description: Node.js version that runs Bumpproof itself (the app under test uses the sandbox image).
+    required: false
+    default: '22'
+  github-token:
+    description: Token used to post the comment.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  outcome:
+    description: both_built, head_build_failed, base_build_failed or not_started.
+    value: ${{ steps.check.outputs.outcome }}
+  exit-code:
+    description: Exit code of `bumpproof check` (0 both built, 1 the head did not, 2 nothing to compare).
+    value: ${{ steps.check.outputs.exit-code }}
+  comment-file:
+    description: Path of the Markdown comment.
+    value: ${{ steps.check.outputs.comment-file }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install Bumpproof
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --no-audit --no-fund
+
+    - name: Fetch the base and head commits
+      id: refs
+      shell: bash
+      env:
+        IN_BASE: ${{ inputs.base }}
+        IN_HEAD: ${{ inputs.head }}
+        PR_BASE: ${{ github.event.pull_request.base.sha }}
+        PR_HEAD: ${{ github.event.pull_request.head.sha }}
+      run: |
+        base="${IN_BASE:-$PR_BASE}"
+        head="${IN_HEAD:-$PR_HEAD}"
+        if [ -z "$base" ] || [ -z "$head" ]; then
+          echo "::error::Bumpproof needs a pull_request event, or the base and head inputs."
+          exit 2
+        fi
+        git fetch --no-tags --depth=1 origin "$base" "$head" || echo "::notice::Fetch failed; using the commits already checked out."
+        echo "base=$base" >> "$GITHUB_OUTPUT"
+        echo "head=$head" >> "$GITHUB_OUTPUT"
+
+    - name: Build and start base, then head
+      id: check
+      shell: bash
+      env:
+        BP_BASE: ${{ steps.refs.outputs.base }}
+        BP_HEAD: ${{ steps.refs.outputs.head }}
+        BP_DIR: ${{ inputs.dir }}
+        BP_LANG: ${{ inputs.lang }}
+        BP_MIN_FREE: ${{ inputs.min-free-gb }}
+        BP_CLI: ${{ github.action_path }}/dist/cli.js
+      run: |
+        md="$RUNNER_TEMP/bumpproof-comment.md"
+        rm -f "$md"
+        set +e
+        node "$BP_CLI" check --base "$BP_BASE" --head "$BP_HEAD" --dir "$BP_DIR" --lang "$BP_LANG" \
+          --min-free-gb "$BP_MIN_FREE" --markdown "$md"
+        code=$?
+        set -e
+        outcome=$(sed -n 's/^<!-- bumpproof-outcome: \([a-z_]*\) -->$/\1/p' "$md" 2>/dev/null)
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+        echo "outcome=${outcome:-not_started}" >> "$GITHUB_OUTPUT"
+        echo "comment-file=$md" >> "$GITHUB_OUTPUT"
+        if [ -f "$md" ]; then cat "$md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+    - name: Comment on the pull request
+      if: inputs.comment == 'true' && github.event.pull_request.number != ''
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR: ${{ github.event.pull_request.number }}
+        MD: ${{ steps.check.outputs.comment-file }}
+      run: |
+        [ -f "$MD" ] || { echo "::warning::No comment was written."; exit 0; }
+        marker='<!-- bumpproof-action -->'
+        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+          --jq ".[] | select(.body | startswith(\"$marker\")) | .id" 2>/dev/null | tail -n 1) || id=''
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$MD" > /dev/null \
+            || echo "::warning::Could not update the comment. Grant pull-requests write to post it."
+        else
+          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -F "body=@$MD" > /dev/null \
+            || echo "::warning::Could not post the comment. Grant pull-requests write to post it."
+        fi
+
+    - name: Result
+      shell: bash
+      env:
+        CODE: ${{ steps.check.outputs.exit-code }}
+        OUTCOME: ${{ steps.check.outputs.outcome }}
+        FAIL_ON_BREAK: ${{ inputs.fail-on-break }}
+      run: |
+        echo "Bumpproof: $OUTCOME"
+        if [ "$CODE" = "1" ] && [ "$FAIL_ON_BREAK" = "true" ]; then
+          echo "::error::The pull request does not build or start. See the comment or the job summary."
+          exit 1
+        fi
+        if [ "$CODE" != "0" ] && [ "$CODE" != "1" ]; then
+          echo "::warning::Bumpproof could not compare the two sides ($OUTCOME)."
+        fi

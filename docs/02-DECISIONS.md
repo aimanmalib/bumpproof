@@ -183,3 +183,20 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
   in the repository URL on every page. `publish.public_strings` lists the exact public strings (the repository URL,
   `github:` install name and Pages host). A secret inside one of them is not a finding. The same value anywhere else
   still is, and is still redacted.
+
+## 13. The GitHub Action: build check and comment only (22 Nov 2026)
+
+- **What it runs:** `action.yml` is a composite Action. It installs Bumpproof from the Action folder and runs
+  `bumpproof check` on the pull request base and head commits. It posts the result as one comment and updates that
+  comment on the next push. No Kane CLI journeys, no fixer, no LLM key and no account key in GitHub (PRD D9). The
+  comment says so in its own words and points to `bumpproof pr ... --fix` on a developer machine.
+- **Finding its own comment:** the first line is a hidden marker, `<!-- bumpproof-action -->`. The second line carries
+  the outcome (`<!-- bumpproof-outcome: ... -->`), so the Action reads the result without parsing a translated sentence.
+- **Injection:** pull request branch names are chosen by whoever opens the pull request. Every value reaches the
+  scripts through `env`, never through `${{ }}` inside `run`, and the comment prints short commit hashes, not branch
+  names. A test reads `action.yml` and fails on an expression inside a script, a `secrets.` reference or `--fix`.
+- **Disk floor on runners:** the host floor is 25 GB (`sandbox.min_free_gb`). A hosted runner has less free disk than
+  that, so `check --min-free-gb` overrides it and the Action passes 10 GB by default.
+- **Fork pull requests** get a read-only token. Posting then fails with a warning, and the result stays in the job summary.
+- **CI:** a job runs the Action on `examples/shop` (same commit on both sides) and checks the outcome and the comment
+  file. Way back: delete the job, or stop using the Action. The CLI does not depend on it.

@@ -52,3 +52,24 @@ jobs:
           cache-dependency-path: examples/shop/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: npm run build
+
+  action:
+    name: Run the Action on the demo shop
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - id: bumpproof
+        uses: ./
+        with:
+          dir: examples/shop
+          base: ${{ github.sha }}
+          head: ${{ github.sha }}
+          comment: 'false'
+      - name: Both sides built
+        env:
+          OUTCOME: ${{ steps.bumpproof.outputs.outcome }}
+          COMMENT: ${{ steps.bumpproof.outputs.comment-file }}
+        run: |
+          test "$OUTCOME" = both_built
+          grep -q '<!-- bumpproof-action -->' "$COMMENT"
