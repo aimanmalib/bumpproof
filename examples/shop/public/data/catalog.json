@@ -1,0 +1,16 @@
+{
+  "categories": [
+    { "id": "tea", "name": "Tea", "blurb": "Loose leaf, packed the week it ships." },
+    { "id": "ceramics", "name": "Ceramics", "blurb": "Cups and pots from two small studios." },
+    { "id": "pantry", "name": "Pantry", "blurb": "Things that go well with tea." }
+  ],
+  "products": [
+    { "id": "sencha-50", "category": "tea", "name": "Sencha, 50 g", "price": 12.0, "note": "Grassy, bright, first flush." },
+    { "id": "hojicha-50", "category": "tea", "name": "Hojicha, 50 g", "price": 10.5, "note": "Roasted, low caffeine." },
+    { "id": "assam-100", "category": "tea", "name": "Assam, 100 g", "price": 9.0, "note": "Malty breakfast tea." },
+    { "id": "cup-moss", "category": "ceramics", "name": "Cup, moss glaze", "price": 18.0, "note": "180 ml, hand thrown." },
+    { "id": "pot-ash", "category": "ceramics", "name": "Teapot, ash glaze", "price": 46.0, "note": "500 ml, steel strainer." },
+    { "id": "honey-250", "category": "pantry", "name": "Wildflower honey, 250 g", "price": 8.5, "note": "Raw, from one hillside." },
+    { "id": "shortbread", "category": "pantry", "name": "Shortbread tin", "price": 7.0, "note": "Twelve pieces, butter only." }
+  ]
+}

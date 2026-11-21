@@ -1,0 +1,25 @@
+{
+  "name": "bumpproof-example-shop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Small demo shop written against older major versions, so Dependabot has real upgrades to propose.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "4.36.1",
+    "clsx": "1.2.1",
+    "date-fns": "2.30.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.7.0",
+    "vite": "6.4.6"
+  }
+}

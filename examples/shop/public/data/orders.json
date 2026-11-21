@@ -1,0 +1,22 @@
+{
+  "orders": [
+    {
+      "id": "1042",
+      "placedAt": "2026-10-28T09:12:00Z",
+      "status": "Delivered",
+      "lines": [
+        { "productId": "sencha-50", "qty": 2 },
+        { "productId": "cup-moss", "qty": 1 }
+      ]
+    },
+    {
+      "id": "1057",
+      "placedAt": "2026-11-09T15:40:00Z",
+      "status": "Shipped",
+      "lines": [
+        { "productId": "pot-ash", "qty": 1 },
+        { "productId": "honey-250", "qty": 1 }
+      ]
+    }
+  ]
+}

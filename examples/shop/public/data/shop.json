@@ -1,0 +1,9 @@
+{
+  "name": "Fern & Fig",
+  "currency": "USD",
+  "locale": "en-US",
+  "shippingFee": 4.5,
+  "freeShippingFrom": 60,
+  "deliveryDays": 3,
+  "dateFormat": "d MMM yyyy"
+}
