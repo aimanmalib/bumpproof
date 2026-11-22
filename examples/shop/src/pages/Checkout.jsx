@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import addDays from 'date-fns/esm/addDays';
+import { addDays } from 'date-fns/addDays';
 import { totals, useCart } from '../cart.jsx';
 import { gate, t, useData } from '../lib.jsx';
 import Summary from './Summary.jsx';
