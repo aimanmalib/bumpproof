@@ -27,6 +27,7 @@ When the head breaks, Claude Code (headless, file tools only) gets Kane CLI's fa
 
 Real runs, on pull requests Dependabot opened on this repository:
 - #4 clsx 1 → 2: safe, 3 of 3 journeys same as base.
+- #3 react-router-dom 6 → 7: CI green, the account tabs broke. Kane CLI caught it three times. 8-line fix, 3 of 3 pass. The fix is left off the branch so anyone can replay the catch.
 - #2 @tanstack/react-query 4 → 5: CI green, but all three journeys failed on pages that crashed. 2-line fix, 3 of 3 pass.
 - #1 date-fns 2 → 4: build failed. 6-line fix, 3 of 3 pass.
 
@@ -54,12 +55,12 @@ The demo shop pins old major versions on purpose, so Dependabot's real pull requ
 
 Numbers, all counted by script from the run records
 
-- Credits per pull request: 6.4 (clsx, safe), 102 (react-query, fixed), 3.8 (date-fns, fixed).
-- Fixer cost on the Claude API: $0.18 and $0.16.
-- Median time from the failed check to Kane CLI passing on the patch: 8 min 02 s, over 3 fixes.
+- Credits per pull request: 6.4 (clsx, safe), 43.7 (react-router, fixed), 102 (react-query, fixed), 3.8 (date-fns, fixed).
+- Fixer cost on the Claude API: $0.15, $0.18 and $0.16.
+- Median time from the failed check to Kane CLI passing on the patch: 6 min 16 s, over 4 fixes.
 - Census: 241 pull requests checked against the rules, 20 eligible, 14 run, 8 could run. CI green but broken: 0. False alarms in the control: 0 of 8.
 - In the census, writing a journey cost 33.4 credits on average and replaying a recording cost 8.1.
-- Breaks fixed: 3 of 3 on the demo app, 0 of 1 in the census.
+- Breaks fixed: 4 of 4 on the demo app, 0 of 1 in the census.
 
 How to run it
 
