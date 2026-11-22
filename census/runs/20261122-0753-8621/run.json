@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0753-8621",
+  "synthetic": false,
+  "started_at": "2026-11-22T08:03:42.163Z",
+  "duration_s": 580,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/eames1127/GitGreens",
+    "pr": 32,
+    "pr_url": "https://github.com/eames1127/GitGreens/pull/32",
+    "pr_title": "build(deps-dev): Bump vite from 5.4.21 to 8.3.8",
+    "ci": "red"
+  },
+  "app_dir": "",
+  "base": {
+    "ref": "d25296fef17ed9fa7e79cc65790bd09c38bb698c",
+    "sha": "d25296fef17ed9fa7e79cc65790bd09c38bb698c"
+  },
+  "head": {
+    "ref": "aca882d87cf2eaf228ffe2a27ee5788a1b50607b",
+    "sha": "aca882d87cf2eaf228ffe2a27ee5788a1b50607b"
+  },
+  "bumps": [
+    {
+      "name": "vite",
+      "from": "^5.0.0",
+      "to": "^8.3.8",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 15.4,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": false,
+      "seconds": 5.3,
+      "failed_at": "install"
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 132,
+        "credits": 10.976,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "passed",
+        "seconds": 130,
+        "credits": 10.726,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 68,
+        "credits": 0,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "broken",
+    "reason": "head_build_failed",
+    "evaluated": 0
+  },
+  "fix": {
+    "status": "failed",
+    "attempts": 2,
+    "changed_lines": 0,
+    "cost_usd": 0.56,
+    "files": [],
+    "explanation": "",
+    "patch_file": null
+  },
+  "credits_consumed": 21.702,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "d25296fef17ed9fa7e79cc65790bd09c38bb698c",
+        "head": "aca882d87cf2eaf228ffe2a27ee5788a1b50607b"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "vite",
+        "from": "^5.0.0",
+        "to": "^8.3.8",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 16,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 15.4
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 189,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 132
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 366,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "passed",
+        "s": 130
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 463,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 68
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 471,
+      "key": "build_failed",
+      "vars": {
+        "side": "head",
+        "phase": "install"
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 475,
+      "key": "fixer_start",
+      "vars": {
+        "attempt": 1
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 539,
+      "key": "fixer_rejected",
+      "vars": {
+        "attempt": 1,
+        "reason": "no_change: no application file changed"
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 539,
+      "key": "fixer_start",
+      "vars": {
+        "attempt": 2
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 580,
+      "key": "fixer_rejected",
+      "vars": {
+        "attempt": 2,
+        "reason": "no_change: no application file changed"
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 580,
+      "key": "verdict",
+      "vars": {
+        "verdict": "broken"
+      },
+      "tone": "fail"
+    }
+  ],
+  "shots": []
+}
