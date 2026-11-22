@@ -11,7 +11,7 @@ import type { Translate } from './i18n.ts';
 import { BudgetError } from './journeys.ts';
 import type { Fetcher } from './notes.ts';
 import {
-  appDirOf, canWrite, fetchMergeRefs, fetchPrInfo, fillVars, parsePrRef, PrError, pushFix, slug, upsertComment,
+  appDirOf, canWrite, mergeLocally, fetchPrInfo, fillVars, parsePrRef, PrError, pushFix, slug, upsertComment,
 } from './pr.ts';
 import type { Runner } from './proc.ts';
 import { renderComment } from './report/markdown.ts';
@@ -70,7 +70,7 @@ export async function runPr(c: PrCommand, f: PrFlags, t: Translate, p: Paint): P
     c.out(t('pr.reading', { repo: slug(ref), n: ref.number, title: info.title, ci: t(`pr.ci_${info.ci}`), dir: dir || '.' }));
     const clone = `${scratch}/repo`;
     await cloneNoCheckout(run, `https://github.com/${slug(ref)}.git`, clone);
-    const refs = await fetchMergeRefs(run, clone, ref.number);
+    const refs = await mergeLocally(run, clone, info);
     c.out(t('pr.refs', { base: shortSha(refs.base), base_ref: info.base_ref, head: shortSha(refs.head) }));
     const res = await runJourneyCommand({
       deps: c.deps, opts: { repo: clone, base: refs.base, head: refs.head, dir, runId },

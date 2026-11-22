@@ -324,7 +324,7 @@
     "push_needs_fix": "--push-fix needs --fix: there is nothing to push without a verified fix.",
     "not_open": "Pull request #{n} is {state}; only open pull requests are checked.",
     "reading": "{repo}#{n}: {title}\nCI on GitHub: {ci} · app folder: {dir}",
-    "refs": "Base {base} ({base_ref} tip) against head {head} (GitHub's merge of the pull request on top of it)",
+    "refs": "Base {base} ({base_ref} tip) against head {head} (the pull request merged on top of it, locally)",
     "ci_green": "green",
     "ci_red": "red",
     "ci_pending": "still running",

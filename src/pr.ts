@@ -84,18 +84,26 @@ async function git(run: Runner, repo: string, args: string[], timeoutMs = 600000
 
 export interface PrRefs { base: string; head: string }
 
+/** Identity for the local merge commit only; it is never pushed. */
+const MERGE_IDENTITY = ['-c', 'user.name=Bumpproof', '-c', 'user.email=bumpproof@localhost.invalid'];
+
 /**
- * Fetches `refs/pull/<n>/merge` into a clone. Its first parent is the base branch tip, the commit itself is the PR
- * merged on top: comparing the two shows exactly what merging the PR would change, even when the branch is behind.
+ * Merges the PR head into the current tip of its base branch inside the clone (no push) and checks the base out, so
+ * the working tree holds the base's journeys. GitHub's own `refs/pull/<n>/merge` can lag behind the base branch, so
+ * the merge is made here: comparing base tip and merge shows exactly what merging the PR would change now.
  */
-export async function fetchMergeRefs(run: Runner, clone: string, n: number): Promise<PrRefs> {
-  try {
-    await git(run, clone, ['fetch', '--quiet', 'origin', `+refs/pull/${n}/merge:refs/bumpproof/merge`]);
-  } catch (e) {
-    throw new PrError(`no merge ref for #${n}: the pull request has conflicts or is closed (${(e as Error).message})`);
-  }
-  const head = await git(run, clone, ['rev-parse', 'refs/bumpproof/merge^{commit}']);
-  const base = await git(run, clone, ['rev-parse', 'refs/bumpproof/merge^1']);
+export async function mergeLocally(run: Runner, clone: string, info: PrInfo): Promise<PrRefs> {
+  if (info.base_ref.startsWith('-') || info.head_ref.startsWith('-')) throw new PrError('bad branch name');
+  await git(run, clone, ['fetch', '--quiet', 'origin', `+refs/heads/${info.base_ref}:refs/bumpproof/base`,
+    `+refs/pull/${info.number}/head:refs/bumpproof/pr`]);
+  const base = await git(run, clone, ['rev-parse', 'refs/bumpproof/base^{commit}']);
+  const pr = await git(run, clone, ['rev-parse', 'refs/bumpproof/pr^{commit}']);
+  if (pr !== info.head_sha) throw new PrError(`the PR head moved while it was read (${pr.slice(0, 7)}); run again`);
+  const tree = await run('git', ['-C', clone, 'merge-tree', '--write-tree', base, pr], { timeoutMs: 600000, env: gitEnv() });
+  if (!tree.ok) throw new PrError(`#${info.number} does not merge cleanly into ${info.base_ref}; rebase it first`);
+  const treeSha = tree.stdout.trim().split('\n')[0]!;
+  const head = await git(run, clone, [...MERGE_IDENTITY, 'commit-tree', treeSha, '-p', base, '-p', pr, '-m', `Merge #${info.number} into ${info.base_ref}`]);
+  await git(run, clone, ['checkout', '--quiet', '--detach', base]);
   return { base, head };
 }
 

@@ -324,7 +324,7 @@
     "push_needs_fix": "--push-fix perlukan --fix: tiada apa untuk ditolak tanpa pembaikan yang disahkan.",
     "not_open": "Pull request #{n} berstatus {state}; hanya pull request terbuka disemak.",
     "reading": "{repo}#{n}: {title}\nCI di GitHub: {ci} · folder aplikasi: {dir}",
-    "refs": "Asas {base} (hujung {base_ref}) lawan kepala {head} (gabungan pull request di atasnya oleh GitHub)",
+    "refs": "Asas {base} (hujung {base_ref}) lawan kepala {head} (pull request digabung di atasnya, secara tempatan)",
     "ci_green": "hijau",
     "ci_red": "merah",
     "ci_pending": "masih berjalan",

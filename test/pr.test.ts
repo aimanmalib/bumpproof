@@ -8,7 +8,7 @@ import { loadConfig } from '../src/config.ts';
 import { gitEnv } from '../src/git.ts';
 import { makeTranslator } from '../src/i18n.ts';
 import {
-  appDirOf, canWrite, fetchMergeRefs, fillVars, parsePrInfo, parsePrRef, PR_MARKER, PrError, pushFix, upsertComment, type PrInfo,
+  appDirOf, canWrite, mergeLocally, fillVars, parsePrInfo, parsePrRef, PR_MARKER, PrError, pushFix, upsertComment, type PrInfo,
 } from '../src/pr.ts';
 import { parsePrArgs, runPr } from '../src/pr-cli.ts';
 import { run, type Runner } from '../src/proc.ts';
@@ -145,13 +145,28 @@ function makeOrigin() {
 
 const FILES = [{ path: 'src/a.js', content: "export const status = 'pending';\n" }, { path: 'BUMPPROOF_FIX.md', content: '# fix\n' }];
 
-test('fetchMergeRefs: base is the merge ref first parent, head is the merge ref', async () => {
+test('mergeLocally merges the PR head into the current base tip and checks the base out', async () => {
   const o = makeOrigin();
   try {
-    const r = await fetchMergeRefs(run, o.clone, 1);
+    // The base branch moved after the PR was opened (a stale GitHub merge ref would miss this commit).
+    o.g(o.work, 'checkout', '--quiet', '-B', 'later', 'HEAD~1');
+    mkdirSync(join(o.work, 'app', 'journeys'), { recursive: true });
+    writeFileSync(join(o.work, 'app', 'journeys', 'shop_test.md'), 'journey\n');
+    o.g(o.work, 'add', '.');
+    o.g(o.work, 'commit', '--quiet', '-m', 'add a journey on main');
+    o.g(o.work, 'push', '--quiet', 'origin', 'later:refs/heads/main', 'refs/heads/bump:refs/pull/1/head');
+    const r = await mergeLocally(run, o.clone, o.info);
     assert.equal(r.base, o.g(o.origin, 'rev-parse', 'main'));
-    assert.equal(r.head, o.g(o.origin, 'rev-parse', 'refs/pull/1/merge'));
-    await assert.rejects(fetchMergeRefs(run, o.clone, 2), PrError);
+    assert.deepEqual(o.g(o.clone, 'rev-list', '--parents', '-n1', r.head).split(' ').slice(1), [r.base, o.info.head_sha]);
+    assert.equal(o.g(o.clone, 'show', `${r.head}:app/package.json`), '{"dependencies":{"lib":"2.0.0"}}');
+    assert.equal(readFileSync(join(o.clone, 'app', 'journeys', 'shop_test.md'), 'utf8'), 'journey\n');
+    await assert.rejects(mergeLocally(run, o.clone, { ...o.info, head_sha: 'b'.repeat(40) }), /moved/);
+    // A base change to the same line conflicts: refused.
+    o.g(o.work, 'checkout', '--quiet', 'later');
+    writeFileSync(join(o.work, 'app', 'package.json'), '{"dependencies":{"lib":"1.5.0"}}\n');
+    o.g(o.work, 'commit', '--quiet', '-am', 'conflict');
+    o.g(o.work, 'push', '--quiet', 'origin', 'later:refs/heads/main');
+    await assert.rejects(mergeLocally(run, o.clone, o.info), /does not merge cleanly/);
   } finally {
     rmSync(o.root, { recursive: true, force: true });
   }
