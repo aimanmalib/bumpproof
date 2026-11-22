@@ -92,6 +92,7 @@ test('the CLI options the action passes exist, and the outcome names match the c
   const help = helpText(makeTranslator('en'));
   const flags = [...check.run.matchAll(/(--[a-z][a-z-]+)/g)].map((m) => m[1]!);
   assert.ok(flags.includes('--markdown') && flags.includes('--base'));
+  assert.ok(flags.includes('--build-only'), 'no Kane CLI login in CI: browser journeys stay off (PRD D9)');
   for (const f of flags) assert.ok(help.includes(`${f} `), `${f} is a bumpproof option`);
   assert.match(check.run, /bumpproof-outcome: /, 'reads the outcome line written by src/check-comment.ts');
   assert.match(text, /<!-- bumpproof-action -->/, 'finds its earlier comment by the same marker');

@@ -20,7 +20,7 @@ export interface CheckOptions {
   dir: string;
   runId: string;
   /** Called while a side is up and answering; the container is stopped right after it returns. */
-  onReady?: (side: 'base' | 'head') => Promise<void>;
+  onReady?: (side: 'base' | 'head', appDir: string, res: SideResult) => Promise<void>;
 }
 
 export interface CheckRecord {
@@ -82,7 +82,7 @@ export async function runCheck(d: SandboxDeps & { run: Runner }, o: CheckOptions
       try {
         const res = await startApp(d, { name, runId: o.runId, side, appDir });
         record.sides.push(res);
-        if (res.built && o.onReady) await o.onReady(side);
+        if (res.built && o.onReady) await o.onReady(side, appDir, res);
       } finally {
         await stopApp(d.run, name);
       }
@@ -95,11 +95,11 @@ export async function runCheck(d: SandboxDeps & { run: Runner }, o: CheckOptions
   return record;
 }
 
-/** Writes `<repo>/.bumpproof/runs/<id>/run.json` and returns its path relative to the repository. */
+/** Writes `<repo>/.bumpproof/runs/<id>/build.json` and returns its path relative to the repository. */
 export function saveRecord(repo: string, rec: CheckRecord): string {
   const dir = join(repo, '.bumpproof', 'runs', rec.run_id);
   mkdirSync(dir, { recursive: true });
-  const path = join(dir, 'run.json');
+  const path = join(dir, 'build.json');
   writeFileSync(path, `${JSON.stringify(rec, null, 2)}\n`);
   return relative(repo, path);
 }

@@ -94,6 +94,12 @@ export function parseNdjson(text: string, exitCode: number | null): KaneRun {
       case 'test_md_adaptive_heal':
         run.healed = true;
         break;
+      case 'test_md_summary': {
+        // Kane CLI 0.10.7 reports healing here: `adaptive_heal: { triggered: true }`.
+        const heal = e.adaptive_heal;
+        if (heal && typeof heal === 'object' && (heal as Record<string, unknown>).triggered === true) run.healed = true;
+        break;
+      }
       case 'test_md_bug_verdict':
         run.bugs.push({ step_index: num(e.step_index), confirmed: e.confirmed === true, title: str(e.bug_title), one_liner: str(e.one_liner) });
         break;

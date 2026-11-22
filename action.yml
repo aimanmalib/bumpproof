@@ -103,7 +103,7 @@ runs:
         rm -f "$md"
         set +e
         node "$BP_CLI" check --base "$BP_BASE" --head "$BP_HEAD" --dir "$BP_DIR" --lang "$BP_LANG" \
-          --min-free-gb "$BP_MIN_FREE" --markdown "$md"
+          --min-free-gb "$BP_MIN_FREE" --markdown "$md" --build-only
         code=$?
         set -e
         outcome=$(sed -n 's/^<!-- bumpproof-outcome: \([a-z_]*\) -->$/\1/p' "$md" 2>/dev/null)

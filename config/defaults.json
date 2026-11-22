@@ -76,6 +76,9 @@
       "chromium",
       "chromium-browser"
     ],
+    "journeys_dir": ".bumpproof/journeys",
+    "journey_suffix": "_test.md",
+    "timeout_s": 900,
     "credit_hard_stop": 9000,
     "census_budget": 4000,
     "testmd_args": [

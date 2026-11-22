@@ -7,6 +7,8 @@ import { parseArgs } from 'node:util';
 import { runCanary } from './canary.ts';
 import { renderCheckComment, renderRefusalComment, type CheckCommentOptions } from './check-comment.ts';
 import { exitCodeOf, newRunId, renderCheck, runCheck, saveRecord } from './check.ts';
+import { hasJourneys, journeyCommand } from './check-cli.ts';
+import { BudgetError } from './journeys.ts';
 import { ROOT, loadConfig, type Config } from './config.ts';
 import { freeBytesOf, renderChecks, runChecks } from './doctor.ts';
 import { makeTranslator, pickLang, type Translate } from './i18n.ts';
@@ -44,6 +46,8 @@ export function helpText(t: Translate): string {
     `  --repo <path>   ${t('cli.opt_repo')}`,
     `  --markdown <f>  ${t('cli.opt_markdown')}`,
     `  --min-free-gb <n> ${t('cli.opt_min_free_gb')}`,
+    `  --build-only    ${t('cli.opt_build_only')}`,
+    `  --publish       ${t('cli.opt_publish')}`,
     `  --canary        ${t('cli.opt_canary')}`,
     `  --find          ${t('cli.opt_find')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
@@ -77,6 +81,8 @@ export async function main(argv: string[], io: Io): Promise<number> {
       census: { type: 'string' },
       comment: { type: 'string' },
       speed: { type: 'string' },
+      'build-only': { type: 'boolean' },
+      publish: { type: 'boolean' },
     },
   });
   const cfg: Config = loadConfig(io.cwd);
@@ -133,12 +139,15 @@ export async function main(argv: string[], io: Io): Promise<number> {
     const writeMd = (text: string) => {
       if (md) writeFileSync(resolve(io.cwd, md), text);
     };
+    const sandbox = { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
+      sleep: (ms: number) => new Promise<void>((r) => setTimeout(r, ms)) };
+    const opts = { repo, base, head, dir: str(values.dir) ?? cfg.app.dir, runId: newRunId() };
     try {
-      const rec = await runCheck(
-        { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
-          sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
-        { repo, base, head, dir: str(values.dir) ?? cfg.app.dir, runId: newRunId() },
-      );
+      if (!values['build-only'] && hasJourneys(cfg, repo, opts.dir)) {
+        return await journeyCommand({ deps: { ...sandbox, env: io.env, ledgerRoot: io.cwd, version: version() }, opts,
+          publish: values.publish === true, cwd: io.cwd, out: io.out, err: io.err }, t, paint);
+      }
+      const rec = await runCheck(sandbox, opts);
       io.out(renderCheck(rec, t, paint));
       io.out(t('check.record', { path: saveRecord(repo, rec) }));
       writeMd(renderCheckComment(rec, t, mdOpts));
@@ -146,6 +155,7 @@ export async function main(argv: string[], io: Io): Promise<number> {
     } catch (e) {
       let reason: string;
       if (e instanceof SandboxError) reason = t(`sandbox.refused_${e.code}`, { detail: e.message });
+      else if (e instanceof BudgetError) reason = t('check.budget', { detail: e.message });
       else if (e instanceof GitError) reason = t('check.git_error', { detail: e.message });
       else throw e;
       io.err(e instanceof SandboxError ? t('check.refused', { reason }) : reason);

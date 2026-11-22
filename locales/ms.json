@@ -29,7 +29,9 @@
     "opt_markdown": "dengan check: tulis juga komen pull request dalam Markdown ke fail ini",
     "opt_min_free_gb": "dengan check: enggan bermula bila ruang cakera kosong kurang daripada ini (GB)",
     "bad_number": "{option} perlukan nombor sifar atau lebih, diberi \"{value}\".",
-    "opt_find": "Cari calon banci dan tulis senarainya (tanpa Kane)"
+    "opt_find": "Cari calon banci dan tulis senarainya (tanpa Kane)",
+    "opt_build_only": "dengan check: bina dan mulakan kedua-dua sisi sahaja; langkau perjalanan pelayar",
+    "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -93,7 +95,14 @@
     "journeys_not_run": "Perjalanan pelayar tidak dijalankan dalam semakan ini.",
     "record": "Rekod larian: {path}",
     "refused": "Tidak dimulakan: {reason}",
-    "git_error": "Ralat git: {detail}"
+    "git_error": "Ralat git: {detail}",
+    "journeys_found": "Perjalanan pelayar: {n} ({names})",
+    "journeys_none": "Tiada perjalanan pelayar dalam {dir}: semakan bina-dan-mula sahaja.",
+    "journey_line": "{side} · {name}: {status} · {s} s · {credits} kredit",
+    "verdict_line": "Keputusan: {verdict} ({reason}); {evaluated} perjalanan dibandingkan; {credits} kredit Kane CLI.",
+    "published": "Rekod larian diterbitkan: {path}",
+    "publish_blocked": "Tidak diterbitkan: imbasan penerbitan menemui {n} masalah (pertama: {first}).",
+    "budget": "Dihentikan: bajet kredit Kane CLI sudah habis ({detail})."
   },
   "sandbox": {
     "failed_install": "pemasangan kebergantungan gagal",

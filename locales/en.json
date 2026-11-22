@@ -29,7 +29,9 @@
     "opt_markdown": "with check: also write a pull request comment in Markdown to this file",
     "opt_min_free_gb": "with check: refuse to start below this much free disk (GB)",
     "bad_number": "{option} needs a number of zero or more, got \"{value}\".",
-    "opt_find": "Find census candidates and write the list (no Kane needed)"
+    "opt_find": "Find census candidates and write the list (no Kane needed)",
+    "opt_build_only": "with check: build and start both sides only; skip the browser journeys",
+    "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -93,7 +95,14 @@
     "journeys_not_run": "Browser journeys were not run in this check.",
     "record": "Run record: {path}",
     "refused": "Not started: {reason}",
-    "git_error": "Git error: {detail}"
+    "git_error": "Git error: {detail}",
+    "journeys_found": "Browser journeys: {n} ({names})",
+    "journeys_none": "No browser journeys in {dir}: build-and-start check only.",
+    "journey_line": "{side} · {name}: {status} · {s} s · {credits} credits",
+    "verdict_line": "Verdict: {verdict} ({reason}); {evaluated} journeys compared; {credits} Kane CLI credits.",
+    "published": "Published run record: {path}",
+    "publish_blocked": "Not published: the publication scan found {n} problem(s) (first: {first}).",
+    "budget": "Stopped: the Kane CLI credit budget is used up ({detail})."
   },
   "sandbox": {
     "failed_install": "dependency install failed",

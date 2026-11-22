@@ -32,6 +32,7 @@ export interface Config {
   app: { dir: string; install: string; build: string; serve: string };
   kane: {
     command: string; chrome_path: string; chrome_dir: string; chrome_names: string[];
+    journeys_dir: string; journey_suffix: string; timeout_s: number;
     credit_hard_stop: number; census_budget: number;
     testmd_args: string[]; ledger_path: string; bug_result_code: number;
   };
