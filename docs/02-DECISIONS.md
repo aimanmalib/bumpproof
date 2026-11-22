@@ -324,3 +324,43 @@ Measured (22 Nov, Kane CLI 0.10.7, Claude Code with `claude-opus-5-5`, host mode
 
 The three failing head runs on PR #2 used 97.406 of its 101.979 credits. A failing journey costs far more than a
 passing replay.
+
+## 18. Census runs: journeys, control and what stays local (22 Nov 2026)
+
+- **Command:** `bumpproof census --run [--limit n] [--only owner/repo]`. It takes eligible candidates from
+  `census/candidates.json` in file order (newest pull request first) that have no row in `census/results.json` yet.
+  The default limit is `census.run_limit` in config.
+- **Journeys are added locally.** These repositories have no Bumpproof journeys. Two generic journeys from
+  `config/census-journeys/` (home page shows content, main navigation works) and, when written, one journey for that
+  app (`census/journeys/<owner>__<repo>/`) go into a local commit on top of the base (never pushed). The app's journey is written
+  from its source before the run. An app served under a base path names it in `app.json` in that folder.
+- **Authored once, then replayed.** The base is served and Kane CLI authors each journey. The recordings become a second
+  local commit, and the head is the pull request merged on top of it. The check then replays the base recordings on
+  the base and on the head, as for our own pull requests (§15).
+- **Control (H4):** the authoring run and the replay on the same base code must agree. A journey that passed when it
+  was authored and fails on the replay is a false alarm of the tool, and the row says so. A journey that never passed
+  on the base is left out of both the control and the verdict.
+- **Read only.** Nothing is pushed, commented or opened on these repositories. The local commits live in a temporary
+  clone that is deleted after the run. A fix patch is written next to the run record in `census/runs/<id>/`.
+- **Credits** count against the census budget (`kane.census_budget`) in `census/kredit.json`. The wall clock of every
+  row adds up against `census.run_timebox_min`.
+
+Census run 1 (22 Nov, Kane CLI 0.10.7; from `census/results.json`):
+
+| Repository | Bump | CI | Verdict | Control | Credits | Time |
+|---|---|---|---|---|---|---|
+| gh-top-languages/builder #31 | vite ^8.3.2 → ^8.3.8 | green | safe | same | 139.25 | 1169 s |
+| torn4dom4n/journey #90 | vite npm:@voidzero-dev/vite-plus-core@^1.6.0 → npm:@voidzero-dev/vite-plus-core@^8.3.8000 | red | could not run (base build failed) | not run | 0 | 40 s |
+| ebcFlagman/wiis-pwa #144 | i18next 27.1.1 → 27.2.1 | green | safe | same | 125.463 | 1753 s |
+| heriberto04/Trip-Logs #26 | next 15.3.3 → 15.5.29 | none | safe | same | 128.667 | 1475 s |
+| sweksha-cloud/Fairlens-a #16 | vite 6.3.5 → 6.4.6 | green | safe | same | 124.783 | 1254 s |
+
+5 repositories run, 4 runnable, 4 safe, 0 broken behind a green CI, 0 false alarms in the control. 518.163 credits in total.
+Authoring the three journeys cost about 100 to 116 credits per repository; the check after it cost 14 to 26.
+
+- **torn4dom4n/journey could not be served.** Its `vite` dependency is an npm alias for `vite-plus`, and the sandbox's
+  Vite preset runs `npx --no-install vite preview`, which npm refused. Its own preview script does not take the host
+  and port the sandbox needs either. This is a limit of Bumpproof, not of that repository, and the row says
+  "could not run".
+- **No break was found in this first run.** These were patch and minor bumps that CI had already passed. That is the
+  honest result. The broken and fixed runs so far come from this repository's own Dependabot pull requests (§17).

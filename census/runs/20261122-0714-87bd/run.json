@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0714-87bd",
+  "synthetic": false,
+  "started_at": "2026-11-22T07:21:22.781Z",
+  "duration_s": 835,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/sweksha-cloud/Fairlens-a",
+    "pr": 16,
+    "pr_url": "https://github.com/sweksha-cloud/Fairlens-a/pull/16",
+    "pr_title": "Bump vite from 6.3.5 to 6.4.6 in /frontend",
+    "ci": "green"
+  },
+  "app_dir": "frontend",
+  "base": {
+    "ref": "30e2d38e0018cea7fb8512a3ff465e4385b7690a",
+    "sha": "30e2d38e0018cea7fb8512a3ff465e4385b7690a"
+  },
+  "head": {
+    "ref": "fc3037eb39516e9b4eeac616d3acc0afd57cbc54",
+    "sha": "fc3037eb39516e9b4eeac616d3acc0afd57cbc54"
+  },
+  "bumps": [
+    {
+      "name": "vite",
+      "from": "6.3.5",
+      "to": "6.4.6",
+      "type": "minor"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 18.6,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 18.9,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 53,
+        "credits": 6.28,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 62,
+        "credits": 2.832,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "passed",
+        "seconds": 107,
+        "credits": 8.442,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 172,
+        "credits": 2.619,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 92,
+        "credits": 2.215,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 87,
+        "credits": 0.863,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 23.251,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "30e2d38e0018cea7fb8512a3ff465e4385b7690a",
+        "head": "fc3037eb39516e9b4eeac616d3acc0afd57cbc54"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "vite",
+        "from": "6.3.5",
+        "to": "6.4.6",
+        "type": "minor"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 19,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 18.6
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 101,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 53
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 240,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "passed",
+        "s": 107
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 364,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 92
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 386,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 18.9
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 485,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 62
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 702,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "nav",
+        "status": "passed",
+        "s": 172
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 828,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 87
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 835,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
