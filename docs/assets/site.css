@@ -72,6 +72,8 @@ p { margin: 0 0 1rem; max-width: 68ch; }
 .lede { font-size: 1.125rem; color: var(--ink-2); max-width: 62ch; margin-top: 1.1rem; }
 .mono, code, .cmd, .patch { font-family: var(--mono); }
 code { font-size: 0.9em; }
+/* Branch names, commands and error messages from real runs are long unbroken tokens: let them wrap on phones. */
+p, li, dd, td, .timeline span { overflow-wrap: anywhere; }
 .num { font-variant-numeric: tabular-nums; }
 .sub { display: block; color: var(--muted); font-size: 0.85rem; }
 .sub.warn, .warnline { color: var(--unrunnable); }

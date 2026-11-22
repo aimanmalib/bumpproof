@@ -6,7 +6,7 @@ import { bumpList, duration, sourceLabel, timelineText } from './words.ts';
 
 function cell(t: Translate, r: JourneyRun | null): string {
   if (!r) return '<td class="dim">—</td>';
-  const healed = r.healed ? ` <span class="tag">${esc(t('outcome.shifted_ok'))}</span>` : '';
+  const healed = r.healed && r.status === 'passed' ? ` <span class="tag">${esc(t('outcome.shifted_ok'))}</span>` : '';
   const secs = r.seconds === null ? '' : `<span class="sub num">${esc(duration(t, r.seconds))}</span>`;
   return `<td><span class="st st-${esc(r.status)}">${esc(t(`status.${r.status}`))}</span>${healed}${secs}</td>`;
 }

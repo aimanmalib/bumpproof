@@ -194,3 +194,16 @@ test('the committed docs/ pages are what bumpproof report writes today', () => {
     rmSync(tmp, { recursive: true, force: true });
   }
 });
+
+test('run page: the "UI changed, behaviour kept" tag only on a journey that passed after healing', async () => {
+  const { runPage } = await import('../src/report/run-page.ts');
+  const t = makeTranslator('en');
+  const r = raw();
+  const j = (r.journeys as Record<string, unknown>[])[0]!;
+  const head = { status: 'failed', seconds: 197, credits: 17, healed: true, failed_step: 'x', remark: 'y', result_code: 740 };
+  const html = (h: Record<string, unknown>) => runPage(parseRun({ ...r, journeys: [{ ...j, head: h, outcome: 'regression' }] }), null, 'x')
+    .body(t, 'en');
+  const tag = `<span class="tag">${t('outcome.shifted_ok')}</span>`;
+  assert.ok(!html(head).includes(tag), 'Kane CLI tried a heal and still failed: not a shifted pass');
+  assert.ok(html({ ...head, status: 'passed' }).includes(tag));
+});
