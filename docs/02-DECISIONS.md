@@ -416,3 +416,17 @@ page or a locale file. Each tile names the files it reads.
 - **H6** divides fixed runs by runs where the fixer ran (`fix` is not null). Two early demo runs were checked without
   `--fix`; the fixer never saw them, so they are not in the count. The demo app and the census are shown apart.
 - The census table becomes one card per repository below 40rem, so a long bump name no longer squeezes the columns.
+
+## 20. The demo video is drawn from stills, frame by frame (22 Nov 2026)
+
+`scripts/video-render.py` builds the video from the real stills that `scripts/video-shots.py` captures, a narration
+folder, and the scene list in `scripts/video/timeline.json`. Each frame is a function of time: crop and zoom a still,
+draw highlights, cards and captions, then pipe the frame to ffmpeg. A slow or busy machine gives the same video.
+
+- Screen recording was not used. It drops frames under load and records the screen at its CSS size.
+- Camera moves, highlight boxes, card text and pauses live in the JSON file. Changing a scene does not need code.
+- Captions are the narration sentences, timed from the speech engine's character timings.
+- The voice is the author's voice cloned with ElevenLabs. The end card and the README say so.
+- Audio: each line is placed at its scene start, then normalised in two passes to -16.5 LUFS, true peak -2 dBTP.
+  No music.
+- Every number on screen comes from `docs/runs/20261122-0453-53ba/run.json`, `census/results.json` or README.md.

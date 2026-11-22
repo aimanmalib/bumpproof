@@ -1,0 +1,117 @@
+{
+  "_about": "Scene list for scripts/video-render.py. Camera = [centre x, centre y, width] in pixels of the still; the height follows 16:9. Times in seconds from the start of the shot or scene. Every text here is shown on screen; numbers come from docs/runs/20261122-0453-53ba/run.json, census/results.json and README.md.",
+  "size": [1920, 1080],
+  "fps": 30,
+  "crossfade": 0.35,
+  "lead": 0.5,
+  "tail": 2.5,
+  "end_hold": 2.5,
+  "caption": {"size": 34, "max_chars": 64, "bottom": 54},
+  "highlight": {"colour": "#f2c14e", "width": 5, "dim": 0.42, "fade": 0.3},
+  "colours": {"ink": "#15181c", "paper": "#f4f1e8", "muted": "#59616b", "safe": "#1d6741", "broken": "#a12f1c", "fixed": "#18536f",
+    "code_ink": "#ece8dc", "green": "#5fd38d", "red": "#ff6b6b", "amber": "#f2c14e", "white": "#ffffff", "grey": "#8a8f98"},
+  "scenes": [
+    {"id": "s01", "tail": 2.0, "shots": [
+      {"img": "pr-commits.png", "from": [1920, 1080, 3840], "to": [1700, 1050, 3000], "move": [0.35, 1.0],
+       "hl": [{"box": [990, 1268, 1185, 1348], "t0": -1}, {"box": [92, 722, 350, 830], "t0": -1, "spot": false}]}],
+      "overlays": [
+        {"type": "inset", "img": "shop-bot-orders.png", "xy": [1236, 650], "w": 600, "t1": 4.6,
+         "label": "The shop on this commit", "tag": "blank page", "tag_colour": "broken"}]},
+    {"id": "s02", "shots": [
+      {"img": "shop-base-orders.png", "dur": 2.0, "from": [1920, 1080, 3840], "to": [1700, 900, 3400]},
+      {"img": "shop-bot-orders.png", "from": [1700, 900, 3400], "to": [1920, 1080, 3840]}],
+      "overlays": [
+        {"type": "tag", "text": "Base branch", "colour": "safe", "xy": [72, 64], "t1": 2.0},
+        {"type": "tag", "text": "Dependabot's commit 5243b1d · CI 3 of 3 green", "colour": "broken", "xy": [72, 64], "t0": 2.0},
+        {"type": "panel", "xy": [72, 640], "w": 1180, "t0": 3.0, "font": "mono", "size": 27, "lines": [
+          ["Page errors on this commit", "grey"],
+          ["Cannot read properties of undefined (reading 'categories')", "red"],
+          ["Cannot read properties of undefined (reading 'orders')", "red"]]}]},
+    {"id": "s03", "tail": 1.6, "shots": [
+      {"card": {"bg": "ink", "lines": [
+        {"t": "CI checks that the code builds.", "font": "display", "size": 76, "colour": "code_ink"},
+        {"t": "It does not open the app.", "font": "display", "size": 76, "colour": "code_ink", "chunk": 1},
+        {"t": "Bumpproof does.", "font": "display", "size": 112, "colour": "amber", "chunk": 2, "gap": 56, "logo": true}]}}]},
+    {"id": "s04", "shots": [
+      {"img": "terminal-caught.png", "from": [1920, 1080, 3840], "to": [1340, 760, 2600], "move": [0.0, 0.5],
+       "hl": [{"box": [210, 570, 1420, 830], "t0": 1.0, "t1": 5.0}]}],
+      "overlays": [
+        {"type": "panel", "xy": [1040, 400], "w": 840, "t0": 5.2, "font": "mono", "size": 23, "title": "examples/shop/.bumpproof/journeys/account_test.md", "lines": [
+          ["# Account orders", "white"], ["", "white"],
+          ["## Open the orders tab", "amber"],
+          ["Verify the heading \"Your account\" is", "code_ink"], ["shown. Click the \"Orders\" tab. Verify", "code_ink"],
+          ["the heading \"Past orders\" lists order", "code_ink"], ["\"#1042\" and order \"#1057\".", "code_ink"], ["", "white"],
+          ["## Open an order", "amber"],
+          ["Click order \"#1042\". Verify the heading", "code_ink"], ["\"Order 1042\" is shown ...", "code_ink"]]}]},
+    {"id": "s05", "shots": [
+      {"img": "terminal-caught.png", "dur": 5.6, "from": [1340, 760, 2600], "to": [1040, 880, 2000],
+       "hl": [{"box": [210, 580, 1420, 830], "t0": 0.3, "t1": 2.4, "spot": false}, {"box": [210, 890, 1300, 1080], "t0": 2.4}]},
+      {"img": "pr-comment.png", "from": [1224, 1230, 2448], "to": [1224, 1250, 2300],
+       "hl": [{"box": [120, 1128, 2330, 1192], "t0": 0.2, "t1": 2.6}, {"box": [90, 1268, 2280, 1326], "t0": 2.6}]}]},
+    {"id": "s06", "shots": [
+      {"img": "pr-comment.png", "from": [1224, 820, 2448], "to": [1060, 820, 2000],
+       "hl": [{"box": [330, 610, 1210, 1005], "t0": 0.4, "t1": 3.4, "spot": false}, {"box": [1550, 605, 1845, 1005], "t0": 3.4}]}]},
+    {"id": "s07", "shots": [
+      {"img": "terminal-fixing.png", "from": [1920, 1080, 3840], "to": [1300, 1000, 2500], "move": [0.0, 0.4],
+       "hl": [{"box": [210, 1085, 1230, 1140], "t0": 1.0}]}],
+      "overlays": [
+        {"type": "panel", "xy": [1060, 320], "w": 800, "t0": 3.6, "font": "mono", "size": 27, "title": "config/defaults.json · fixer", "lines": [
+          ["claude -p --model claude-opus-5-5", "code_ink"],
+          ["--tools Read,Edit,Write,Glob,Grep", "green"], ["", "white"],
+          ["No Bash. No web. No MCP.", "amber"],
+          ["The bumped version is locked.", "amber"]]}]},
+    {"id": "s08", "shots": [
+      {"img": "pr-comment.png", "from": [1224, 2860, 2448], "to": [1224, 2960, 2448],
+       "hl": [{"box": [90, 2688, 1960, 2750], "t0": 0.2, "t1": 3.4}, {"box": [130, 3185, 2380, 3365], "t0": 3.4}]}]},
+    {"id": "s09", "shots": [
+      {"img": "terminal-verdict.png", "dur": 5.4, "from": [1300, 1000, 2500], "to": [1250, 1260, 2400],
+       "hl": [{"box": [210, 1155, 1400, 1395], "t0": 0.6}]},
+      {"img": "shop-fixed-orders.png", "from": [1920, 1080, 3840], "to": [1700, 900, 3400]}],
+      "overlays": [{"type": "tag", "text": "After the fix · 456c2cb", "colour": "fixed", "xy": [72, 64], "t0": 5.4}]},
+    {"id": "s10", "shots": [
+      {"img": "pr-comment.png", "dur": 6.4, "from": [1224, 690, 2448], "to": [1224, 3900, 2448], "move": [0.05, 0.75],
+       "hl": [{"box": [40, 4420, 2410, 4530], "t0": 5.0}]},
+      {"img": "pr-commits.png", "from": [1920, 1080, 3840], "to": [1700, 1450, 3000],
+       "hl": [{"box": [180, 1500, 3745, 1725], "t0": 0.4}]}]},
+    {"id": "s11", "shots": [
+      {"img": "terminal-verdict.png", "from": [1920, 1080, 3840], "to": [1400, 1500, 2700], "move": [0.0, 0.4],
+       "hl": [{"box": [40, 1650, 1370, 1712], "t0": 1.2}]}],
+      "overlays": [
+        {"type": "panel", "xy": [1150, 330], "w": 700, "t0": 3.4, "font": "mono", "size": 30, "title": "docs/runs/20261122-0453-53ba/run.json", "lines": [
+          ["duration_s        1354", "code_ink"], ["credits_consumed  101.979", "code_ink"], ["fix.cost_usd      0.18", "green"]]}]},
+    {"id": "s12", "shots": [
+      {"img": "report-home-full.png", "from": [1920, 3650, 3840], "to": [1150, 3640, 2200], "move": [0.1, 0.6],
+       "hl": [{"box": [250, 3270, 1310, 4010], "t0": 2.0}]}]},
+    {"id": "s13", "shots": [
+      {"img": "report-census.png", "dur": 3.6, "from": [1920, 1080, 3840], "to": [1600, 900, 3200],
+       "hl": [{"box": [255, 920, 2300, 1060], "t0": 0.8}]},
+      {"img": "report-census-full.png", "from": [1920, 2000, 3840], "to": [1920, 3700, 3840],
+       "hl": [{"box": [270, 2700, 3580, 2930], "t0": 4.0}]}]},
+    {"id": "s14", "shots": [
+      {"img": "report-census-full.png", "from": [1920, 2800, 3840], "to": [2450, 2280, 2900], "move": [0.0, 0.5],
+       "hl": [{"box": [2855, 1430, 3275, 4680], "t0": 1.6}]}]},
+    {"id": "s15", "tail": 2.6, "shots": [
+      {"card": {"bg": "paper", "lines": [
+        {"t": "Census: green CI and a broken app", "font": "sans", "size": 46, "colour": "muted"},
+        {"t": "0 of 8", "font": "display", "size": 200, "colour": "ink"},
+        {"t": "The demo shop (PR #2) is the only case here.", "font": "sans", "size": 46, "colour": "broken", "chunk": 1, "gap": 30}]}}]},
+    {"id": "s16", "tail": 2.8, "shots": [
+      {"card": {"bg": "ink", "lines": [
+        {"t": "Limits", "font": "display", "size": 96, "colour": "amber"},
+        {"t": "npm only. One app directory per run.", "font": "sans", "size": 48, "colour": "code_ink", "gap": 40},
+        {"t": "Apps that need a database or secrets cannot run.", "font": "sans", "size": 48, "colour": "code_ink", "chunk": 1},
+        {"t": "A failing journey costs many times the credits", "font": "sans", "size": 48, "colour": "code_ink", "chunk": 2},
+        {"t": "of a passing one.", "font": "sans", "size": 48, "colour": "code_ink", "chunk": 2}]}}]},
+    {"id": "s17", "shots": [
+      {"img": "report-judges.png", "from": [1920, 1080, 3840], "to": [1700, 1350, 3000], "move": [0.1, 0.6],
+       "hl": [{"box": [330, 1250, 3600, 1430], "t0": 2.2}]}]},
+    {"id": "s18", "captions": false, "shots": [
+      {"card": {"bg": "ink", "lines": [
+        {"t": "Bumpproof", "font": "display", "size": 128, "colour": "white", "logo": true},
+        {"t": "Open source · Apache-2.0", "font": "sans", "size": 44, "colour": "amber", "gap": 16},
+        {"t": "github.com/aimanmalib/bumpproof", "font": "mono", "size": 40, "colour": "code_ink", "gap": 44},
+        {"t": "aimanmalib.github.io/bumpproof", "font": "mono", "size": 40, "colour": "code_ink"},
+        {"t": "Code written with Claude Code. Fixer: Claude Code. Browser agent: Kane CLI.", "font": "sans", "size": 30, "colour": "grey", "gap": 56},
+        {"t": "Narration: the author's voice, cloned with ElevenLabs (AI).", "font": "sans", "size": 30, "colour": "grey"}]}}]}
+  ]
+}
