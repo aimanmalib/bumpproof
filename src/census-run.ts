@@ -144,6 +144,7 @@ export async function runCandidate(d: CensusRunDeps, c: Candidate, t: Translate,
     if (!authored.built) return finish({ ...row, reason: 'base_build_failed', detail: scrubText(authored.detail ?? '', d.cfg.publish, secrets) });
     const base = await commitInto(d, clone, withJourneys, path, { fromDir: authored.folder }, 'Bumpproof census recordings (local only)');
     const head = await mergeOnto(d.run, clone, base, info.head_sha, info);
+    await git(d.run, clone, ['checkout', '--quiet', '--detach', base]);
     const res = await runJourneyCommand({
       deps: { ...d, census: true }, opts: { repo: clone, base, head, dir, runId }, publish: false, cwd: d.cwd, out: d.out, err: d.err,
       source: { repo: c.url, pr: info.number, pr_url: info.url, pr_title: info.title, ci: info.ci }, fix: { fetch: d.fetch },

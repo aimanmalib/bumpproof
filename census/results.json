@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-22T06:18:34.571Z",
+  "rules": {
+    "order": "newest_pr_first",
+    "generic_journeys": [
+      "home_test.md",
+      "nav_test.md"
+    ],
+    "patches": "kept in this report only"
+  },
+  "counts": {
+    "run": 1,
+    "runnable": 1,
+    "safe": 1,
+    "fixed": 0,
+    "broken": 0,
+    "unrunnable": 0,
+    "ci_green_but_broken": 0,
+    "control_same": 1,
+    "control_false_alarm": 0,
+    "control_inconclusive": 0,
+    "credits": 139.25,
+    "duration_s": 1169
+  },
+  "repos": [
+    {
+      "repo": "gh-top-languages/builder",
+      "url": "https://github.com/gh-top-languages/builder",
+      "license": "MIT",
+      "stars": 0,
+      "pr_url": "https://github.com/gh-top-languages/builder/pull/31",
+      "pr_number": 31,
+      "pr_title": "chore(deps-dev): bump vite from 8.3.2 to 8.3.8",
+      "bot": "dependabot",
+      "ci": "green",
+      "dir": "",
+      "bump": "vite ^8.3.2 → ^8.3.8",
+      "verdict": "safe",
+      "reason": "ok",
+      "detail": null,
+      "control": "same",
+      "ci_green_but_broken": false,
+      "journeys": [
+        {
+          "name": "home",
+          "kind": "generic",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        },
+        {
+          "name": "nav",
+          "kind": "generic",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        },
+        {
+          "name": "specific",
+          "kind": "specific",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        }
+      ],
+      "credits": 139.25,
+      "duration_s": 1169,
+      "run_id": "20261122-0559-70dd",
+      "patch": null,
+      "ran_at": "2026-11-22T05:59:05.853Z"
+    }
+  ]
+}
