@@ -122,8 +122,15 @@ test('fix stage: a regression is patched, rebuilt, failed journey replayed first
   assert.equal(res.check.sides.length, 2);
   // The fixed run and its patch are written together, after the scan.
   const out = join(tmp(), 'run');
-  assert.deepEqual(writeRunJson(out, report, w.deps.cfg, {}, stage.patch), []);
-  assert.deepEqual(readdirSync(out).sort(), ['fix.patch', 'run.json']);
+  assert.deepEqual(writeRunJson(out, report, w.deps.cfg, {}, stage.patch, [], stage.prompt), []);
+  assert.deepEqual(readdirSync(out).sort(), ['fix.patch', 'fixer-prompt.md', 'run.json']);
+  // fixer-prompt.md is the prompt as sent, numbered, saved (not rebuilt).
+  assert.equal(report.fix?.prompt_file, 'fixer-prompt.md');
+  const saved = readFileSync(join(out, 'fixer-prompt.md'), 'utf8');
+  assert.match(saved, /saved during the run/);
+  assert.match(saved, /## Attempt 1\n/);
+  assert.ok(!/## Attempt 2/.test(saved));
+  assert.match(saved, /│ The user journey \*\*cart\*\* passed on the old version/);
   const t = makeTranslator('en');
   assert.match(renderFix(report, t, makePaint(false)), /Fixed after 1 attempt\(s\): 1 line\(s\) changed in BUMPPROOF_FIX\.md, server\.js/);
   assert.equal(w.fd.calls.filter((c) => c[0] === 'run').length, 3, 'base, head, fixed head');

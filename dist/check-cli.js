@@ -61,13 +61,15 @@ export function renderJourneys(r, t, p) {
     return lines.join('\n');
 }
 /**
- * Writes `run.json` (and the fix patch, when there is one) to `dir` after the publication scan of both;
+ * Writes `run.json` (and the fix patch and the fixer's prompts, when there are some) to `dir` after the publication scan of each;
  * returns the problems found (nothing is written then).
  */
-export function writeRunJson(dir, r, cfg, env, patch = '', images = []) {
+export function writeRunJson(dir, r, cfg, env, patch = '', images = [], prompt = '') {
     const files = [['run.json', `${JSON.stringify(r, null, 2)}\n`]];
     if (r.fix?.patch_file && patch)
         files.push([r.fix.patch_file, patch]);
+    if (r.fix?.prompt_file && prompt)
+        files.push([r.fix.prompt_file, prompt]);
     const secrets = secretsFromEnv(env, cfg.publish.secret_env);
     // An image is scanned through its file name and the text in its metadata.
     const scanned = [...files, ...images.map((i) => [i.file, `${i.file}\n${imageText(i.bytes)}`])];
@@ -94,11 +96,12 @@ export async function runJourneyCommand(c, t, p) {
     c.out(renderCheck(res.check, t, p).replace(`\n${p.dim(t('check.journeys_not_run'))}`, ''));
     c.out(renderJourneys(res.report, t, p));
     let patch = '';
+    let prompt = '';
     let files = [];
     let afterFix = null;
     if (c.fix && fixNeeded(res.report)) {
         c.out(`\n${t('fix.running', { attempts: cfg.fixer.max_attempts })}`);
-        ({ patch, files, afterFix } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
+        ({ patch, files, afterFix, prompt } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
         c.out(renderFix(res.report, t, p));
     }
     const sides = { base: res.base, head: res.head, after_fix: afterFix };
@@ -106,7 +109,7 @@ export async function runJourneyCommand(c, t, p) {
     res.report.shots = shots.shots;
     c.out(t('check.record', { path: saveRecord(c.opts.repo, res.check) }));
     const local = join(c.opts.repo, '.bumpproof', 'runs', res.report.run_id);
-    const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch, shots.files);
+    const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch, shots.files, prompt);
     if (problems.length === 0)
         c.out(t('check.record', { path: relative(c.opts.repo, join(local, 'run.json')) }));
     let published = false;
@@ -115,10 +118,10 @@ export async function runJourneyCommand(c, t, p) {
         if (problems.length > 0)
             c.err(t('check.publish_blocked', { n: problems.length, first: problems[0] }));
         else {
-            writeRunJson(dest, res.report, cfg, c.deps.env, patch, shots.files);
+            writeRunJson(dest, res.report, cfg, c.deps.env, patch, shots.files, prompt);
             published = true;
             c.out(t('check.published', { path: relative(c.cwd, join(dest, 'run.json')) }));
         }
     }
-    return { code: verdictExit(res.report), report: res.report, patch, files, published };
+    return { code: verdictExit(res.report), report: res.report, patch, prompt, files, published };
 }

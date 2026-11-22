@@ -310,7 +310,8 @@
     "control_false_alarm": "Amaran palsu",
     "control_inconclusive": "Tidak muktamad",
     "control_not_run": "Tidak dijalankan",
-    "census_attribution": "Setiap repositori milik pemiliknya dan digunakan di bawah lesen yang ditunjukkan. Kami hanya membaca dan menjalankan kodnya. Kami tidak membuka PR atau komen di sana."
+    "census_attribution": "Setiap repositori milik pemiliknya dan digunakan di bawah lesen yang ditunjukkan. Kami hanya membaca dan menjalankan kodnya. Kami tidak membuka PR atau komen di sana.",
+    "run_prompt": "Apa yang diberitahu kepada ejen"
   },
   "action": {
     "title": "Semakan binaan Bumpproof",
@@ -404,5 +405,27 @@
     "no_plan": "Aplikasi dalam {dir} tidak dapat disediakan: {reason}. Tiada apa ditulis.",
     "bad_dir": "Folder aplikasi mesti kekal dalam folder ini: {dir}",
     "next": "Perjalanan ini draf. Baca setiap satu dan ubah langkahnya kepada apa yang aplikasi anda mesti buat.\nKemudian jalankan: bumpproof check --base <ref> --head <ref>"
+  },
+  "prompt_file": {
+    "title": "Apa yang diberitahu kepada ejen: larian {id}",
+    "saved": "Ini prompt yang Bumpproof hantar kepada ejen pembaik, satu blok setiap cubaan, disimpan semasa larian.",
+    "rebuilt": "Dibina semula daripada input yang direkod, bukan salinan yang disimpan: larian ini lebih lama daripada prompt yang disimpan. Kod yang sama (`buildPrompt` dalam `src/fixer.ts`) mengisi templat dalam `prompts/`, yang sama seperti semasa larian ({templates}).",
+    "missing": "Tidak direkod untuk larian ini, jadi tidak ditunjukkan: {list}.",
+    "notes": "Nota keluaran: ejen membaca seluruh teks dalam setiap blok `<untrusted_release_notes>`. Salinan ini menyimpan baris pertama blok (pakej, versi, sumber) dan meninggalkan teksnya.",
+    "kane_title": "Dapatan Kane CLI dalam prompt ini",
+    "no_kane": "Tarikan ini tidak berjaya dibina, jadi Kane CLI tidak menjalankan perjalanan padanya. Kegagalan di sini ialah log binaan. Kane CLI masuk selepas pembaikan: ia mengulang setiap perjalanan pada aplikasi yang dibaiki.",
+    "col_fact": "Daripada Kane CLI",
+    "col_value": "Nilai",
+    "col_line": "Baris dalam prompt",
+    "step": "Langkah yang gagal",
+    "remark": "Ulasan Kane CLI",
+    "result_code": "Kod keputusan",
+    "console": "Ralat konsol baharu",
+    "network": "Permintaan gagal baharu",
+    "not_sent": "tidak dihantar kepada ejen",
+    "marked": "Baris bertanda `K` di bawah membawa kata-kata Kane CLI.",
+    "attempt": "Cubaan {n}",
+    "notes_left_out": "[{kb} KB nota keluaran: ejen membacanya sepenuhnya; ditinggalkan daripada salinan ini]",
+    "notes_not_recorded": "[nota keluaran dimuat turun semasa larian; tidak direkod, jadi tidak ditunjukkan]"
   }
 }

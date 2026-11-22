@@ -28,6 +28,11 @@ export function readCensus(path) {
             control: s(o.control), ci_green_but_broken: o.ci_green_but_broken === true, run_id: s(o.run_id) };
     });
 }
+/** The fixer-prompt.md file name when the run has one on disk. */
+function promptOf(runsDir, run) {
+    const f = run.fix?.prompt_file;
+    return f && existsSync(join(runsDir, run.run_id, f)) ? f : null;
+}
 function patchOf(runsDir, run) {
     const f = run.fix?.patch_file;
     if (!f)
@@ -72,8 +77,10 @@ export function buildSite(cfg, o) {
         ['census.html', renderPage(censusPage(data), site(''))],
         ['judges.html', renderPage(judgesPage(data), site(''))],
     ]);
-    for (const r of runs)
-        pages.set(`runs/${r.run_id}/index.html`, renderPage(runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command), site('../../')));
+    for (const r of runs) {
+        const page = runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command, promptOf(o.runsDir, r));
+        pages.set(`runs/${r.run_id}/index.html`, renderPage(page, site('../../')));
+    }
     const en = o.translators.get('en');
     const oldReadme = o.readmePath && en && existsSync(o.readmePath) ? readFileSync(o.readmePath, 'utf8') : null;
     const readme = oldReadme === null ? null

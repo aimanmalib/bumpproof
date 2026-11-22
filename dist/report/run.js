@@ -94,6 +94,7 @@ export function parseRun(v) {
             changed_lines: num(fix.changed_lines, 'fix.changed_lines'), cost_usd: optNum(fix.cost_usd, 'fix.cost_usd'),
             files: strs(fix.files, 'fix.files'), explanation: str(fix.explanation ?? '', 'fix.explanation'),
             patch_file: fix.patch_file === null || fix.patch_file === undefined ? null : safeFile(fix.patch_file, 'fix.patch_file'),
+            ...(fix.prompt_file === null || fix.prompt_file === undefined ? {} : { prompt_file: safeFile(fix.prompt_file, 'fix.prompt_file') }),
         },
         credits_consumed: num(o.credits_consumed ?? 0, 'credits_consumed'),
         timeline: arr(o.timeline ?? [], 'timeline').map((e, i) => {

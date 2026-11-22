@@ -20,7 +20,8 @@ export function patchHtml(patch: string): string {
   return `<pre class="patch"><code>${lines.join('\n')}</code></pre>`;
 }
 
-export function runPage(run: RunReport, patch: string | null, replayCommand: string): PageSpec {
+/** `prompt` is the fixer-prompt.md file name when it sits next to run.json, else null. */
+export function runPage(run: RunReport, patch: string | null, replayCommand: string, prompt: string | null = null): PageSpec {
   return {
     id: 'run',
     title: (t) => `${t('site.run_title', { id: run.run_id })} · Bumpproof`,
@@ -63,6 +64,7 @@ export function runPage(run: RunReport, patch: string | null, replayCommand: str
         const meta = [t('site.fix_attempts', { attempts: run.fix.attempts, lines: run.fix.changed_lines }),
           ...(run.fix.cost_usd === null ? [] : [t('site.fix_cost', { usd: run.fix.cost_usd.toFixed(2) })])].join(' · ');
         parts.push(`<section><h2>${esc(t('site.run_fix'))}</h2><p class="facts num">${esc(meta)}</p>`
+          + (prompt ? `<p><a href="${esc(prompt)}">${esc(t('site.run_prompt'))}</a></p>` : '')
           + (run.fix.explanation ? `<blockquote>${esc(run.fix.explanation)}</blockquote>` : '')
           + `<h3>${esc(t('site.run_patch'))}</h3>${patch ? patchHtml(patch) : `<p class="empty">${esc(t('site.no_patch'))}</p>`}</section>`);
       }

@@ -151,7 +151,8 @@ export async function fetchNotes(d, pkg, from, to) {
     const cut = cutBytes(parts.join('\n\n'), d.cfg.notes.max_kb * 1024);
     return { pkg, from, to, repo, sources, text: cut.text, truncated: cut.truncated };
 }
-const TAG = 'untrusted_release_notes';
+export const NOTES_TAG = 'untrusted_release_notes';
+const TAG = NOTES_TAG;
 /** Wraps notes in the data markers. A closing marker inside the notes is defused so it cannot end the block early. */
 export function notesBlock(n) {
     const body = (n.text || '(no release notes found)').replace(new RegExp(`</?\\s*${TAG}`, 'gi'), (m) => m.replace('<', '&lt;'));

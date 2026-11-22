@@ -172,7 +172,8 @@
       "src/lib.jsx"
     ],
     "explanation": "# Bumpproof fix: @tanstack/react-query 4.36.1 -> 5.108.0\n\n## Change\n\n- **File:** `src/lib.jsx` (`gate` function)\n- **What:** The loading check now uses `q.status === 'pending'` instead of `q.status === 'loading'`.\n- **Why:** In v5 a query that has no data yet has status `pending`, not `loading`. So `gate` never showed the loading placeholder. `Orders` then rendered before the data arrived and read `orders.data.orders` while `data` was still `undefined`. That caused the crash `Cannot read properties of undefined (reading 'orders')`.\n- **Upgrade guide line:**\n  > The `loading` status has been renamed to `pending`, and similarly the derived `isLoading` flag has been renamed to `isPending`.\n\n## Notes\n\n- I found no other v4-only APIs in `src/`. The app already uses the object form of `useQuery`, and it does not use `cacheTime`, `onSuccess`, `keepPreviousData` or mutations.\n- The release notes contained no instructions directed at me.",
-    "patch_file": "fix.patch"
+    "patch_file": "fix.patch",
+    "prompt_file": "fixer-prompt.md"
   },
   "credits_consumed": 70.701,
   "timeline": [

@@ -9,6 +9,8 @@ import { makeWorkDir } from './check.ts';
 import { compareJourney, prVerdict, type JourneyResult } from './compare.ts';
 import { scrubText, secretsFromEnv } from './evidence.ts';
 import { fixLoop, type FixFailure, type FixResult, type Verification } from './fixer.ts';
+import { condenseNotes, kaneFacts, renderPromptFile } from './fixer-prompt.ts';
+import { makeTranslator } from './i18n.ts';
 import { cleanSubdir, exportTree } from './git.ts';
 import { copyJourneys, factsOf, journeysDir, runSide, type JourneyFile, type KaneDeps, type SideRuns } from './journeys.ts';
 import { fetchNotes, notesBlock, type Fetcher } from './notes.ts';
@@ -99,7 +101,9 @@ export async function verifyFix(
 }
 
 /** Folds the fix into the run record: the fix build, `after_fix` per journey, the fix summary, credits and the verdict. */
-export function applyFix(r: RunReport, fix: FixResult, last: LastVerify, d: FixStageDeps, patchFile: string | null): void {
+export function applyFix(
+  r: RunReport, fix: FixResult, last: LastVerify, d: FixStageDeps, patchFile: string | null, promptFile: string | null = null,
+): void {
   const secrets = secretsFromEnv(d.env, d.cfg.publish.secret_env);
   if (last.build) {
     const b: BuildRecord = { side: 'fix', built: last.build.built, seconds: last.build.seconds, failed_at: last.build.failed_at ?? null };
@@ -122,6 +126,7 @@ export function applyFix(r: RunReport, fix: FixResult, last: LastVerify, d: FixS
     files: fix.changes.map((c) => c.path),
     explanation: scrubText(fix.explanation.trim(), d.cfg.publish, secrets),
     patch_file: ok ? patchFile : null,
+    prompt_file: fix.prompts.length > 0 ? promptFile : null,
   };
   const v = prVerdict({
     base_built: r.builds.some((b) => b.side === 'base' && b.built),
@@ -135,7 +140,25 @@ export function applyFix(r: RunReport, fix: FixResult, last: LastVerify, d: FixS
 /** A file the verified fix changed, relative to the app folder: its new text, or null when the fix deleted it. */
 export interface FixedFile { path: string; content: string | null }
 
-export interface FixStage { fix: FixResult; patch: string; files: FixedFile[]; afterFix: SideRuns }
+export interface FixStage {
+  fix: FixResult; patch: string; files: FixedFile[]; afterFix: SideRuns;
+  /** fixer-prompt.md: the prompts as sent, scrubbed, Kane CLI's lines marked ('' when the fixer did not run). */
+  prompt: string;
+}
+
+/** The published copy of the prompts: scrubbed like every other run text, release notes condensed. */
+export function promptCopy(r: RunReport, failure: FixFailure, prompts: string[], d: Pick<FixStageDeps, 'cfg' | 'env'>): string {
+  if (prompts.length === 0) return '';
+  const secrets = secretsFromEnv(d.env, d.cfg.publish.secret_env);
+  const en = makeTranslator('en');
+  const code = failure.kind === 'journey' ? r.journeys.find((j) => j.name === failure.journey)?.head?.result_code ?? null : null;
+  return renderPromptFile(en, {
+    run_id: r.run_id,
+    kane: kaneFacts(failure, code).map((f) => ({ ...f, value: scrubText(f.value, d.cfg.publish, secrets) })),
+    quoted: failure.kind === 'journey' && failure.objective ? [scrubText(failure.objective, d.cfg.publish, secrets)] : [],
+    prompts: prompts.map((p) => condenseNotes(scrubText(p, d.cfg.publish, secrets), (kb) => en('prompt_file.notes_left_out', { kb }))),
+  });
+}
 
 /**
  * Runs the fixer on a fresh export of the head. The record in `res.report` is updated in place;
@@ -160,12 +183,14 @@ export async function runFixStage(d: FixStageDeps, res: JourneyCheck, repo: stri
       notes.push(notesBlock(await fetchNotes({ cfg: d.cfg, run: d.run, fetch: d.fetch }, b.name, b.from, b.to)));
     }
     let n = 0;
+    const failure = failureOf(res, journeysSrc);
     const fix = await fixLoop({
       cfg: d.cfg, run: d.run, env: d.env, name: `${d.cfg.sandbox.container_prefix}-${r.run_id}-fixer`,
       onEvent: (key, vars, tone) => tl.add(key, key === 'fixer_rejected' ? { ...vars, reason: String(vars.reason).slice(0, 200) } : vars, tone),
       verify: () => verifyFix(d, res, workCopy, journeysSrc, scratch, ++n, tl, last),
-    }, workCopy, { bumps: r.bumps.map((b): Bump => ({ ...b, type: b.type as Bump['type'] })), failure: failureOf(res, journeysSrc), notes });
-    applyFix(r, fix, last, d, patchFile);
+    }, workCopy, { bumps: r.bumps.map((b): Bump => ({ ...b, type: b.type as Bump['type'] })), failure, notes });
+    applyFix(r, fix, last, d, patchFile, d.cfg.fixer.prompt_file);
+    const prompt = promptCopy(r, failure, fix.prompts, d);
     const verdict = r.timeline.findIndex((e) => e.key === 'verdict');
     const at = verdict === -1 ? r.timeline.length : verdict;
     r.timeline.splice(at, verdict === -1 ? 0 : 1, ...tl.entries,
@@ -175,7 +200,7 @@ export async function runFixStage(d: FixStageDeps, res: JourneyCheck, repo: stri
     const files: FixedFile[] = fix.status === 'fixed'
       ? fix.changes.map((c) => ({ path: c.path, content: existsSync(join(workCopy, c.path)) ? readFileSync(join(workCopy, c.path), 'utf8') : null }))
       : [];
-    return { fix, patch: fix.patch, files, afterFix: last.runs };
+    return { fix, patch: fix.patch, files, afterFix: last.runs, prompt };
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }

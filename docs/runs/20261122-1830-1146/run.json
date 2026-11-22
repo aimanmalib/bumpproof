@@ -166,7 +166,8 @@
       "src/pages/Account.jsx"
     ],
     "explanation": "# Bumpproof fix: react-router-dom 6.30.1 -> 7.18.6\n\n## Cause\n\n`Account` is rendered by the splat route `account/*` (`src/App.jsx:39`). Its tab links\nwere relative (`to=\".\"` and `to=\"orders\"`). React Router v7 turns on the v6\n`future.v7_relativeSplatPath` behaviour by default. With it, relative paths inside a splat\nroute resolve against the full matched URL, splat included, not against the route's base\npath. So on `/account/orders`, the \"Overview\" tab (`to=\".\"`) pointed to `/account/orders`\ninstead of `/account`, and \"Signed in as a demo customer.\" never showed up. That is the\nassertion that failed in step 4. (From `/account/orders`, the \"Orders\" tab would also have\npointed to `/account/orders/orders`.)\n\n## Changes\n\n### `src/pages/Account.jsx`\n- Overview tab: `to=\".\"` changed to `to=\"/account\"` (still uses `end`).\n- Orders tab: `to=\"orders\"` changed to `to=\"/account/orders\"`.\n- Updated the comment above the component to explain why the paths are absolute.\n\nThe links now point to the same URLs they did in v6, and the active-tab styling works the\nsame way. Nothing else changed.\n\n## Release-note reference\n\nThe supplied release notes do not explain this change. They only contain a link to the\nv7.1.3 changelog and the v8→v9 \"Future Changes\" guide, which says \"_No future flags yet_\".\nThe explanation comes from React Router's v6→v7 upgrade guide, which is not included\nhere. That guide describes the `v7_relativeSplatPath` future flag, which became the default\nin v7 and changes how relative paths resolve inside splat routes.\n\n## Notes on the release-notes data\n\nI found no instructions embedded in the release notes. They do not cover the v6→v7\nupgrade (the guide included is for v8→v9).",
-    "patch_file": "fix.patch"
+    "patch_file": "fix.patch",
+    "prompt_file": "fixer-prompt.md"
   },
   "credits_consumed": 43.66,
   "timeline": [

@@ -179,7 +179,8 @@ export async function fetchNotes(d: NotesDeps, pkg: string, from: string | null,
   return { pkg, from, to, repo, sources, text: cut.text, truncated: cut.truncated };
 }
 
-const TAG = 'untrusted_release_notes';
+export const NOTES_TAG = 'untrusted_release_notes';
+const TAG = NOTES_TAG;
 
 /** Wraps notes in the data markers. A closing marker inside the notes is defused so it cannot end the block early. */
 export function notesBlock(n: ReleaseNotes): string {

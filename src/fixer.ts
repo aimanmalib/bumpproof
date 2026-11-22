@@ -151,6 +151,8 @@ export interface FixResult {
   patch: string;
   explanation: string;
   changes: FileChange[];
+  /** The prompt of every attempt, as sent (fixer-prompt.md is written from these). */
+  prompts: string[];
 }
 
 export interface FixDeps {
@@ -173,8 +175,10 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
   const before = snapshotTree(workDir, cfg.fixer.snapshot_skip);
   const attempts: Attempt[] = [];
   const rejected: string[] = [];
+  const prompts: string[] = [];
   for (let n = 1; n <= cfg.fixer.max_attempts; n++) {
     const prompt = buildPrompt(cfg, input, rejected, d.root);
+    prompts.push(prompt);
     d.onEvent?.('fixer_start', { attempt: n }, 'info');
     const agent = await runAgent(d.run, cfg, fixerInvocation(cfg, workDir, prompt, `${d.name ?? 'bumpproof-fixer'}-${n}`), d.env);
     const after = snapshotTree(workDir, cfg.fixer.snapshot_skip);
@@ -189,7 +193,7 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
       if (attempt.verification.ok) {
         d.onEvent?.('fixer_done', { lines: changedLines }, 'ok');
         const note = after.get(cfg.fixer.explanation_file)?.data.toString('utf8') ?? '';
-        return { status: 'fixed', attempts, patch: renderPatch(changes), explanation: note, changes };
+        return { status: 'fixed', attempts, patch: renderPatch(changes), explanation: note, changes, prompts };
       }
       rejected.push(`the patch passed the guards but the check still fails: ${attempt.verification.detail}`);
     } else {
@@ -198,7 +202,7 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
     d.onEvent?.('fixer_rejected', { attempt: n, reason: rejected[rejected.length - 1] ?? '' }, 'fail');
     restoreTree(workDir, before, changes);
   }
-  return { status: 'failed', attempts, patch: '', explanation: '', changes: [] };
+  return { status: 'failed', attempts, patch: '', explanation: '', changes: [], prompts };
 }
 
 function strip(a: AgentReport & { stdout?: string; stderr?: string }): AgentReport {

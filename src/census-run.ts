@@ -150,7 +150,7 @@ export async function runCandidate(d: CensusRunDeps, c: Candidate, t: Translate,
       source: { repo: c.url, pr: info.number, pr_url: info.url, pr_title: info.title, ci: info.ci }, fix: { fetch: d.fetch },
     }, t, p);
     const dest = resolve(d.cwd, d.cfg.census.runs_dir, res.report.run_id);
-    const problems = writeRunJson(dest, res.report, d.cfg, d.env, res.patch);
+    const problems = writeRunJson(dest, res.report, d.cfg, d.env, res.patch, [], res.prompt);
     if (problems.length > 0) d.err(t('check.publish_blocked', { n: problems.length, first: problems[0]! }));
     const done = applyRun(row, res.report, authored.runs, kinds, authored.credits);
     const patchFile = res.report.fix?.patch_file;

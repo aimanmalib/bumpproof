@@ -114,6 +114,7 @@
     ],
     "explanation_file": "BUMPPROOF_FIX.md",
     "patch_file": "fix.patch",
+    "prompt_file": "fixer-prompt.md",
     "protected_paths": [
       ".bumpproof/**",
       "**/*_test.md",

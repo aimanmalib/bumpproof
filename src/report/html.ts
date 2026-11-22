@@ -52,6 +52,12 @@ export function readCensus(path: string): CensusRow[] | null {
   });
 }
 
+/** The fixer-prompt.md file name when the run has one on disk. */
+function promptOf(runsDir: string, run: RunReport): string | null {
+  const f = run.fix?.prompt_file;
+  return f && existsSync(join(runsDir, run.run_id, f)) ? f : null;
+}
+
 function patchOf(runsDir: string, run: RunReport): string | null {
   const f = run.fix?.patch_file;
   if (!f) return null;
@@ -95,7 +101,10 @@ export function buildSite(cfg: Config, o: ReportOptions): ReportResult {
     ['census.html', renderPage(censusPage(data), site(''))],
     ['judges.html', renderPage(judgesPage(data), site(''))],
   ]);
-  for (const r of runs) pages.set(`runs/${r.run_id}/index.html`, renderPage(runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command), site('../../')));
+  for (const r of runs) {
+    const page = runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command, promptOf(o.runsDir, r));
+    pages.set(`runs/${r.run_id}/index.html`, renderPage(page, site('../../')));
+  }
 
   const en = o.translators.get('en');
   const oldReadme = o.readmePath && en && existsSync(o.readmePath) ? readFileSync(o.readmePath, 'utf8') : null;

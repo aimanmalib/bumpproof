@@ -7,6 +7,8 @@ import { makeWorkDir } from "./check.js";
 import { compareJourney, prVerdict } from "./compare.js";
 import { scrubText, secretsFromEnv } from "./evidence.js";
 import { fixLoop } from "./fixer.js";
+import { condenseNotes, kaneFacts, renderPromptFile } from "./fixer-prompt.js";
+import { makeTranslator } from "./i18n.js";
 import { cleanSubdir, exportTree } from "./git.js";
 import { copyJourneys, factsOf, journeysDir, runSide } from "./journeys.js";
 import { fetchNotes, notesBlock } from "./notes.js";
@@ -85,7 +87,7 @@ export async function verifyFix(d, res, workCopy, journeysSrc, scratch, n, tl, l
     }
 }
 /** Folds the fix into the run record: the fix build, `after_fix` per journey, the fix summary, credits and the verdict. */
-export function applyFix(r, fix, last, d, patchFile) {
+export function applyFix(r, fix, last, d, patchFile, promptFile = null) {
     const secrets = secretsFromEnv(d.env, d.cfg.publish.secret_env);
     if (last.build) {
         const b = { side: 'fix', built: last.build.built, seconds: last.build.seconds, failed_at: last.build.failed_at ?? null };
@@ -108,6 +110,7 @@ export function applyFix(r, fix, last, d, patchFile) {
         files: fix.changes.map((c) => c.path),
         explanation: scrubText(fix.explanation.trim(), d.cfg.publish, secrets),
         patch_file: ok ? patchFile : null,
+        prompt_file: fix.prompts.length > 0 ? promptFile : null,
     };
     const v = prVerdict({
         base_built: r.builds.some((b) => b.side === 'base' && b.built),
@@ -116,6 +119,20 @@ export function applyFix(r, fix, last, d, patchFile) {
         fix: { attempts: fix.attempts.length, all_pass: ok },
     });
     r.verdict = { verdict: v.verdict, reason: v.reason, evaluated: v.evaluated };
+}
+/** The published copy of the prompts: scrubbed like every other run text, release notes condensed. */
+export function promptCopy(r, failure, prompts, d) {
+    if (prompts.length === 0)
+        return '';
+    const secrets = secretsFromEnv(d.env, d.cfg.publish.secret_env);
+    const en = makeTranslator('en');
+    const code = failure.kind === 'journey' ? r.journeys.find((j) => j.name === failure.journey)?.head?.result_code ?? null : null;
+    return renderPromptFile(en, {
+        run_id: r.run_id,
+        kane: kaneFacts(failure, code).map((f) => ({ ...f, value: scrubText(f.value, d.cfg.publish, secrets) })),
+        quoted: failure.kind === 'journey' && failure.objective ? [scrubText(failure.objective, d.cfg.publish, secrets)] : [],
+        prompts: prompts.map((p) => condenseNotes(scrubText(p, d.cfg.publish, secrets), (kb) => en('prompt_file.notes_left_out', { kb }))),
+    });
 }
 /**
  * Runs the fixer on a fresh export of the head. The record in `res.report` is updated in place;
@@ -141,12 +158,14 @@ export async function runFixStage(d, res, repo, dir, patchFile) {
             notes.push(notesBlock(await fetchNotes({ cfg: d.cfg, run: d.run, fetch: d.fetch }, b.name, b.from, b.to)));
         }
         let n = 0;
+        const failure = failureOf(res, journeysSrc);
         const fix = await fixLoop({
             cfg: d.cfg, run: d.run, env: d.env, name: `${d.cfg.sandbox.container_prefix}-${r.run_id}-fixer`,
             onEvent: (key, vars, tone) => tl.add(key, key === 'fixer_rejected' ? { ...vars, reason: String(vars.reason).slice(0, 200) } : vars, tone),
             verify: () => verifyFix(d, res, workCopy, journeysSrc, scratch, ++n, tl, last),
-        }, workCopy, { bumps: r.bumps.map((b) => ({ ...b, type: b.type })), failure: failureOf(res, journeysSrc), notes });
-        applyFix(r, fix, last, d, patchFile);
+        }, workCopy, { bumps: r.bumps.map((b) => ({ ...b, type: b.type })), failure, notes });
+        applyFix(r, fix, last, d, patchFile, d.cfg.fixer.prompt_file);
+        const prompt = promptCopy(r, failure, fix.prompts, d);
         const verdict = r.timeline.findIndex((e) => e.key === 'verdict');
         const at = verdict === -1 ? r.timeline.length : verdict;
         r.timeline.splice(at, verdict === -1 ? 0 : 1, ...tl.entries, { at_s: Math.round((d.now() - (Number.isFinite(started) ? started : d.now())) / 1000), key: 'verdict', vars: { verdict: r.verdict.verdict },
@@ -155,7 +174,7 @@ export async function runFixStage(d, res, repo, dir, patchFile) {
         const files = fix.status === 'fixed'
             ? fix.changes.map((c) => ({ path: c.path, content: existsSync(join(workCopy, c.path)) ? readFileSync(join(workCopy, c.path), 'utf8') : null }))
             : [];
-        return { fix, patch: fix.patch, files, afterFix: last.runs };
+        return { fix, patch: fix.patch, files, afterFix: last.runs, prompt };
     }
     finally {
         rmSync(scratch, { recursive: true, force: true });

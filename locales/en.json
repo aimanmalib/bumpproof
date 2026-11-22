@@ -310,7 +310,8 @@
     "control_false_alarm": "False alarm",
     "control_inconclusive": "Inconclusive",
     "control_not_run": "Not run",
-    "census_attribution": "Each repository belongs to its owners and is used under the license shown. We only read and ran the code. We opened no pull requests or comments there."
+    "census_attribution": "Each repository belongs to its owners and is used under the license shown. We only read and ran the code. We opened no pull requests or comments there.",
+    "run_prompt": "What the agent was told"
   },
   "action": {
     "title": "Bumpproof build check",
@@ -404,5 +405,27 @@
     "no_plan": "Cannot set up the app in {dir}: {reason}. Nothing was written.",
     "bad_dir": "The app folder must stay inside this folder: {dir}",
     "next": "These journeys are drafts. Read each one and change the steps to what your app must do.\nThen run: bumpproof check --base <ref> --head <ref>"
+  },
+  "prompt_file": {
+    "title": "What the agent was told: run {id}",
+    "saved": "This is the prompt Bumpproof sent to the fixer agent, one block per attempt, saved during the run.",
+    "rebuilt": "Rebuilt from the recorded inputs, not a saved copy: this run is older than the saved prompt. The same code (`buildPrompt` in `src/fixer.ts`) filled the templates in `prompts/`, which are the same as when the run happened ({templates}).",
+    "missing": "Not recorded for this run, so not shown: {list}.",
+    "notes": "Release notes: the agent read the whole text inside each `<untrusted_release_notes>` block. This copy keeps the block's first line (package, versions, sources) and leaves the text out.",
+    "kane_title": "Kane CLI's findings in this prompt",
+    "no_kane": "The pull request did not build, so Kane CLI ran no journey on it. The failure here is the build log. Kane CLI comes in after the fix: it replays every journey on the patched app.",
+    "col_fact": "From Kane CLI",
+    "col_value": "Value",
+    "col_line": "Line in the prompt",
+    "step": "Step that failed",
+    "remark": "Kane CLI's remark",
+    "result_code": "Result code",
+    "console": "New console error",
+    "network": "New failed request",
+    "not_sent": "not sent to the agent",
+    "marked": "Lines marked `K` below hold Kane CLI's words.",
+    "attempt": "Attempt {n}",
+    "notes_left_out": "[{kb} KB of release notes: the agent read them in full; left out of this copy]",
+    "notes_not_recorded": "[release notes downloaded during the run; not recorded, so not shown]"
   }
 }
