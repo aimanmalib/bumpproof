@@ -27,6 +27,8 @@ export function runReport(cfg: Config, t: Translate, values: Record<string, unkn
     const censusPath = at(io.cwd, str(values.census) ?? cfg.report.census_path);
     const translators = new Map(cfg.languages.map((l) => [l, makeTranslator(l)] as const));
     const res = buildSite(cfg, { outDir, runsDir, censusPath, version: version(), translators,
+      candidatesPath: at(io.cwd, cfg.census.candidates_path), censusRunsDir: at(io.cwd, cfg.census.runs_dir),
+      ledgerPath: at(io.cwd, cfg.kane.ledger_path),
       secrets: secretsFromEnv(io.env, cfg.publish.secret_env) });
     if (res.findings.length > 0) {
       io.err(t('report.scan_failed', { count: res.findings.length }));

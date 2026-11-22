@@ -184,3 +184,27 @@ blockquote { margin: 0.75rem 0 1rem; padding: 0.75rem 1rem; background: var(--sh
 
 .foot { margin-top: 4rem; padding-top: 1rem; border-top: 2px solid var(--ink); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem;
   color: var(--muted); font-size: 0.88rem; }
+
+/* Measured numbers (H1–H6): a ruled grid of ledger entries, the big figure in the display face. */
+.metrics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  border-top: 2px solid var(--ink); }
+.metric { padding: 1rem 1.25rem 0.75rem 0; border-bottom: 1px solid var(--rule); min-width: 0; }
+.metric .metric-id { font: 500 0.8rem/1 var(--mono); color: var(--muted); margin: 0 0 0.5rem; }
+.metric .metric-n { font: 700 clamp(2rem, 5vw, 2.75rem)/1 var(--display); letter-spacing: -0.02em; margin: 0 0 0.25rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.metric .metric-none { color: var(--muted); }
+.metric h3 { margin-top: 0.5rem; }
+.metric p { color: var(--ink-2); font-size: 0.97rem; }
+.metric .metric-src { font-size: 0.8rem; margin: 0; }
+.metric-src code { color: var(--muted); overflow-wrap: anywhere; }
+
+/* Census table on narrow screens: one card per repository, the column name beside each value. */
+@media (max-width: 40rem) {
+  .ledger[data-census] thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ledger[data-census], .ledger[data-census] tbody, .ledger[data-census] tr { display: block; }
+  .ledger[data-census] tr { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--rule); }
+  .ledger[data-census] tr[hidden] { display: none; }
+  .ledger[data-census] td, .ledger[data-census] td:first-child { display: block; position: relative; border: 0; padding: 0.2rem 0 0.2rem 7.5rem; min-height: 1.6rem; }
+  .ledger[data-census] .stamp { white-space: normal; max-width: 100%; }
+  .ledger[data-census] td::before { content: attr(data-label); position: absolute; left: 0; top: 0.35rem; width: 7rem;
+    font: 600 0.72rem/1.3 var(--display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+}

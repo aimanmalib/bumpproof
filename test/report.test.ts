@@ -185,8 +185,9 @@ test('the committed docs/ pages are what bumpproof report writes today', () => {
   const tmp = mkdtempSync(join(tmpdir(), 'bp-docs-'));
   try {
     const runs = join(ROOT, 'docs', 'runs');
-    const res = buildSite(cfg, { outDir: tmp, runsDir: runs, censusPath: join(ROOT, 'census', 'results.json'), version: version(),
-      translators, secrets: [] });
+    const res = buildSite(cfg, { outDir: tmp, runsDir: runs, censusPath: join(ROOT, cfg.report.census_path), version: version(),
+      candidatesPath: join(ROOT, cfg.census.candidates_path), censusRunsDir: join(ROOT, cfg.census.runs_dir),
+      ledgerPath: join(ROOT, cfg.kane.ledger_path), translators, secrets: [] });
     for (const p of res.pages) {
       assert.equal(readFileSync(join(ROOT, 'docs', p), 'utf8'), readFileSync(join(tmp, p), 'utf8'), `docs/${p} is stale: run bumpproof report`);
     }

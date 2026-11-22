@@ -6,6 +6,7 @@ import { ROOT, type Config } from '../config.ts';
 import { scanText, type Finding } from '../evidence.ts';
 import type { Translate } from '../i18n.ts';
 import { renderPage, type SiteInfo } from './layout.ts';
+import { measure, readCandidates, readLedger } from './metrics.ts';
 import { censusPage, homePage, judgesPage, type CensusRow, type SiteData } from './pages.ts';
 import { RunFormatError, readRuns, type RunReport } from './run.ts';
 import { runPage } from './run-page.ts';
@@ -14,6 +15,10 @@ export interface ReportOptions {
   outDir: string;
   runsDir: string;
   censusPath: string;
+  /** Optional census inputs for the measured numbers (H2, H5, H6); left out, those numbers show a dash. */
+  candidatesPath?: string;
+  censusRunsDir?: string;
+  ledgerPath?: string;
   version: string;
   translators: Map<string, Translate>;
   secrets: string[];
@@ -37,7 +42,8 @@ export function readCensus(path: string): CensusRow[] | null {
     const repo = s(o.repo);
     const verdict = s(o.verdict);
     if (!repo || !verdict) throw new RunFormatError(`${path}: repos[${i}] needs "repo" and "verdict"`);
-    return { repo, verdict, license: s(o.license), pr_url: s(o.pr_url), bump: s(o.bump) ?? '—', ci: s(o.ci), control: s(o.control) };
+    return { repo, verdict, url: s(o.url), license: s(o.license), pr_url: s(o.pr_url), bump: s(o.bump) ?? '—', ci: s(o.ci),
+      control: s(o.control), ci_green_but_broken: o.ci_green_but_broken === true, run_id: s(o.run_id) };
   });
 }
 
@@ -71,8 +77,10 @@ export function copyAssets(outDir: string, root: string = ROOT): string[] {
 export function buildSite(cfg: Config, o: ReportOptions): ReportResult {
   const runs = readRuns(o.runsDir);
   const census = readCensus(o.censusPath);
+  const censusRuns = o.censusRunsDir ? readRuns(o.censusRunsDir) : [];
+  const metrics = measure({ runs, census, censusRuns, candidates: readCandidates(o.candidatesPath), ledger: readLedger(o.ledgerPath) });
   const data: SiteData = {
-    runs, census, repoUrl: cfg.report.repo_url, installCommand: cfg.report.install_command,
+    runs, census, metrics, repoUrl: cfg.report.repo_url, installCommand: cfg.report.install_command,
     replayCommand: cfg.report.replay_command, proofLinks: cfg.report.proof_links,
   };
   const site = (root: string): SiteInfo => ({ version: o.version, repoUrl: cfg.report.repo_url, root, languages: cfg.languages,

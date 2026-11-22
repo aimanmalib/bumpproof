@@ -1,22 +1,28 @@
 // Overview, census and "For judges" pages. Numbers come from the run records and census/results.json only.
 import type { Translate } from '../i18n.ts';
 import { anchor, code, esc, stamp, type PageSpec } from './layout.ts';
+import type { Metrics } from './metrics.ts';
+import { censusSummary, numbersSection } from './numbers.ts';
 import type { RunReport } from './run.ts';
 import { sourceLabel } from './words.ts';
 
 export interface CensusRow {
   repo: string;
+  url: string | null;
   license: string | null;
   pr_url: string | null;
   bump: string;
   ci: string | null;
   verdict: string;
   control: string | null;
+  ci_green_but_broken: boolean;
+  run_id: string | null;
 }
 
 export interface SiteData {
   runs: RunReport[];
   census: CensusRow[] | null;
+  metrics: Metrics;
   installCommand: string;
   replayCommand: string;
   repoUrl: string;
@@ -50,6 +56,7 @@ export function homePage(d: SiteData): PageSpec {
         + `<a class="btn btn-quiet" href="judges.html">${esc(t('site.nav_judges'))}</a></p></section>`
         + `<section aria-labelledby="how-${lang}"><h2 id="how-${lang}">${esc(t('site.how_title'))}</h2>`
         + `<ol class="pipeline">${steps}</ol></section>`
+        + numbersSection(t, d.metrics, lang)
         + `<section id="${anchor('runs', lang)}"><h2>${esc(t('site.runs_title'))}</h2>${runsTable(t, d.runs, '')}</section>`
         + `<section><h2>${esc(t('site.install_title'))}</h2><p>${esc(t('site.install_body'))}</p>${code(d.installCommand)}</section>`
         + `<section class="note"><h2>${esc(t('site.status_title'))}</h2><p>${esc(t('site.status_body'))}</p></section>`;
@@ -67,14 +74,17 @@ export function censusPage(d: SiteData): PageSpec {
       const verdicts = [...new Set(d.census.map((c) => c.verdict))];
       const filters = [`<button type="button" data-filter="" aria-pressed="true">${esc(t('site.census_all'))}</button>`,
         ...verdicts.map((v) => `<button type="button" data-filter="${esc(v)}" aria-pressed="false">${esc(t(`verdict.${v}`))}</button>`)].join('');
-      const rows = d.census.map((c) => `<tr data-verdict="${esc(c.verdict)}"><td>`
-        + (c.pr_url ? `<a href="${esc(c.pr_url)}">${esc(c.repo)}</a>` : esc(c.repo))
-        + `</td><td>${esc(c.bump)}</td><td>${esc(c.ci ?? '—')}</td><td>${stamp(t, c.verdict)}</td>`
-        + `<td>${esc(c.control ?? '—')}</td><td>${esc(c.license ?? '—')}</td></tr>`).join('');
-      return `${intro}<div class="filters" role="group" aria-label="${esc(t('site.census_filter'))}">${filters}</div>`
+      const cols = ['col_repo', 'col_bump', 'col_ci', 'col_verdict', 'col_control', 'col_license'];
+      const td = (i: number, html: string) => `<td data-label="${esc(t(`site.${cols[i]}`))}">${html}</td>`;
+      const rows = d.census.map((c) => `<tr data-verdict="${esc(c.verdict)}">`
+        + td(0, c.url ? `<a href="${esc(c.url)}">${esc(c.repo)}</a>` : esc(c.repo))
+        + td(1, c.pr_url ? `<a href="${esc(c.pr_url)}">${esc(c.bump)}</a>` : esc(c.bump)) + td(2, esc(c.ci ?? '—'))
+        + td(3, `${stamp(t, c.verdict)}${c.ci_green_but_broken ? `<span class="sub warn">${esc(t('site.ci_green_broken'))}</span>` : ''}`)
+        + td(4, esc(c.control ? t(`site.control_${c.control}`) : '—')) + td(5, esc(c.license ?? '—')) + '</tr>').join('');
+      return `${intro}${censusSummary(t, d.metrics)}<div class="filters" role="group" aria-label="${esc(t('site.census_filter'))}">${filters}</div>`
         + `<p class="count">${esc(t('site.census_count', { n: d.census.length }))}</p><div class="scroll"><table class="ledger" data-census>`
-        + `<thead><tr>${['col_repo', 'col_bump', 'col_ci', 'col_verdict', 'col_control', 'col_license']
-          .map((k) => `<th scope="col">${esc(t(`site.${k}`))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+        + `<thead><tr>${cols.map((k) => `<th scope="col">${esc(t(`site.${k}`))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`
+        + `<p class="count">${esc(t('site.census_attribution'))}</p>`;
     },
   };
 }
