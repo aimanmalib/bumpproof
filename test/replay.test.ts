@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -7,7 +7,7 @@ import { main, type Io } from '../src/cli.ts';
 import { ROOT, loadConfig } from '../src/config.ts';
 import { makeTranslator } from '../src/i18n.ts';
 import { replay, stamp } from '../src/replay.ts';
-import { runReplay } from '../src/report-cli.ts';
+import { replayDir, runReplay } from '../src/report-cli.ts';
 import { readRun } from '../src/report/run.ts';
 import { makePaint } from '../src/ui.ts';
 
@@ -86,4 +86,33 @@ test('bumpproof replay and report --comment run from the command line without ne
   assert.equal(await main(['report', '--comment', 'test/fixtures/synthetic-run'], b), 0);
   assert.match(b.stdout.join('\n'), /## 🛠️ Bumpproof: Fixed/);
   assert.doesNotMatch(b.stdout.join('\n'), /Run page with/, 'synthetic runs get no public link');
+});
+
+test('replay falls back to the runs shipped in the package when the folder is not in the current directory', () => {
+  const root = mkdtempSync(join(tmpdir(), 'bumpproof-pkg-'));
+  const cwd = mkdtempSync(join(tmpdir(), 'bumpproof-empty-'));
+  try {
+    const shipped = join(root, 'docs', 'runs', 'r-1');
+    mkdirSync(join(root, 'docs', 'runs'), { recursive: true });
+    cpSync(FIXTURE, shipped, { recursive: true });
+    assert.equal(replayDir(cwd, 'r-1', root), shipped, 'a bare id from an empty folder');
+    assert.equal(replayDir(cwd, 'docs/runs/r-1', root), shipped, 'the README path from an empty folder');
+    assert.equal(replayDir(cwd, 'nope', root), join(cwd, 'nope'), 'an unknown id stays local, so it still fails');
+    const local = join(cwd, 'docs', 'runs', 'r-1');
+    cpSync(FIXTURE, local, { recursive: true });
+    assert.equal(replayDir(cwd, 'docs/runs/r-1', root), local, 'a folder in the current directory wins');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('bumpproof replay of an id that exists nowhere still exits 2', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'bumpproof-empty-'));
+  try {
+    const o = { ...io(), cwd };
+    assert.equal(await main(['replay', 'no-such-run-id'], o), 2);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
 });

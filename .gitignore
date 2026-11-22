@@ -1,5 +1,6 @@
 node_modules/
-dist/
+# The demo app build; the package build in /dist is committed on purpose (docs/02-DECISIONS.md).
+examples/*/dist/
 .env
 .env.*
 !.env.example

@@ -1,6 +1,7 @@
 // `report` and `replay` commands: argument handling and output; the work lives in src/report/ and src/replay.ts.
-import { isAbsolute, join } from 'node:path';
-import type { Config } from './config.ts';
+import { existsSync } from 'node:fs';
+import { basename, isAbsolute, join } from 'node:path';
+import { ROOT, type Config } from './config.ts';
 import { secretsFromEnv } from './evidence.ts';
 import { makeTranslator, type Translate } from './i18n.ts';
 import { replay } from './replay.ts';
@@ -49,6 +50,16 @@ export function runReport(cfg: Config, t: Translate, values: Record<string, unkn
   }
 }
 
+/**
+ * A run folder under the current directory wins. Outside a clone (an empty folder, `npx`, a global install) fall back
+ * to the runs shipped inside the package, so `replay <id>` and `replay docs/runs/<id>` both work anywhere.
+ */
+export function replayDir(cwd: string, dir: string, root: string = ROOT): string {
+  const local = at(cwd, dir);
+  const shipped = join(root, 'docs', 'runs', basename(dir));
+  return existsSync(join(local, 'run.json')) || !existsSync(join(shipped, 'run.json')) ? local : shipped;
+}
+
 export async function runReplay(cfg: Config, t: Translate, dir: string | undefined, speedFlag: unknown, io: Io,
   sleep: (ms: number) => Promise<void> = (ms) => new Promise((r) => setTimeout(r, ms))): Promise<number> {
   if (!dir) {
@@ -57,7 +68,7 @@ export async function runReplay(cfg: Config, t: Translate, dir: string | undefin
   }
   const speed = str(speedFlag) !== undefined ? Number(speedFlag) : cfg.replay.speed;
   try {
-    const run = readRun(at(io.cwd, dir));
+    const run = readRun(replayDir(io.cwd, dir));
     await replay(run, t, makePaint(useColor(io.env, io.isTTY)), {
       speed: Number.isFinite(speed) && speed >= 0 ? speed : cfg.replay.speed, maxGapMs: cfg.replay.max_gap_ms, sleep, out: io.out,
     });
