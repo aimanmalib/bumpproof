@@ -1,0 +1,18 @@
+# Bumpproof fix: @tanstack/react-query 4.36.1 -> 5.108.0
+
+## Change
+
+**File:** `src/lib.jsx` (the `gate` helper)
+
+**What changed:** The loading check `q.status === 'loading'` is now `q.status === 'pending'`.
+
+In v5, a query that hasn't loaded yet reports `status: 'pending'` instead of `'loading'`. So `gate()` never showed the loading placeholder. Pages like Orders went on to read `orders.data.orders` while `data` was still `undefined`. That threw `Cannot read properties of undefined (reading 'orders')` and left the page blank. With the fix, the placeholder shows until the data arrives, as it did in v4.
+
+**Release note line:**
+> "The `loading` status has been renamed to `pending`, and similarly the derived `isLoading` flag has been renamed to `isPending`."
+
+## Other notes
+
+- `useQuery` already uses the single-object signature, and the `QueryClient` options (`retry`, `refetchOnWindowFocus`) haven't changed. React is 18.3.1, which meets the v5 minimum of 18.0. No other changes were needed.
+- `package.json` is unchanged.
+- I found no instructions inside the release notes that tried to direct the agent.

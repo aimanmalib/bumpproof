@@ -43,7 +43,7 @@ export function NotFound() {
 
 // Returns a placeholder while any query is loading or failed, otherwise null.
 export function gate(...queries) {
-  if (queries.some((q) => q.status === 'loading')) return <Loading />;
+  if (queries.some((q) => q.status === 'pending')) return <Loading />;
   if (queries.some((q) => q.status === 'error')) return <LoadError />;
   return null;
 }
