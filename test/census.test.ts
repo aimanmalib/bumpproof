@@ -68,7 +68,8 @@ test('manifest rules: framework, build, serve, install hooks in the app or the r
 });
 
 test('env examples: keys that look like secrets are found, plain settings are not', () => {
-  const text = '# comment\nVITE_PUBLIC_URL=http://x\nexport OPENAI_API_KEY=\nDATABASE_URL="postgres://"\nGITHUB_TOKEN=\nclient_secret=abc\nPORT=3000\n';
+  const text = ['# comment', 'VITE_PUBLIC_URL=http://x', 'export OPENAI_API_KEY=', 'DATABASE_URL="postgres://"', 'GITHUB_TOKEN=',
+    'client_secret=abc', 'PORT=3000', ''].join('\n');
   assert.deepEqual(secretKeys(text, rules.env_key_pattern), ['OPENAI_API_KEY', 'DATABASE_URL', 'GITHUB_TOKEN', 'client_secret']);
   assert.deepEqual(secretKeys('PORT=1\nVITE_TITLE=x', rules.env_key_pattern), []);
 });
