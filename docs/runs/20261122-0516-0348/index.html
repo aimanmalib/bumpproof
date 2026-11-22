@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run 20261122-0516-0348 · Bumpproof</title>
+<meta name="description" content="Dependency bumps, checked in a real browser before you merge.">
+<link rel="preload" href="../../assets/fonts/ibm-plex-sans-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<div class="lang" role="group" aria-label="Language / Bahasa"><button type="button" data-set="en" aria-pressed="true">EN</button><button type="button" data-set="ms" aria-pressed="false">BM</button></div>
+<div class="copy" lang="en" data-lang="en"><a class="skip" href="#main-en">Skip to content</a><header class="bar"><a class="mark" href="../../index.html">Bumpproof</a><nav class="nav" aria-label="Overview"><a href="../../index.html">Overview</a><a href="../../index.html#runs" aria-current="page">Runs</a><a href="../../census.html">Census</a><a href="../../judges.html">For judges</a></nav></header><main id="main-en"><p class="crumb"><a href="../../index.html#runs">All runs</a></p><section class="verdict-head"><div><span class="stamp stamp-fixed stamp-big">Fixed</span></div><div><h1>Bump date-fns from 2.30.0 to 4.4.0 in /examples/shop</h1><p class="src"><a href="https://github.com/aimanmalib/bumpproof/pull/1">aimanmalib/bumpproof #1</a></p><p class="lede">The pull request did not build or start.</p><p class="facts num">Time 15 min 50 s · 3.806 Kane CLI credits · Kane CLI 0.10.7</p><p class="facts">CI on the pull request: red</p></div></section><section><h2>What changed</h2><p class="mono">date-fns 2.30.0 → 4.4.0</p><p class="facts mono">Base 722c1d6340340a4e94ee8de08436666278e196fa (722c1d6) · head 81737f660c56e4f407a2bec2c46d0deab1262fc4 (81737f6)</p></section><section><h2>Journeys</h2><div class="scroll"><table class="ledger"><thead><tr><th scope="col">Journey</th><th scope="col">Base branch</th><th scope="col">Pull request</th><th scope="col">After the fix</th><th scope="col">Result</th></tr></thead><tbody><tr><th scope="row" class="mono">account</th><td><span class="st st-passed">Passed</span><span class="sub num">1 min 40 s</span></td><td class="dim">—</td><td><span class="st st-passed">Passed</span><span class="sub num">1 min 13 s</span></td><td><span class="oc oc-unrunnable">Could not run</span></td></tr><tr><th scope="row" class="mono">browse</th><td><span class="st st-passed">Passed</span><span class="sub num">1 min 13 s</span></td><td class="dim">—</td><td><span class="st st-passed">Passed</span><span class="sub num">1 min 01 s</span></td><td><span class="oc oc-unrunnable">Could not run</span></td></tr><tr><th scope="row" class="mono">checkout</th><td><span class="st st-passed">Passed</span><span class="sub num">1 min 35 s</span></td><td class="dim">—</td><td><span class="st st-passed">Passed</span><span class="sub num">1 min 05 s</span></td><td><span class="oc oc-unrunnable">Could not run</span></td></tr></tbody></table></div></section><section><h2>The fix</h2><p class="facts num">1 attempt(s) · 6 changed lines · Claude Code cost $0.16</p><blockquote># Fix for date-fns 2.30.0 -&gt; 4.4.0
+
+## Changes
+
+### `src/pages/Checkout.jsx` (line 3)
+- Before: `import addDays from &#39;date-fns/esm/addDays&#39;;`
+- After: `import { addDays } from &#39;date-fns/addDays&#39;;`
+- Why: The `esm/` subfolder no longer exists, and the package has no default exports any more. That missing folder is what broke the build (`Missing &quot;./esm/addDays&quot; specifier in &quot;date-fns&quot; package`). Release notes, v3.0.0:
+  &gt; **BREAKING**: The package now has a flat structure, meaning functions are now named `node_modules/date-fns/add.mjs`, locales are `node_modules/date-fns/locale/enUS.mjs`, etc.
+
+  &gt; **BREAKING**: date-fns is now a dual-package with the support of both ESM and CommonJS. The files exports are now explicitly in the `package.json`. The ESM files now have `.mjs` extension.
+
+### `src/lib.jsx` (lines 2–3)
+- Before: `import format from &#39;date-fns/format&#39;;` and `import parseISO from &#39;date-fns/parseISO&#39;;`
+- After: `import { format } from &#39;date-fns/format&#39;;` and `import { parseISO } from &#39;date-fns/parseISO&#39;;`
+- Why: These modules no longer have default exports. Release notes, v3.0.0:
+  &gt; **BREAKING**: Now all file content’s exported via named exports instead of `export default`, which will require change direct imports i.e. `const addDays = require(‘date-fns/addDays’)` to `const { addDays } = require(‘date-fns/addDays’)`.
+
+## Behaviour check
+- `format(date, &quot;d MMM yyyy&quot;)` uses the same tokens as before. No protected tokens (`Y`/`D`) are used.
+- `addDays` gets a number (`deliveryDays: 3` in `public/data/shop.json`), so the v3 change that stopped converting arguments to the expected type does not affect it.
+- `package.json` is unchanged. No companion package is needed.
+
+## Notes on the release notes
+The release notes contained no instructions aimed at this task, so there was nothing to ignore.</blockquote><h3>Patch</h3><pre class="patch"><code><span class="d-file">--- /dev/null</span>
+<span class="d-file">+++ b/BUMPPROOF_FIX.md</span>
+<span class="d-add">+# Fix for date-fns 2.30.0 -&gt; 4.4.0</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Changes</span>
+<span class="d-add">+</span>
+<span class="d-add">+### `src/pages/Checkout.jsx` (line 3)</span>
+<span class="d-add">+- Before: `import addDays from &#39;date-fns/esm/addDays&#39;;`</span>
+<span class="d-add">+- After: `import { addDays } from &#39;date-fns/addDays&#39;;`</span>
+<span class="d-add">+- Why: The `esm/` subfolder no longer exists, and the package has no default exports any more. That missing folder is what broke the build (`Missing &quot;./esm/addDays&quot; specifier in &quot;date-fns&quot; package`). Release notes, v3.0.0:</span>
+<span class="d-add">+  &gt; **BREAKING**: The package now has a flat structure, meaning functions are now named `node_modules/date-fns/add.mjs`, locales are `node_modules/date-fns/locale/enUS.mjs`, etc.</span>
+<span class="d-add">+</span>
+<span class="d-add">+  &gt; **BREAKING**: date-fns is now a dual-package with the support of both ESM and CommonJS. The files exports are now explicitly in the `package.json`. The ESM files now have `.mjs` extension.</span>
+<span class="d-add">+</span>
+<span class="d-add">+### `src/lib.jsx` (lines 2–3)</span>
+<span class="d-add">+- Before: `import format from &#39;date-fns/format&#39;;` and `import parseISO from &#39;date-fns/parseISO&#39;;`</span>
+<span class="d-add">+- After: `import { format } from &#39;date-fns/format&#39;;` and `import { parseISO } from &#39;date-fns/parseISO&#39;;`</span>
+<span class="d-add">+- Why: These modules no longer have default exports. Release notes, v3.0.0:</span>
+<span class="d-add">+  &gt; **BREAKING**: Now all file content’s exported via named exports instead of `export default`, which will require change direct imports i.e. `const addDays = require(‘date-fns/addDays’)` to `const { addDays } = require(‘date-fns/addDays’)`.</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Behaviour check</span>
+<span class="d-add">+- `format(date, &quot;d MMM yyyy&quot;)` uses the same tokens as before. No protected tokens (`Y`/`D`) are used.</span>
+<span class="d-add">+- `addDays` gets a number (`deliveryDays: 3` in `public/data/shop.json`), so the v3 change that stopped converting arguments to the expected type does not affect it.</span>
+<span class="d-add">+- `package.json` is unchanged. No companion package is needed.</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Notes on the release notes</span>
+<span class="d-add">+The release notes contained no instructions aimed at this task, so there was nothing to ignore.</span>
+<span class="d-file">--- a/src/lib.jsx</span>
+<span class="d-file">+++ b/src/lib.jsx</span>
+<span class="d-del">-import format from &#39;date-fns/format&#39;;</span>
+<span class="d-del">-import parseISO from &#39;date-fns/parseISO&#39;;</span>
+<span class="d-add">+import { format } from &#39;date-fns/format&#39;;</span>
+<span class="d-add">+import { parseISO } from &#39;date-fns/parseISO&#39;;</span>
+<span class="d-file">--- a/src/pages/Checkout.jsx</span>
+<span class="d-file">+++ b/src/pages/Checkout.jsx</span>
+<span class="d-del">-import addDays from &#39;date-fns/esm/addDays&#39;;</span>
+<span class="d-add">+import { addDays } from &#39;date-fns/addDays&#39;;</span></code></pre></section><section><h2>Timeline</h2><ol class="timeline"><li class="tl-info"><span class="tl-at num">0 s</span><span>Run started: 722c1d6340340a4e94ee8de08436666278e196fa against 81737f660c56e4f407a2bec2c46d0deab1262fc4</span></li><li class="tl-info"><span class="tl-at num">0 s</span><span>date-fns 2.30.0 → 4.4.0 (major)</span></li><li class="tl-ok"><span class="tl-at num">17 s</span><span>Base branch: built and answering after 16.3 s</span></li><li class="tl-ok"><span class="tl-at num">2 min 50 s</span><span>Base branch · account: passed in 100 s</span></li><li class="tl-ok"><span class="tl-at num">4 min 39 s</span><span>Base branch · browse: passed in 73 s</span></li><li class="tl-ok"><span class="tl-at num">6 min 54 s</span><span>Base branch · checkout: passed in 95 s</span></li><li class="tl-fail"><span class="tl-at num">7 min 15 s</span><span>Pull request: did not build or start (build)</span></li><li class="tl-info"><span class="tl-at num">7 min 19 s</span><span>Claude Code, attempt 1: writing a fix</span></li><li class="tl-ok"><span class="tl-at num">8 min 07 s</span><span>With the fix: built and answering after 13.7 s</span></li><li class="tl-ok"><span class="tl-at num">9 min 52 s</span><span>After the fix · account: passed in 73 s</span></li><li class="tl-ok"><span class="tl-at num">14 min 10 s</span><span>After the fix · browse: passed in 61 s</span></li><li class="tl-ok"><span class="tl-at num">15 min 47 s</span><span>After the fix · checkout: passed in 65 s</span></li><li class="tl-ok"><span class="tl-at num">15 min 50 s</span><span>Fix accepted: 6 changed lines</span></li><li class="tl-ok"><span class="tl-at num">15 min 50 s</span><span>Verdict: Fixed</span></li></ol><p>Replay this run in a terminal (no credits, no network)</p><pre class="cmd"><code>npx github:aimanmalib/bumpproof replay docs/runs/20261122-0516-0348</code></pre></section></main><footer class="foot"><span>Apache-2.0 · Generated by bumpproof report 0.0.0</span><a href="https://github.com/aimanmalib/bumpproof">GitHub repository</a></footer></div>
+<div class="copy" lang="ms" data-lang="ms" hidden><a class="skip" href="#main-ms">Langkau ke kandungan</a><header class="bar"><a class="mark" href="../../index.html">Bumpproof</a><nav class="nav" aria-label="Gambaran"><a href="../../index.html">Gambaran</a><a href="../../index.html#runs-ms" aria-current="page">Larian</a><a href="../../census.html">Banci</a><a href="../../judges.html">Untuk juri</a></nav></header><main id="main-ms"><p class="crumb"><a href="../../index.html#runs-ms">Semua larian</a></p><section class="verdict-head"><div><span class="stamp stamp-fixed stamp-big">Dibaiki</span></div><div><h1>Bump date-fns from 2.30.0 to 4.4.0 in /examples/shop</h1><p class="src"><a href="https://github.com/aimanmalib/bumpproof/pull/1">aimanmalib/bumpproof #1</a></p><p class="lede">Pull request ini tidak dapat dibina atau dimulakan.</p><p class="facts num">Masa 15 min 50 s · 3.806 kredit Kane CLI · Kane CLI 0.10.7</p><p class="facts">CI pada pull request: red</p></div></section><section><h2>Apa yang berubah</h2><p class="mono">date-fns 2.30.0 → 4.4.0</p><p class="facts mono">Asas 722c1d6340340a4e94ee8de08436666278e196fa (722c1d6) · kepala 81737f660c56e4f407a2bec2c46d0deab1262fc4 (81737f6)</p></section><section><h2>Perjalanan</h2><div class="scroll"><table class="ledger"><thead><tr><th scope="col">Perjalanan</th><th scope="col">Cawangan asas</th><th scope="col">Pull request</th><th scope="col">Selepas pembaikan</th><th scope="col">Keputusan</th></tr></thead><tbody><tr><th scope="row" class="mono">account</th><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 40 s</span></td><td class="dim">—</td><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 13 s</span></td><td><span class="oc oc-unrunnable">Tidak dapat dijalankan</span></td></tr><tr><th scope="row" class="mono">browse</th><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 13 s</span></td><td class="dim">—</td><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 01 s</span></td><td><span class="oc oc-unrunnable">Tidak dapat dijalankan</span></td></tr><tr><th scope="row" class="mono">checkout</th><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 35 s</span></td><td class="dim">—</td><td><span class="st st-passed">Lulus</span><span class="sub num">1 min 05 s</span></td><td><span class="oc oc-unrunnable">Tidak dapat dijalankan</span></td></tr></tbody></table></div></section><section><h2>Pembaikan</h2><p class="facts num">1 cubaan · 6 baris berubah · Kos Claude Code $0.16</p><blockquote># Fix for date-fns 2.30.0 -&gt; 4.4.0
+
+## Changes
+
+### `src/pages/Checkout.jsx` (line 3)
+- Before: `import addDays from &#39;date-fns/esm/addDays&#39;;`
+- After: `import { addDays } from &#39;date-fns/addDays&#39;;`
+- Why: The `esm/` subfolder no longer exists, and the package has no default exports any more. That missing folder is what broke the build (`Missing &quot;./esm/addDays&quot; specifier in &quot;date-fns&quot; package`). Release notes, v3.0.0:
+  &gt; **BREAKING**: The package now has a flat structure, meaning functions are now named `node_modules/date-fns/add.mjs`, locales are `node_modules/date-fns/locale/enUS.mjs`, etc.
+
+  &gt; **BREAKING**: date-fns is now a dual-package with the support of both ESM and CommonJS. The files exports are now explicitly in the `package.json`. The ESM files now have `.mjs` extension.
+
+### `src/lib.jsx` (lines 2–3)
+- Before: `import format from &#39;date-fns/format&#39;;` and `import parseISO from &#39;date-fns/parseISO&#39;;`
+- After: `import { format } from &#39;date-fns/format&#39;;` and `import { parseISO } from &#39;date-fns/parseISO&#39;;`
+- Why: These modules no longer have default exports. Release notes, v3.0.0:
+  &gt; **BREAKING**: Now all file content’s exported via named exports instead of `export default`, which will require change direct imports i.e. `const addDays = require(‘date-fns/addDays’)` to `const { addDays } = require(‘date-fns/addDays’)`.
+
+## Behaviour check
+- `format(date, &quot;d MMM yyyy&quot;)` uses the same tokens as before. No protected tokens (`Y`/`D`) are used.
+- `addDays` gets a number (`deliveryDays: 3` in `public/data/shop.json`), so the v3 change that stopped converting arguments to the expected type does not affect it.
+- `package.json` is unchanged. No companion package is needed.
+
+## Notes on the release notes
+The release notes contained no instructions aimed at this task, so there was nothing to ignore.</blockquote><h3>Patch</h3><pre class="patch"><code><span class="d-file">--- /dev/null</span>
+<span class="d-file">+++ b/BUMPPROOF_FIX.md</span>
+<span class="d-add">+# Fix for date-fns 2.30.0 -&gt; 4.4.0</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Changes</span>
+<span class="d-add">+</span>
+<span class="d-add">+### `src/pages/Checkout.jsx` (line 3)</span>
+<span class="d-add">+- Before: `import addDays from &#39;date-fns/esm/addDays&#39;;`</span>
+<span class="d-add">+- After: `import { addDays } from &#39;date-fns/addDays&#39;;`</span>
+<span class="d-add">+- Why: The `esm/` subfolder no longer exists, and the package has no default exports any more. That missing folder is what broke the build (`Missing &quot;./esm/addDays&quot; specifier in &quot;date-fns&quot; package`). Release notes, v3.0.0:</span>
+<span class="d-add">+  &gt; **BREAKING**: The package now has a flat structure, meaning functions are now named `node_modules/date-fns/add.mjs`, locales are `node_modules/date-fns/locale/enUS.mjs`, etc.</span>
+<span class="d-add">+</span>
+<span class="d-add">+  &gt; **BREAKING**: date-fns is now a dual-package with the support of both ESM and CommonJS. The files exports are now explicitly in the `package.json`. The ESM files now have `.mjs` extension.</span>
+<span class="d-add">+</span>
+<span class="d-add">+### `src/lib.jsx` (lines 2–3)</span>
+<span class="d-add">+- Before: `import format from &#39;date-fns/format&#39;;` and `import parseISO from &#39;date-fns/parseISO&#39;;`</span>
+<span class="d-add">+- After: `import { format } from &#39;date-fns/format&#39;;` and `import { parseISO } from &#39;date-fns/parseISO&#39;;`</span>
+<span class="d-add">+- Why: These modules no longer have default exports. Release notes, v3.0.0:</span>
+<span class="d-add">+  &gt; **BREAKING**: Now all file content’s exported via named exports instead of `export default`, which will require change direct imports i.e. `const addDays = require(‘date-fns/addDays’)` to `const { addDays } = require(‘date-fns/addDays’)`.</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Behaviour check</span>
+<span class="d-add">+- `format(date, &quot;d MMM yyyy&quot;)` uses the same tokens as before. No protected tokens (`Y`/`D`) are used.</span>
+<span class="d-add">+- `addDays` gets a number (`deliveryDays: 3` in `public/data/shop.json`), so the v3 change that stopped converting arguments to the expected type does not affect it.</span>
+<span class="d-add">+- `package.json` is unchanged. No companion package is needed.</span>
+<span class="d-add">+</span>
+<span class="d-add">+## Notes on the release notes</span>
+<span class="d-add">+The release notes contained no instructions aimed at this task, so there was nothing to ignore.</span>
+<span class="d-file">--- a/src/lib.jsx</span>
+<span class="d-file">+++ b/src/lib.jsx</span>
+<span class="d-del">-import format from &#39;date-fns/format&#39;;</span>
+<span class="d-del">-import parseISO from &#39;date-fns/parseISO&#39;;</span>
+<span class="d-add">+import { format } from &#39;date-fns/format&#39;;</span>
+<span class="d-add">+import { parseISO } from &#39;date-fns/parseISO&#39;;</span>
+<span class="d-file">--- a/src/pages/Checkout.jsx</span>
+<span class="d-file">+++ b/src/pages/Checkout.jsx</span>
+<span class="d-del">-import addDays from &#39;date-fns/esm/addDays&#39;;</span>
+<span class="d-add">+import { addDays } from &#39;date-fns/addDays&#39;;</span></code></pre></section><section><h2>Garis masa</h2><ol class="timeline"><li class="tl-info"><span class="tl-at num">0 s</span><span>Larian bermula: 722c1d6340340a4e94ee8de08436666278e196fa lawan 81737f660c56e4f407a2bec2c46d0deab1262fc4</span></li><li class="tl-info"><span class="tl-at num">0 s</span><span>date-fns 2.30.0 → 4.4.0 (major)</span></li><li class="tl-ok"><span class="tl-at num">17 s</span><span>Cawangan asas: dibina dan menjawab selepas 16.3 s</span></li><li class="tl-ok"><span class="tl-at num">2 min 50 s</span><span>Cawangan asas · account: lulus dalam 100 s</span></li><li class="tl-ok"><span class="tl-at num">4 min 39 s</span><span>Cawangan asas · browse: lulus dalam 73 s</span></li><li class="tl-ok"><span class="tl-at num">6 min 54 s</span><span>Cawangan asas · checkout: lulus dalam 95 s</span></li><li class="tl-fail"><span class="tl-at num">7 min 15 s</span><span>Pull request: tidak dapat dibina atau dimulakan (build)</span></li><li class="tl-info"><span class="tl-at num">7 min 19 s</span><span>Claude Code, cubaan 1: menulis pembaikan</span></li><li class="tl-ok"><span class="tl-at num">8 min 07 s</span><span>Dengan pembaikan: dibina dan menjawab selepas 13.7 s</span></li><li class="tl-ok"><span class="tl-at num">9 min 52 s</span><span>Selepas pembaikan · account: lulus dalam 73 s</span></li><li class="tl-ok"><span class="tl-at num">14 min 10 s</span><span>Selepas pembaikan · browse: lulus dalam 61 s</span></li><li class="tl-ok"><span class="tl-at num">15 min 47 s</span><span>Selepas pembaikan · checkout: lulus dalam 65 s</span></li><li class="tl-ok"><span class="tl-at num">15 min 50 s</span><span>Pembaikan diterima: 6 baris berubah</span></li><li class="tl-ok"><span class="tl-at num">15 min 50 s</span><span>Keputusan: Dibaiki</span></li></ol><p>Ulang tayang larian ini dalam terminal (tanpa kredit, tanpa rangkaian)</p><pre class="cmd"><code>npx github:aimanmalib/bumpproof replay docs/runs/20261122-0516-0348</code></pre></section></main><footer class="foot"><span>Apache-2.0 · Dijana oleh bumpproof report 0.0.0</span><a href="https://github.com/aimanmalib/bumpproof">Repositori GitHub</a></footer></div>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

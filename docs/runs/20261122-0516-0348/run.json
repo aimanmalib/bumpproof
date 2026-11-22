@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0516-0348",
+  "synthetic": false,
+  "started_at": "2026-11-22T05:16:42.564Z",
+  "duration_s": 950,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "aimanmalib/bumpproof",
+    "pr": 1,
+    "pr_url": "https://github.com/aimanmalib/bumpproof/pull/1",
+    "pr_title": "Bump date-fns from 2.30.0 to 4.4.0 in /examples/shop",
+    "ci": "red"
+  },
+  "app_dir": "examples/shop",
+  "base": {
+    "ref": "722c1d6340340a4e94ee8de08436666278e196fa",
+    "sha": "722c1d6340340a4e94ee8de08436666278e196fa"
+  },
+  "head": {
+    "ref": "81737f660c56e4f407a2bec2c46d0deab1262fc4",
+    "sha": "81737f660c56e4f407a2bec2c46d0deab1262fc4"
+  },
+  "bumps": [
+    {
+      "name": "date-fns",
+      "from": "2.30.0",
+      "to": "4.4.0",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 16.3,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": false,
+      "seconds": 12.4,
+      "failed_at": "build"
+    },
+    {
+      "side": "fix",
+      "built": true,
+      "seconds": 13.7,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "account",
+      "base": {
+        "status": "passed",
+        "seconds": 100,
+        "credits": 1.016,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": {
+        "status": "passed",
+        "seconds": 73,
+        "credits": 0.409,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "browse",
+      "base": {
+        "status": "passed",
+        "seconds": 73,
+        "credits": 0.182,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": {
+        "status": "passed",
+        "seconds": 61,
+        "credits": 0.193,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "checkout",
+      "base": {
+        "status": "passed",
+        "seconds": 95,
+        "credits": 0.967,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": null,
+      "after_fix": {
+        "status": "passed",
+        "seconds": 65,
+        "credits": 1.039,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "unrunnable",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "fixed",
+    "reason": "head_build_failed",
+    "evaluated": 0
+  },
+  "fix": {
+    "status": "fixed",
+    "attempts": 1,
+    "changed_lines": 6,
+    "cost_usd": 0.16,
+    "files": [
+      "BUMPPROOF_FIX.md",
+      "src/lib.jsx",
+      "src/pages/Checkout.jsx"
+    ],
+    "explanation": "# Fix for date-fns 2.30.0 -> 4.4.0\n\n## Changes\n\n### `src/pages/Checkout.jsx` (line 3)\n- Before: `import addDays from 'date-fns/esm/addDays';`\n- After: `import { addDays } from 'date-fns/addDays';`\n- Why: The `esm/` subfolder no longer exists, and the package has no default exports any more. That missing folder is what broke the build (`Missing \"./esm/addDays\" specifier in \"date-fns\" package`). Release notes, v3.0.0:\n  > **BREAKING**: The package now has a flat structure, meaning functions are now named `node_modules/date-fns/add.mjs`, locales are `node_modules/date-fns/locale/enUS.mjs`, etc.\n\n  > **BREAKING**: date-fns is now a dual-package with the support of both ESM and CommonJS. The files exports are now explicitly in the `package.json`. The ESM files now have `.mjs` extension.\n\n### `src/lib.jsx` (lines 2–3)\n- Before: `import format from 'date-fns/format';` and `import parseISO from 'date-fns/parseISO';`\n- After: `import { format } from 'date-fns/format';` and `import { parseISO } from 'date-fns/parseISO';`\n- Why: These modules no longer have default exports. Release notes, v3.0.0:\n  > **BREAKING**: Now all file content’s exported via named exports instead of `export default`, which will require change direct imports i.e. `const addDays = require(‘date-fns/addDays’)` to `const { addDays } = require(‘date-fns/addDays’)`.\n\n## Behaviour check\n- `format(date, \"d MMM yyyy\")` uses the same tokens as before. No protected tokens (`Y`/`D`) are used.\n- `addDays` gets a number (`deliveryDays: 3` in `public/data/shop.json`), so the v3 change that stopped converting arguments to the expected type does not affect it.\n- `package.json` is unchanged. No companion package is needed.\n\n## Notes on the release notes\nThe release notes contained no instructions aimed at this task, so there was nothing to ignore.",
+    "patch_file": "fix.patch"
+  },
+  "credits_consumed": 3.806,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "722c1d6340340a4e94ee8de08436666278e196fa",
+        "head": "81737f660c56e4f407a2bec2c46d0deab1262fc4"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "date-fns",
+        "from": "2.30.0",
+        "to": "4.4.0",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 17,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 16.3
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 170,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "account",
+        "status": "passed",
+        "s": 100
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 279,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "browse",
+        "status": "passed",
+        "s": 73
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 414,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "checkout",
+        "status": "passed",
+        "s": 95
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 435,
+      "key": "build_failed",
+      "vars": {
+        "side": "head",
+        "phase": "build"
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 439,
+      "key": "fixer_start",
+      "vars": {
+        "attempt": 1
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 487,
+      "key": "built",
+      "vars": {
+        "side": "fix",
+        "s": 13.7
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 592,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "account",
+        "status": "passed",
+        "s": 73
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 850,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "browse",
+        "status": "passed",
+        "s": 61
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 947,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "checkout",
+        "status": "passed",
+        "s": 65
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 950,
+      "key": "fixer_done",
+      "vars": {
+        "lines": 6
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 950,
+      "key": "verdict",
+      "vars": {
+        "verdict": "fixed"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
