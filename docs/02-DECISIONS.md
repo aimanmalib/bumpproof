@@ -200,3 +200,98 @@ Technical decisions taken while building Bumpproof, newest last. Each entry says
 - **Fork pull requests** get a read-only token. Posting then fails with a warning, and the result stays in the job summary.
 - **CI:** a job runs the Action on `examples/shop` (same commit on both sides) and checks the outcome and the comment
   file. Way back: delete the job, or stop using the Action. The CLI does not depend on it.
+
+## 14. Census candidates: search and fixed rules (22 Nov 2026)
+
+- **One command, read only:** `bumpproof census --find` searches GitHub through `gh api` and writes
+  `census/candidates.json`. It reads repository metadata, the pull request, its file list, `package.json` at the base
+  and head commits, the app folder listing and any `.env.example`. Nothing from these repositories is run, and we open
+  no issue, comment or pull request on them.
+- **Search:** one query per bot and watched package (`census.watchlist`, 18 packages × 2 bots = 36 queries, cap 60):
+  open pull requests by `app/dependabot` or `app/renovate`, created on or after `census.created_since`, whose title
+  holds the bot's own phrase (`"bump vite from"`, `"update dependency vite"`). A first run that searched for the bare
+  package name matched `react-i18next` for `react`: 8 of 40 repositories checked changed no watched package. Queries are spaced `census.search_gap_ms` apart. GitHub's secondary limit still hits every few
+  queries, so a limit waits `census.rate_limit_wait_s` and retries once; a second limit stops the search and the file
+  says so (`stopped`).
+- **Order and cap:** one pull request per repository, newest first, then repository name. Our own repository is skipped.
+  Repositories are checked in that order until `census.target_eligible` (20, the PRD's "at most 20 candidates")
+  pass, or `census.max_evaluate` or the time box is reached. Every repository checked is listed with its reasons.
+  The ones never reached are counted by why (`not_checked`: `enough`, `limit`, `timebox`) rather than listed, since
+  nothing about them was looked at; the queries and their totals are in the file, so the search can be rerun. A first
+  version listed them all, which made the file 420 KB, mostly names nobody had checked. The census run takes eligible
+  repositories from the top.
+- **Rules, in stages:** (1) license on the list, not archived, under 50 MB; (2) the pull request is still open and
+  changes a `package.json` or lockfile (the app folder is that file's folder; the title's `in /dir` breaks ties);
+  (3) the `package.json` diff changes a watched package (the diff is the truth, as in `bump.ts`); (4) Vite, Next.js,
+  Create React App or Astro, a `build` script and a `start`/`serve`/`preview` script, and no `preinstall`,
+  `postinstall` or `prepare` in the app's or the root `package.json`; (5) a lockfile in the app folder and no env
+  example key that looks like a secret. A stage that finds reasons ends the check, which saves API calls; all reasons
+  within that stage are kept.
+- **Added rule, lockfile:** PRD §5.9 does not name it. The sandbox installs with `npm ci` / `--frozen-lockfile` and
+  `--ignore-scripts` (D7), which cannot run without a lockfile, so a repository without one would only fail later as
+  "cannot run". `census.require_lockfile` turns it off.
+- **CI state** of each eligible pull request comes from the same rollup `gh pr view --json statusCheckRollup` reads
+  (asked through GraphQL so every call shares one pacer): `green`, `red`, `pending` or `none`. H3 ("CI green but
+  broken") needs it.
+- **Publication:** `census/` is published. The file holds repository names, pull request titles and links, licenses,
+  script names and watched bumps. It holds no author fields. The publication scan runs before writing; one finding
+  means no file.
+
+## 15. Browser journeys in check, and what the demo upgrades really break (22 Nov 2026)
+
+- **Journeys:** three Kane CLI `test.md` files in `examples/shop/.bumpproof/journeys/` (browse, checkout, account).
+  They were authored once on the base branch at `http://127.0.0.1:4173`. The `output-*` folders are Kane CLI's cached
+  recordings and are committed, so later runs replay them. Authoring cost 214.4 credits for the three.
+- **Order and copies:** `check` serves the base, runs every journey, stops it, then serves the head on the same port and
+  runs only the journeys that passed on the base. Each side runs on its own copy of the journeys folder in a temporary
+  folder, so a heal on the head never rewrites the committed recordings.
+- **Credits:** the account balance is read before and after each run. The drop is what goes into `census/kredit.json`.
+  The sum in the run stream is the fallback. Measured on the first authoring run: stream sum 49.7, balance drop 56.8.
+- **Failure text:** a confirmed bug from Kane CLI (`test_md_bug_verdict`) is used as the remark. The `run_end` reason
+  is a machine code such as `action_failed: click @ step 2`.
+- **Kane CLI 0.10.7 stream:** healing is reported by `test_md_adaptive_heal` and by `test_md_summary.adaptive_heal`.
+  Two sanitized real streams are test fixtures (`test/fixtures/recorded-20261122-*.ndjson`).
+- **The Action passes `--build-only`.** CI has no Kane CLI login (D9).
+- **Chrome:** Chrome for Testing 158.0.8127.36, headless, found in the Chrome folder from config. No fallback needed.
+
+What the four real Dependabot pull requests did (first runs, 22 Nov, published under `docs/runs/`):
+
+| Package | Planned break | What happened |
+|---|---|---|
+| `@tanstack/react-query` 4.36.1 → 5.108.0 | v5 renames the `loading` status to `pending`; `lib.jsx` waits on `status === 'loading'` | Broken. All three journeys fail on the head. Console: `Cannot read properties of undefined (reading 'categories')`. Kane CLI confirmed a bug (result code 740). |
+| `react-router-dom` 6.30.1 → 7.18.6 | v7 resolves relative links inside the `account/*` splat route from the full path | Broken. The account journey fails at "Use the tabs again". Browse and checkout pass. |
+| `date-fns` 2.30.0 → 4.4.0 | Default imports from `date-fns/format` etc. | **Did not break.** v3 and v4 still ship `export default` in each function file ("Fallback for modularized imports"). The run says safe, and that is the honest result. |
+| `clsx` 1.2.1 → 2.1.1 | none (expected safe) | Safe. |
+
+The date-fns break was planned and did not happen. It is not faked. A real build failure for the fixer demo has to come
+from a different API change that really fails (PRD §5.8); that is decided in the slice that needs it.
+
+## 16. The fix loop: check --fix (22 Nov 2026)
+
+- **Command:** `bumpproof check --base <ref> --head <ref> --fix` (or `bumpproof fix --base … --head …`). The fixer runs only
+  when the verdict is broken because a journey regressed or the head did not build.
+- **Working copy:** a fresh export of the head. The fixer gets the failure, the bumped packages and the release notes.
+  For a regression that is the first failed journey: its `test.md` text from the base, the failed step, Kane CLI's remark
+  and new console or network errors. For a failed build it gets the last log lines.
+- **Verify:** each patch that passes the guards (§11) is copied to a new folder and built in the sandbox. The sandbox
+  writes `node_modules` into the folder it mounts, so it never gets the agent's own folder. Kane CLI then replays the
+  journeys that failed first, then the others. It replays from the base's journeys and recordings. It stops at the
+  first journey that does not pass. Only when every journey that passed on the base passes again is the verdict
+  `fixed`. `compare.ts` still decides it.
+- **Record:** `run.json` keeps the head results and adds the fix build, `after_fix` for each journey, the fix summary
+  and `fix.patch` next to it. The publication scan reads both files before either is written.
+- **Busy port:** the first live run lost its fix stage. Another program on this host held 127.0.0.1:4173 for a moment.
+  `startApp` now waits up to `sandbox.port_wait_s` (600 s) before it refuses.
+- **A real build failure for the demo:** the planned date-fns break did not happen (§15). The shop now imports `addDays`
+  from `date-fns/esm/addDays`, the per-function ES module path date-fns 2 ships. Version 3 lists its import paths in
+  `package.json` ("The files exports are now explicitly in the `package.json`", v3.0.0 notes) and has no `esm` folder.
+
+Measured (22 Nov, Kane CLI 0.10.7, Claude Code with `claude-opus-5-5`, host mode):
+
+| Bump | Head | Fix | Result |
+|---|---|---|---|
+| `@tanstack/react-query` 4.36.1 → 5.108.0 (Dependabot branch) | 3 of 3 journeys fail | 1 attempt, `src/lib.jsx` `status === 'loading'` → `'pending'`, 2 changed lines, $0.17, quotes the v5 guide | Fixed: 3 of 3 pass after the fix. 70.7 credits, 21 min. Published as `docs/runs/20261122-0333-17ad/`. |
+| `date-fns` 2.30.0 → 4.4.0 (Dependabot's `package.json` and lockfile on a local branch from `main`) | Build fails: `Missing "./esm/addDays" specifier in "date-fns" package` | 1 attempt, named imports from `date-fns` in two files, 5 changed lines, $0.16 | Fixed: 3 of 3 pass. 3.9 credits, 14 min. Not published: its head commit exists only on this machine. |
+
+The date-fns fix also changed the default imports, quoting the v3 note on named exports. v4 still has default exports
+(§15), so that part was not needed. It still builds, and every journey passes.

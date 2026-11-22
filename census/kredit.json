@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "total": 502.625,
+  "total": 505.27,
   "census": 0,
   "runs": [
     {
@@ -253,6 +253,30 @@
       "at": "2026-11-22T03:56:56.073Z",
       "id": "20261122-0355-0c11:base:browse:1",
       "credits": 0.206,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:59:08.362Z",
+      "id": "20261122-0355-0c11:base:checkout:1",
+      "credits": 1.034,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T04:02:58.158Z",
+      "id": "20261122-0355-0c11:after_fix:account:1",
+      "credits": 0.357,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T04:05:48.760Z",
+      "id": "20261122-0355-0c11:after_fix:browse:1",
+      "credits": 0.208,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T04:07:49.248Z",
+      "id": "20261122-0355-0c11:after_fix:checkout:1",
+      "credits": 1.046,
       "census": false
     }
   ]
