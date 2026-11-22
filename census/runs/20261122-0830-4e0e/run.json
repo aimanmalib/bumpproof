@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0830-4e0e",
+  "synthetic": false,
+  "started_at": "2026-11-22T08:39:40.656Z",
+  "duration_s": 1013,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/Guhan3132/nodeloop",
+    "pr": 20,
+    "pr_url": "https://github.com/Guhan3132/nodeloop/pull/20",
+    "pr_title": "Bump tailwindcss from 4.3.3 to 4.3.5",
+    "ci": "green"
+  },
+  "app_dir": "",
+  "base": {
+    "ref": "0121e1f5b1105d2a4de5a069f2e71cefae1ef0d3",
+    "sha": "0121e1f5b1105d2a4de5a069f2e71cefae1ef0d3"
+  },
+  "head": {
+    "ref": "c12782aa7b53f228cba4102ec9cc04d75c06d1a8",
+    "sha": "c12782aa7b53f228cba4102ec9cc04d75c06d1a8"
+  },
+  "bumps": [],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 87.4,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 80.7,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 122,
+        "credits": 18.852,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 105,
+        "credits": 18.958,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "passed",
+        "seconds": 183,
+        "credits": 21.924,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 149,
+        "credits": 21.908,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 50,
+        "credits": 0.172,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 55,
+        "credits": 0.181,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 81.995,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "0121e1f5b1105d2a4de5a069f2e71cefae1ef0d3",
+        "head": "c12782aa7b53f228cba4102ec9cc04d75c06d1a8"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 88,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 87.4
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 241,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 122
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 455,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "passed",
+        "s": 183
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 529,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 50
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 613,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 80.7
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 739,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 105
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 911,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "nav",
+        "status": "passed",
+        "s": 149
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 995,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 55
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1013,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
