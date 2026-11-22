@@ -1,7 +1,7 @@
 // The journey part of `bumpproof check`: run, print, save the run record, and optionally publish it under docs/runs/.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { fixNeeded, runFixStage } from './check-fix.ts';
+import { fixNeeded, runFixStage, type FixedFile } from './check-fix.ts';
 import { runJourneyCheck, type JourneyCheckDeps } from './check-journeys.ts';
 import { renderCheck, saveRecord, type CheckOptions } from './check.ts';
 import type { Config } from './config.ts';
@@ -86,35 +86,55 @@ export interface JourneyCommand {
   publish: boolean;
   /** Present with `--fix`: run the fixer on a regression or a failed head build (release notes come through `fetch`). */
   fix?: { fetch: Fetcher };
+  /** Where the run came from (a pull request), stored in run.json. */
+  source?: Partial<RunReport['source']>;
   cwd: string;
   out: (s: string) => void;
   err: (s: string) => void;
 }
 
+export interface JourneyOutcome {
+  code: number;
+  report: RunReport;
+  /** The fix patch ('' when there is none). */
+  patch: string;
+  /** The files the verified fix changed, with their new text (empty without a fix). */
+  files: FixedFile[];
+  /** True when run.json was written under docs/runs/. */
+  published: boolean;
+}
+
 export async function journeyCommand(c: JourneyCommand, t: Translate, p: Paint): Promise<number> {
+  return (await runJourneyCommand(c, t, p)).code;
+}
+
+export async function runJourneyCommand(c: JourneyCommand, t: Translate, p: Paint): Promise<JourneyOutcome> {
   const { cfg } = c.deps;
   const names = findJourneys(journeysDir(join(c.opts.repo, cleanSubdir(c.opts.dir)), cfg), cfg.kane.journey_suffix).map((j) => j.name);
   c.out(t('check.journeys_found', { n: names.length, names: names.join(', ') }));
-  const res = await runJourneyCheck(c.deps, c.opts);
+  const res = await runJourneyCheck(c.deps, c.opts, c.source);
   c.out(renderCheck(res.check, t, p).replace(`\n${p.dim(t('check.journeys_not_run'))}`, ''));
   c.out(renderJourneys(res.report, t, p));
   let patch = '';
+  let files: FixedFile[] = [];
   if (c.fix && fixNeeded(res.report)) {
     c.out(`\n${t('fix.running', { attempts: cfg.fixer.max_attempts })}`);
-    patch = (await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file)).patch;
+    ({ patch, files } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
     c.out(renderFix(res.report, t, p));
   }
   c.out(t('check.record', { path: saveRecord(c.opts.repo, res.check) }));
   const local = join(c.opts.repo, '.bumpproof', 'runs', res.report.run_id);
   const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch);
   if (problems.length === 0) c.out(t('check.record', { path: relative(c.opts.repo, join(local, 'run.json')) }));
+  let published = false;
   if (c.publish) {
     const dest = resolve(c.cwd, cfg.report.runs_dir, res.report.run_id);
     if (problems.length > 0) c.err(t('check.publish_blocked', { n: problems.length, first: problems[0]! }));
     else {
       writeRunJson(dest, res.report, cfg, c.deps.env, patch);
+      published = true;
       c.out(t('check.published', { path: relative(c.cwd, join(dest, 'run.json')) }));
     }
   }
-  return verdictExit(res.report);
+  return { code: verdictExit(res.report), report: res.report, patch, files, published };
 }

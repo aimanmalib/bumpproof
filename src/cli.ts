@@ -18,6 +18,7 @@ import { httpStatus, portFree, SandboxError } from './sandbox.ts';
 import { makePaint, useColor } from './ui.ts';
 import { runReplay, runReport } from './report-cli.ts';
 import { runCensusFind } from './census.ts';
+import { parsePrArgs, runPr } from './pr-cli.ts';
 import { secretsFromEnv } from './evidence.ts';
 import { httpFetcher } from './notes.ts';
 
@@ -50,6 +51,7 @@ export function helpText(t: Translate): string {
     `  --build-only    ${t('cli.opt_build_only')}`,
     `  --publish       ${t('cli.opt_publish')}`,
     `  --fix           ${t('cli.opt_fix')}`,
+    `  --push-fix      ${t('cli.opt_push_fix')}`,
     `  --canary        ${t('cli.opt_canary')}`,
     `  --find          ${t('cli.opt_find')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
@@ -175,6 +177,12 @@ export async function main(argv: string[], io: Io): Promise<number> {
     io.out(t(`fix.canary_${r.status}`, { date: r.date, detail: r.detail }));
     if (r.denied_tools.length > 0) io.out(t('fix.denied', { tools: r.denied_tools.join(', ') }));
     return r.status === 'pass' ? 0 : r.status === 'leak' ? 1 : 2;
+  }
+  if (cmd === 'pr') {
+    const sandbox = { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
+      sleep: (ms: number) => new Promise<void>((r) => setTimeout(r, ms)) };
+    return runPr({ deps: { ...sandbox, env: io.env, ledgerRoot: io.cwd, version: version() }, fetch: httpFetcher(cfg.notes.timeout_ms),
+      version: version(), cwd: io.cwd, out: io.out, err: io.err }, parsePrArgs(argv), t, makePaint(useColor(io.env, io.isTTY)));
   }
   if (cmd === 'census') {
     if (!values.find) {

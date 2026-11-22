@@ -32,7 +32,8 @@
     "opt_find": "Find census candidates and write the list (no Kane needed)",
     "opt_build_only": "with check: build and start both sides only; skip the browser journeys",
     "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site",
-    "opt_fix": "with check: when the head regresses or does not build, let the fixer patch it and replay the journeys"
+    "opt_fix": "with check: when the head regresses or does not build, let the fixer patch it and replay the journeys",
+    "opt_push_fix": "with pr --fix: push a verified fix onto the pull request branch (our repositories only)"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -316,5 +317,23 @@
     "progress_eligible": "  {repo}: passes the rules",
     "progress_excluded": "  {repo}: left out",
     "reason_enough": "enough repositories already pass"
+  },
+  "pr": {
+    "need_ref": "Name the pull request: bumpproof pr <owner>/<repo>#<number>",
+    "not_ours": "--comment and --push-fix work only on repositories listed in config pr.write_repos; {repo} is not one of them. Run without them to check it read-only.",
+    "push_needs_fix": "--push-fix needs --fix: there is nothing to push without a verified fix.",
+    "not_open": "Pull request #{n} is {state}; only open pull requests are checked.",
+    "reading": "{repo}#{n}: {title}\nCI on GitHub: {ci} · app folder: {dir}",
+    "refs": "Base {base} ({base_ref} tip) against head {head} (GitHub's merge of the pull request on top of it)",
+    "ci_green": "green",
+    "ci_red": "red",
+    "ci_pending": "still running",
+    "ci_none": "no checks",
+    "pushed": "Pushed the fix to {branch} as {sha} (a new commit; nothing was merged).",
+    "push_refused": "The fix was not pushed: {detail}",
+    "nothing_to_push": "Nothing to push: the verdict is {verdict}.",
+    "comment_pushed": "The verified fix is on `{branch}` as commit {sha}. The pull request is not merged; a person decides.",
+    "commented": "Comment: {url}",
+    "error": "Pull request: {detail}"
   }
 }

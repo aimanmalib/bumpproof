@@ -1,7 +1,7 @@
 // `check --fix`: after a check found a regression or a head that does not build, Claude Code patches a fresh copy of
 // the head (fixer.ts, guarded), the sandbox rebuilds that copy, and Kane CLI replays the journeys: the failed ones
 // first, then the rest (PRD §5.6). The verdict is still decided by compare.ts; this file only gathers the facts.
-import { cpSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Bump } from './bump.ts';
 import type { JourneyCheck, JourneyCheckDeps } from './check-journeys.ts';
@@ -132,7 +132,10 @@ export function applyFix(r: RunReport, fix: FixResult, last: LastVerify, d: FixS
   r.verdict = { verdict: v.verdict, reason: v.reason, evaluated: v.evaluated };
 }
 
-export interface FixStage { fix: FixResult; patch: string }
+/** A file the verified fix changed, relative to the app folder: its new text, or null when the fix deleted it. */
+export interface FixedFile { path: string; content: string | null }
+
+export interface FixStage { fix: FixResult; patch: string; files: FixedFile[] }
 
 /**
  * Runs the fixer on a fresh export of the head. The record in `res.report` is updated in place;
@@ -169,7 +172,10 @@ export async function runFixStage(d: FixStageDeps, res: JourneyCheck, repo: stri
       { at_s: Math.round((d.now() - (Number.isFinite(started) ? started : d.now())) / 1000), key: 'verdict', vars: { verdict: r.verdict.verdict },
         tone: r.verdict.verdict === 'fixed' ? 'ok' : 'fail' });
     r.duration_s = Math.max(r.duration_s, r.timeline.at(-1)!.at_s);
-    return { fix, patch: fix.patch };
+    const files: FixedFile[] = fix.status === 'fixed'
+      ? fix.changes.map((c) => ({ path: c.path, content: existsSync(join(workCopy, c.path)) ? readFileSync(join(workCopy, c.path), 'utf8') : null }))
+      : [];
+    return { fix, patch: fix.patch, files };
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }

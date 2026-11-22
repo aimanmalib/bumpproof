@@ -52,6 +52,8 @@ export interface Config {
     changelog_files: string[]; guides: Record<string, string>;
   };
   github: { command: string };
+  /** `pr --comment/--push-fix` only on these `owner/repo`; the fix commit message (`{name} {from} {to} {run}`). */
+  pr: { write_repos: string[]; fix_commit_message: string };
   census: CensusConfig;
   doctor: { timeout_ms: number };
   publish: {

@@ -32,7 +32,8 @@
     "opt_find": "Cari calon banci dan tulis senarainya (tanpa Kane)",
     "opt_build_only": "dengan check: bina dan mulakan kedua-dua sisi sahaja; langkau perjalanan pelayar",
     "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan",
-    "opt_fix": "dengan check: bila kepala regresi atau gagal dibina, biar fixer menampalnya dan ulang perjalanan"
+    "opt_fix": "dengan check: bila kepala regresi atau gagal dibina, biar fixer menampalnya dan ulang perjalanan",
+    "opt_push_fix": "dengan pr --fix: tolak pembaikan yang disahkan ke cawangan pull request (repositori kita sahaja)"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -316,5 +317,23 @@
     "progress_eligible": "  {repo}: lulus peraturan",
     "progress_excluded": "  {repo}: dikecualikan",
     "reason_enough": "sudah cukup repositori yang lulus"
+  },
+  "pr": {
+    "need_ref": "Namakan pull request: bumpproof pr <pemilik>/<repo>#<nombor>",
+    "not_ours": "--comment dan --push-fix hanya untuk repositori dalam config pr.write_repos; {repo} bukan salah satunya. Jalankan tanpanya untuk semakan baca sahaja.",
+    "push_needs_fix": "--push-fix perlukan --fix: tiada apa untuk ditolak tanpa pembaikan yang disahkan.",
+    "not_open": "Pull request #{n} berstatus {state}; hanya pull request terbuka disemak.",
+    "reading": "{repo}#{n}: {title}\nCI di GitHub: {ci} · folder aplikasi: {dir}",
+    "refs": "Asas {base} (hujung {base_ref}) lawan kepala {head} (gabungan pull request di atasnya oleh GitHub)",
+    "ci_green": "hijau",
+    "ci_red": "merah",
+    "ci_pending": "masih berjalan",
+    "ci_none": "tiada semakan",
+    "pushed": "Pembaikan ditolak ke {branch} sebagai {sha} (komit baharu; tiada apa digabung).",
+    "push_refused": "Pembaikan tidak ditolak: {detail}",
+    "nothing_to_push": "Tiada apa untuk ditolak: verdict ialah {verdict}.",
+    "comment_pushed": "Pembaikan yang disahkan ada di `{branch}` sebagai komit {sha}. Pull request tidak digabung; manusia yang memutuskan.",
+    "commented": "Komen: {url}",
+    "error": "Pull request: {detail}"
   }
 }
