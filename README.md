@@ -4,7 +4,7 @@
 
 <p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b><br>
 <a href="https://aimanmalib.github.io/bumpproof/"><b>Report site</b></a> · <a href="#judge-it-in-2-minutes">Judge it in 2 minutes</a> · <a href="#run-it-live">Run it live</a> · <a href="#limitations">Limitations</a> · <a href="#bahasa-melayu">Bahasa Melayu</a><br>
-Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
+Built in Malaysia by Aiman Malib</p>
 
 <p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a></p>
 
