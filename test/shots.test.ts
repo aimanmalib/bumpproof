@@ -146,3 +146,19 @@ test('the PR comment shows the screenshots from the run page, in both languages'
   assert.match(renderComment(r, makeTranslator('ms'), { version: '1', runUrl: 'https://example.com/runs/x/', bugCode: 740 }), /Tangkapan skrin Kane CLI/);
   assert.doesNotMatch(renderComment(r, makeTranslator('en'), { version: '1', runUrl: null, bugCode: 740 }), /!\[/, 'no run page, no images');
 });
+
+test('run page: the screenshots link to full size, with the failed step under the pull request one', async () => {
+  const { runPage } = await import('../src/report/run-page.ts');
+  const r = report();
+  const failed = r.journeys.find((j) => j.name === 'account')!.head!.failed_step!;
+  r.shots = [{ journey: 'account', side: 'base', file: 'shots/account-base.jpg' }, { journey: 'account', side: 'head', file: 'shots/account-head.jpg' }];
+  for (const lang of ['en', 'ms'] as const) {
+    const t = makeTranslator(lang);
+    const html = runPage(r, null, 'x').body(t, lang);
+    assert.ok(html.includes(`<a href="shots/account-head.jpg"><img src="shots/account-head.jpg" alt="${t('site.shot_alt', { journey: 'account', side: t('side.head') })}"`));
+    assert.ok(html.includes(`${t('side.head')}<br>${failed.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}</figcaption>`));
+    assert.ok(html.includes(`${t('side.base')}</figcaption>`), 'no step under the base screenshot');
+  }
+  r.shots = [];
+  assert.ok(!runPage(r, null, 'x').body(makeTranslator('en'), 'en').includes('class="shots"'));
+});

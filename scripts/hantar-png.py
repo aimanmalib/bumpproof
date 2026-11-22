@@ -1,21 +1,29 @@
 #!/usr/bin/env python3
-"""Draws the two optional attachments for the hackathon form, as PNG at 2x pixel density.
+"""Draws the optional attachments for the hackathon form, as PNG at 2x pixel density.
 
 1. architecture.png: how one check runs, drawn in HTML with the report site's own stylesheet and fonts.
 2. census.png: the English census page from docs/census.html, as published. Its numbers come from
    census/results.json through `bumpproof report`; nothing here types a number in.
+3. before-after.png: two Kane CLI screenshots of one run as published under docs/runs/<id>/shots/ (the step that
+   failed on the pull request, and the same step after the fix), cropped to the page content. The labels come
+   from that run's run.json.
 
-Needs Python Playwright with Chromium. Usage:
+Needs Python Playwright with Chromium, and Pillow. Usage:
   python3 scripts/hantar-png.py <out-dir>
 """
+import json
 import sys
 from pathlib import Path
 
+from PIL import Image
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / 'docs'
 DSF = 2
+# The run and journey shown in before-after.png, and the part of Kane CLI's 1920 x 1080 screenshot that holds the page.
+BEFORE_AFTER = ('20261122-0453-53ba', 'account')
+CROP = {'x': 560, 'y': 0, 'w': 800, 'h': 450, 'full_w': 1920}
 
 # One box per step: (lane, title, detail, file in this repository).
 STEPS = [
@@ -89,6 +97,51 @@ Nothing is merged. Release notes reach the fixer marked as untrusted input.</p>
 </div></body></html>"""
 
 
+BA_CSS = """
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+.sheet { width: 1520px; padding: 40px; box-sizing: border-box; }
+h1 { max-width: none; font-family: var(--display); font-size: 36px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.sub { color: var(--muted); font-size: 18px; margin: 0 0 28px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+figure { margin: 0; }
+.crop { overflow: hidden; aspect-ratio: var(--cw) / var(--ch); border: 2px solid var(--rule-strong); border-radius: var(--radius); }
+figure.head .crop { border-color: var(--broken); }
+figure.fix .crop { border-color: var(--fixed); }
+.crop img { display: block; width: calc(var(--fw) / var(--cw) * 100%); margin-left: calc(var(--cx) / var(--cw) * -100%);
+  margin-top: calc(var(--cy) / var(--cw) * -100%); }
+figcaption { margin-top: 12px; font-size: 18px; line-height: 1.4; }
+figcaption b { font-family: var(--display); font-size: 22px; display: block; }
+.sheet p { max-width: none; }
+.runline { margin-top: 24px; font-size: 15px; color: var(--muted); }
+"""
+
+
+def before_after_html():
+    run_id, journey = BEFORE_AFTER
+    run_dir = DOCS / 'runs' / run_id
+    run = json.loads((run_dir / 'run.json').read_text(encoding='utf-8'))
+    shots = {s['side']: s['file'] for s in run['shots'] if s['journey'] == journey}
+    j = next(x for x in run['journeys'] if x['name'] == journey)
+    bump = run['bumps'][0]
+    pr = run['source'].get('pr')
+    title = f"Pull request #{pr}: {bump['name']} {bump['from']} → {bump['to']}" if pr else f"{bump['name']} {bump['from']} → {bump['to']}"
+    css_href = (DOCS / 'assets' / 'site.css').as_uri()
+    var = f"--fw:{CROP['full_w']};--cw:{CROP['w']};--ch:{CROP['h']};--cx:{CROP['x']};--cy:{CROP['y']}"
+    fig = lambda side, cls, head, text: (f'<figure class="{cls}"><div class="crop"><img src="{(run_dir / shots[side]).as_uri()}" alt=""></div>'
+                                         f'<figcaption><b>{esc(head)}</b>{esc(text)}</figcaption></figure>')
+    fix = run.get('fix') or {}
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="{css_href}">
+<style>{BA_CSS}</style></head><body><div class="sheet" style="{var}">
+<h1>What Kane CLI saw: journey <code>{esc(journey)}</code></h1>
+<p class="sub">{esc(title)} · CI was {esc(run['source'].get('ci') or 'not reported')} · screenshots from the Kane CLI evidence pack, cropped to the page</p>
+<div class="pair">
+{fig('head', 'head', 'On the pull request', f"Failed at the step: {j['head']['failed_step']}. Kane CLI's screenshot shows an empty page.")}
+{fig('after_fix', 'fix', 'After the fix', f"Same step passes. The patch changed {fix.get('changed_lines', '?')} lines; Kane CLI replayed every journey on it.")}
+</div>
+<p class="runline">Run {esc(run_id)} · the same step on the base branch passed · https://aimanmalib.github.io/bumpproof/runs/{esc(run_id)}/</p>
+</div></body></html>"""
+
+
 def main(argv):
     if len(argv) != 2:
         sys.exit(__doc__)
@@ -96,6 +149,8 @@ def main(argv):
     out.mkdir(parents=True, exist_ok=True)
     tmp = out / '.architecture.html'
     tmp.write_text(architecture_html(), encoding='utf-8')
+    tmp_ba = out / '.before-after.html'
+    tmp_ba.write_text(before_after_html(), encoding='utf-8')
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
@@ -108,10 +163,19 @@ def main(argv):
             page.add_style_tag(content='[data-lang="en"] main { padding: 32px 40px; max-width: 1360px; }')
             page.evaluate('document.fonts.ready')
             page.locator('[data-lang="en"] main').screenshot(path=str(out / 'census.png'))
+            page = browser.new_page(viewport={'width': 1520, 'height': 900}, device_scale_factor=DSF)
+            page.goto(tmp_ba.as_uri())
+            page.evaluate('document.fonts.ready')
+            page.wait_for_function("[...document.images].every(i => i.complete && i.naturalWidth > 0)")
+            page.locator('.sheet').screenshot(path=str(out / 'before-after.png'))
             browser.close()
     finally:
         tmp.unlink(missing_ok=True)
-    for name in ('architecture.png', 'census.png'):
+        tmp_ba.unlink(missing_ok=True)
+    # Flat colours: a 256-colour palette keeps before-after.png small without visible loss.
+    ba = Image.open(out / 'before-after.png')
+    ba.convert('RGB').quantize(256, method=Image.Quantize.MEDIANCUT).save(out / 'before-after.png', optimize=True)
+    for name in ('architecture.png', 'census.png', 'before-after.png'):
         print(out / name, (out / name).stat().st_size, 'bytes')
 
 

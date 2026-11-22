@@ -347,5 +347,51 @@
       "tone": "ok"
     }
   ],
-  "shots": []
+  "shots": [
+    {
+      "journey": "account",
+      "side": "base",
+      "file": "shots/account-base.jpg"
+    },
+    {
+      "journey": "account",
+      "side": "head",
+      "file": "shots/account-head.jpg"
+    },
+    {
+      "journey": "account",
+      "side": "after_fix",
+      "file": "shots/account-after_fix.jpg"
+    },
+    {
+      "journey": "browse",
+      "side": "base",
+      "file": "shots/browse-base.jpg"
+    },
+    {
+      "journey": "browse",
+      "side": "head",
+      "file": "shots/browse-head.jpg"
+    },
+    {
+      "journey": "browse",
+      "side": "after_fix",
+      "file": "shots/browse-after_fix.jpg"
+    },
+    {
+      "journey": "checkout",
+      "side": "base",
+      "file": "shots/checkout-base.jpg"
+    },
+    {
+      "journey": "checkout",
+      "side": "head",
+      "file": "shots/checkout-head.jpg"
+    },
+    {
+      "journey": "checkout",
+      "side": "after_fix",
+      "file": "shots/checkout-after_fix.jpg"
+    }
+  ]
 }

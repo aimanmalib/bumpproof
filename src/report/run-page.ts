@@ -67,10 +67,15 @@ export function runPage(run: RunReport, patch: string | null, replayCommand: str
           + `<h3>${esc(t('site.run_patch'))}</h3>${patch ? patchHtml(patch) : `<p class="empty">${esc(t('site.no_patch'))}</p>`}</section>`);
       }
 
+      // Under the pull request screenshot: the step Kane CLI reported as failed.
+      const shotStep = (s: RunReport['shots'][number]): string => {
+        const step = s.side === 'head' ? run.journeys.find((j) => j.name === s.journey)?.head?.failed_step : null;
+        return step ? `<br>${esc(step)}` : '';
+      };
       if (run.shots.length) {
         parts.push(`<section><h2>${esc(t('site.run_shots'))}</h2><p>${esc(t('site.run_shots_note'))}</p><div class="shots">${run.shots.map((s) => `<figure>`
           + `<a href="${esc(s.file)}"><img src="${esc(s.file)}" alt="${esc(t('site.shot_alt', { journey: s.journey, side: t(`side.${s.side}`) }))}" loading="lazy"></a>`
-          + `<figcaption><span class="mono">${esc(s.journey)}</span> · ${esc(t(`side.${s.side}`))}</figcaption></figure>`).join('')}</div></section>`);
+          + `<figcaption><span class="mono">${esc(s.journey)}</span> · ${esc(t(`side.${s.side}`))}${shotStep(s)}</figcaption></figure>`).join('')}</div></section>`);
       }
 
       const timeline = [...run.timeline].sort((a, b) => a.at_s - b.at_s).map((e) => `<li class="tl-${esc(e.tone)}">`

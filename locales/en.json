@@ -251,7 +251,7 @@
     "run_fix": "The fix",
     "run_patch": "Patch",
     "run_timeline": "Timeline",
-    "run_shots_note": "Screenshots Kane CLI took at the step that failed on the pull request, and at the same step on the base branch and after the fix. Nothing else from the evidence pack is published.",
+    "run_shots_note": "Screenshots Kane CLI took at the step that failed on the pull request, and at the same step on the base branch and after the fix. Nothing else from the evidence pack is published. Select a screenshot to open it at full size.",
     "shot_alt": "Kane CLI screenshot: {journey} journey, {side}",
     "run_shots": "Screenshots",
     "run_replay": "Replay this run in a terminal (no keys, no credits)",

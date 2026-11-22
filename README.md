@@ -8,6 +8,8 @@ Built in Malaysia by Aiman Malib</p>
 
 <p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a></p>
 
+<p align="center"><a href="https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/"><img src="docs/hantar/before-after.png" width="760" alt="Two Kane CLI screenshots of the same step in pull request #2: an empty page on the pull request, the Past orders list after the fix"></a></p>
+
 ![Replay of a recorded run: the bump breaks every journey, Claude Code writes a two-line fix, Kane CLI passes all three again](docs/media/bumpproof-loop.gif)
 
 - Demo video, 3 minutes, narrated: https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4
@@ -24,7 +26,7 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 | | What is asked | Where to check it |
 |---|---|---|
 | P1 | It works end to end | Pull request [#2](https://github.com/aimanmalib/bumpproof/pull/2): Dependabot opened it, CI was green, Bumpproof commented and pushed a verified fix. [Run page](https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/). |
-| P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. |
+| P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. The run page shows Kane CLI's screenshot of that step on the base, on the pull request and after the fix. |
 | P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L32`](src/check-fix.ts#L32)). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L60`](src/check-fix.ts#L60)). |
 | K1 | Ships | `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder on Node 20 and 22. CI runs it that way, and the full test suite, on every push. |
 | K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. |
@@ -143,11 +145,11 @@ flowchart LR
 | What | Where |
 |---|---|
 | `kane-cli testmd run <journey> --agent --headless --bug-detection continue` | [`src/kane.ts#L139`](src/kane.ts#L139), flags in [`config/defaults.json#L85`](config/defaults.json#L85) |
-| One journey run, refused when the credit budget is spent | [`src/journeys.ts#L88`](src/journeys.ts#L88), budget [`src/kane.ts#L186`](src/kane.ts#L186) |
+| One journey run, refused when the credit budget is spent | [`src/journeys.ts#L91`](src/journeys.ts#L91), budget [`src/kane.ts#L186`](src/kane.ts#L186) |
 | Reading the JSON event stream: steps, healing, `run_end`, `test_md_done` | [`src/kane.ts#L57`](src/kane.ts#L57) |
 | `credits_consumed` per run, added to a ledger | [`src/kane.ts#L106`](src/kane.ts#L106), ledger [`census/kredit.json`](census/kredit.json) |
 | Exit code to pass or fail, and the bug detection code in the PR comment | [`src/compare.ts#L43`](src/compare.ts#L43), [`src/report/markdown.ts#L42`](src/report/markdown.ts#L42) |
-| Evidence pack (`.evidence` zip): console and network errors, scrubbed before publishing | [`src/evidence.ts#L26`](src/evidence.ts#L26), [`src/evidence.ts#L116`](src/evidence.ts#L116) |
+| Evidence pack (`.evidence` zip): console and network errors, scrubbed before publishing | [`src/evidence.ts#L27`](src/evidence.ts#L27), [`src/evidence.ts#L117`](src/evidence.ts#L117) |
 | Kane CLI's failure handed to the fixer, then the replay on the patch | [`src/check-fix.ts#L32`](src/check-fix.ts#L32), [`src/check-fix.ts#L60`](src/check-fix.ts#L60) |
 | Journeys authored once on a census repository's base, then replayed | [`src/census-run.ts#L86`](src/census-run.ts#L86) |
 

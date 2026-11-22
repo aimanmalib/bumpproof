@@ -341,5 +341,21 @@
       "tone": "ok"
     }
   ],
-  "shots": []
+  "shots": [
+    {
+      "journey": "account",
+      "side": "base",
+      "file": "shots/account-base.jpg"
+    },
+    {
+      "journey": "account",
+      "side": "head",
+      "file": "shots/account-head.jpg"
+    },
+    {
+      "journey": "account",
+      "side": "after_fix",
+      "file": "shots/account-after_fix.jpg"
+    }
+  ]
 }

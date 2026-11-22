@@ -95,3 +95,4 @@ How AI is used: the code was written with Claude Code, directed by the author. C
 
 - `docs/hantar/architecture.png`: how one check runs.
 - `docs/hantar/census.png`: the census table from the report site.
+- `docs/hantar/before-after.png`: two Kane CLI screenshots of the same step in pull request #2, on the pull request and after the fix.
