@@ -106,8 +106,30 @@ bumpproof pr <owner>/<repo>#<number> --fix      # check one pull request, fix wh
 ```
 
 `init` finds the package manager, the build and serve commands, and the routes in your source. It writes them to
-`.bumpproof/config.json` and drafts two or three journeys in `.bumpproof/journeys/`. Read the drafts and change the
-steps to what your app must do. `--dir <folder>` points it at an app inside a larger repository.
+`.bumpproof/config.json` and drafts two or three journeys in `.bumpproof/journeys/`. It does not overwrite files that
+are already there. This is the output on a copy of `examples/shop` with its `.bumpproof/` folder removed:
+
+```text
+$ bumpproof init
+Found an app in . (package manager: npm).
+Install: npm ci --ignore-scripts --include=dev --no-audit --no-fund
+Build:   npm run build
+Serve:   npx --no-install vite preview --host 0.0.0.0 --port {port} --strictPort
+Port:    4173
+Routes in the source: /, /cart, /shop, /account, /checkout
+Wrote .bumpproof/config.json
+Wrote .bumpproof/journeys/home_test.md
+Wrote .bumpproof/journeys/nav_test.md
+Wrote .bumpproof/journeys/cart_test.md
+These journeys are drafts. Read each one and change the steps to what your app must do.
+Then run: bumpproof check --base <ref> --head <ref>
+```
+
+Read the drafts and change the steps to what your app must do. `--dir <folder>` points it at an app inside a larger
+repository. Next.js routes are read from `app/` and `pages/`, also under `src/`.
+
+Each check builds two copies of the app in Docker. Bumpproof refuses to start with less than 25 GB free disk.
+The limit is `sandbox.min_free_gb` in the config, or `--min-free-gb <n>` for one run.
 
 `--comment` posts the result on the pull request. `--push-fix` pushes the verified fix to the pull request branch.
 Both work only on repositories you list in `pr.write_repos`. Bumpproof never merges.
