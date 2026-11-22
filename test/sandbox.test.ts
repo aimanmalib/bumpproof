@@ -151,6 +151,14 @@ test('startApp refuses to start on low disk or a busy port, before touching Dock
   assert.equal(fd.calls.length, 0);
 });
 
+test('startApp waits for a port another program holds for a while, then starts', async () => {
+  const fd = fakeDocker([[{ running: true, out: phases('install', 'build', 'serve') }]]);
+  let busy = 3;
+  const r = await startApp(fd.deps({ isPortFree: async () => busy-- <= 0 }), args(shop()));
+  assert.equal(r.built, true);
+  assert.equal(busy, -1, 'asked until the port was free');
+});
+
 test('startApp: Docker refusing to run is a host problem, and the half-made container is removed', async () => {
   const fd = fakeDocker([], { runFails: true });
   await assert.rejects(startApp(fd.deps(), args(shop())), (e) => e instanceof SandboxError && e.code === 'docker');

@@ -22,7 +22,7 @@ export interface Config {
   sandbox: {
     image: string; work_dir: string; min_free_gb: number; disk_path: string;
     cpus: number; memory: string; pids_limit: number; label: string;
-    user: string; container_prefix: string; setup_timeout_s: number; serve_timeout_s: number; poll_ms: number;
+    user: string; container_prefix: string; setup_timeout_s: number; serve_timeout_s: number; port_wait_s: number; poll_ms: number;
     health_path: string; health_max_status: number; log_tail_lines: number; home: string;
     env: Record<string, string>; lockfiles: Record<string, string>; install: Record<string, string>;
     run_script: Record<string, string>; build_script: string;

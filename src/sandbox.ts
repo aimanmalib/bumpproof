@@ -256,7 +256,12 @@ export async function startApp(d: SandboxDeps, a: Omit<RunArgs, 'script' | 'user
   const secs = () => Math.round((d.now() - t0) / 100) / 10;
   const free = diskFreeGb(cfg, d.freeBytes);
   if (free < s.min_free_gb) throw new SandboxError('disk', `${free.toFixed(1)} GB free, ${s.min_free_gb} GB needed`);
-  if (!(await d.isPortFree(cfg.port))) throw new SandboxError('port', `127.0.0.1:${cfg.port} is in use`);
+  // Another program on the host may hold the port for a while; wait for it up to `port_wait_s` before refusing.
+  const portDeadline = d.now() + s.port_wait_s * 1000;
+  while (!(await d.isPortFree(cfg.port))) {
+    if (d.now() >= portDeadline) throw new SandboxError('port', `127.0.0.1:${cfg.port} is in use`);
+    await d.sleep(s.poll_ms);
+  }
   const plan = planApp(a.appDir, cfg);
   if ('problem' in plan) return { side: a.side, built: false, failed_at: 'plan', plan_problem: plan.problem, seconds: secs(), log_tail: [] };
 

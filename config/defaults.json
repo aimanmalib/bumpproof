@@ -23,6 +23,7 @@
     "container_prefix": "bumpproof",
     "setup_timeout_s": 900,
     "serve_timeout_s": 90,
+    "port_wait_s": 600,
     "poll_ms": 1000,
     "health_path": "/",
     "health_max_status": 399,
