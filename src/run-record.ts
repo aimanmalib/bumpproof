@@ -32,7 +32,8 @@ export function journeyRun(attempts: JourneyAttempt[] | undefined, rules: Publis
     credits: Math.round(attempts.reduce((s, a) => s + a.credits, 0) * 1000) / 1000,
     healed: k.healed,
     failed_step: clean(k.failed_step?.heading ?? null),
-    remark: k.status === 'passed' ? null : clean(k.reason),
+    // A bug Kane CLI confirmed says what the user sees; the run_end reason is only a machine code.
+    remark: k.status === 'passed' ? null : clean([...k.bugs].reverse().find((b) => b.confirmed)?.one_liner ?? k.reason),
     result_code: k.result_code,
   };
 }

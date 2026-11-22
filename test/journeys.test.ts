@@ -151,3 +151,19 @@ test('writeRunJson refuses a record that still holds a private value', () => {
   assert.equal(writeRunJson(d2, leaky, cfg, {}).length > 0, true);
   assert.equal(existsSync(join(d2, 'run.json')), false);
 });
+
+test('recorded regression (react-query 5 head, Kane CLI 0.10.7): failed after a heal, confirmed bug becomes the remark', async () => {
+  const { parseNdjson } = await import('../src/kane.ts');
+  const { journeyRun } = await import('../src/run-record.ts');
+  const k = parseNdjson(fixture('recorded-20261122-checkout-regression.ndjson'), 1);
+  assert.equal(k.status, 'failed');
+  assert.equal(k.complete, true);
+  assert.equal(k.healed, true, 'test_md_adaptive_heal and test_md_summary.adaptive_heal both say so');
+  assert.equal(k.result_code, 740);
+  assert.equal(k.failed_step?.heading, 'Add a product to the cart');
+  assert.equal(k.bugs.filter((b) => b.confirmed).length, 2);
+  const cfg = loadConfig('/nonexistent');
+  const r = journeyRun([{ kane: k, evidence: null, credits: 17.882, seconds: 197 }], cfg.publish, []);
+  assert.equal(r?.remark, k.bugs[1]?.one_liner);
+  assert.notEqual(r?.remark, k.reason);
+});
