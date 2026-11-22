@@ -112,6 +112,7 @@
       "json"
     ],
     "explanation_file": "BUMPPROOF_FIX.md",
+    "patch_file": "fix.patch",
     "protected_paths": [
       ".bumpproof/**",
       "**/*_test.md",

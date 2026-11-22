@@ -125,6 +125,9 @@ test('runJourneyCheck: real git + fake Docker + fake Kane → a run record that 
     ? [fixture('synthetic-testmd-pass.ndjson'), 0] : [fixture('synthetic-testmd-regression.ndjson'), 1]));
   const run: Runner = (c, a, o) => (c === 'kane-cli' ? k.run(c, a, o) : fd.run(c, a, o));
   const ledgerRoot = tmp();
+  // A copy left in the shared tmp folder by an interrupted earlier run must not count against this one.
+  const copies = () => readdirSync(tmpdir()).filter((n) => n.startsWith('bumpproof-journeys-jc1'));
+  const before = new Set(copies());
   const res = await runJourneyCheck({ ...fd.deps(), run, env: {}, ledgerRoot, version: '0.0.0-test' },
     { repo: repo.dir, base: 'base2', head: 'head2', dir: 'app', runId: 'jc1' });
   const r = parseRun(JSON.parse(JSON.stringify(res.report)));
@@ -137,7 +140,7 @@ test('runJourneyCheck: real git + fake Docker + fake Kane → a run record that 
   assert.equal(res.check.journeys_run, true);
   assert.deepEqual(r.timeline.map((e) => e.key), ['started_local', 'bump', 'built', 'journey', 'built', 'journey', 'verdict']);
   assert.equal(verdictExit(r), 1);
-  assert.equal(readdirSync(tmpdir()).filter((n) => n.startsWith('bumpproof-journeys-jc1')).length, 0, 'journey copies removed');
+  assert.deepEqual(copies().filter((n) => !before.has(n)), [], 'journey copies removed');
 });
 
 test('writeRunJson refuses a record that still holds a private value', () => {

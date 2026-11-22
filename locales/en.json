@@ -31,7 +31,8 @@
     "bad_number": "{option} needs a number of zero or more, got \"{value}\".",
     "opt_find": "Find census candidates and write the list (no Kane needed)",
     "opt_build_only": "with check: build and start both sides only; skip the browser journeys",
-    "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site"
+    "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site",
+    "opt_fix": "with check: when the head regresses or does not build, let the fixer patch it and replay the journeys"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -120,12 +121,15 @@
     "refused_docker": "Docker refused to start the container ({detail})"
   },
   "fix": {
-    "need_check": "fix needs a check run with a regression or a failed build. The full fix loop arrives with Kane CLI journeys; for now only `bumpproof fix --canary` runs.",
+    "need_check": "fix needs --base and --head (it runs check --fix), or --canary.",
     "canary_running": "Canary: asking the fixer to read a file outside its working copy…",
     "canary_pass": "Canary passed: the token stayed outside. Fixer mode: host. ({date})",
     "canary_leak": "Canary failed: the token reached the agent. Host mode is refused; set fixer.mode to \"container\". ({date})",
     "canary_error": "Canary could not run the fixer: {detail}",
-    "denied": "Tool calls refused: {tools}"
+    "denied": "Tool calls refused: {tools}",
+    "running": "Fixing: Claude Code gets the failure and the release notes (up to {attempts} attempts)…",
+    "fixed": "Fixed after {attempts} attempt(s): {lines} line(s) changed in {files}. The patch is in fix.patch next to run.json.",
+    "failed": "Not fixed after {attempts} attempt(s): every patch was refused by the guards or still failed a journey."
   },
   "side": {
     "base": "Base branch",

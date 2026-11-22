@@ -19,6 +19,7 @@ import { makePaint, useColor } from './ui.ts';
 import { runReplay, runReport } from './report-cli.ts';
 import { runCensusFind } from './census.ts';
 import { secretsFromEnv } from './evidence.ts';
+import { httpFetcher } from './notes.ts';
 
 export const COMMANDS = ['doctor', 'init', 'check', 'fix', 'pr', 'census', 'report', 'replay'] as const;
 
@@ -48,6 +49,7 @@ export function helpText(t: Translate): string {
     `  --min-free-gb <n> ${t('cli.opt_min_free_gb')}`,
     `  --build-only    ${t('cli.opt_build_only')}`,
     `  --publish       ${t('cli.opt_publish')}`,
+    `  --fix           ${t('cli.opt_fix')}`,
     `  --canary        ${t('cli.opt_canary')}`,
     `  --find          ${t('cli.opt_find')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
@@ -83,6 +85,7 @@ export async function main(argv: string[], io: Io): Promise<number> {
       speed: { type: 'string' },
       'build-only': { type: 'boolean' },
       publish: { type: 'boolean' },
+      fix: { type: 'boolean' },
     },
   });
   const cfg: Config = loadConfig(io.cwd);
@@ -115,14 +118,16 @@ export async function main(argv: string[], io: Io): Promise<number> {
     io.out(renderChecks(checks, t, makePaint(useColor(io.env, io.isTTY))));
     return checks.every((c) => c.ok) ? 0 : 1;
   }
-  if (cmd === 'check') {
+  // `fix --base --head` is `check --fix`; `fix --canary` is handled further down.
+  if (cmd === 'check' || (cmd === 'fix' && !values.canary)) {
     const str = (v: unknown) => (typeof v === 'string' && v !== '' ? v : undefined);
     const base = str(values.base);
     const head = str(values.head);
     if (!base || !head) {
-      io.err(t('check.need_refs'));
+      io.err(t(cmd === 'fix' ? 'fix.need_check' : 'check.need_refs'));
       return 2;
     }
+    const wantFix = cmd === 'fix' || values.fix === true;
     const minFree = str(values['min-free-gb']);
     if (minFree !== undefined) {
       const n = Number(minFree);
@@ -145,7 +150,8 @@ export async function main(argv: string[], io: Io): Promise<number> {
     try {
       if (!values['build-only'] && hasJourneys(cfg, repo, opts.dir)) {
         return await journeyCommand({ deps: { ...sandbox, env: io.env, ledgerRoot: io.cwd, version: version() }, opts,
-          publish: values.publish === true, cwd: io.cwd, out: io.out, err: io.err }, t, paint);
+          publish: values.publish === true, cwd: io.cwd, out: io.out, err: io.err,
+          ...(wantFix ? { fix: { fetch: httpFetcher(cfg.notes.timeout_ms) } } : {}) }, t, paint);
       }
       const rec = await runCheck(sandbox, opts);
       io.out(renderCheck(rec, t, paint));
@@ -164,10 +170,6 @@ export async function main(argv: string[], io: Io): Promise<number> {
     }
   }
   if (cmd === 'fix') {
-    if (!values.canary) {
-      io.err(t('fix.need_check'));
-      return 2;
-    }
     io.out(t('fix.canary_running'));
     const r = await runCanary({ cfg, run, env: io.env });
     io.out(t(`fix.canary_${r.status}`, { date: r.date, detail: r.detail }));

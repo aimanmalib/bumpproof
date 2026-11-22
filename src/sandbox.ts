@@ -40,7 +40,7 @@ export interface SandboxFacts {
 }
 
 export interface SideResult {
-  side: 'base' | 'head';
+  side: 'base' | 'head' | 'fix';
   built: boolean;
   failed_at?: FailedAt;
   /** Plan problem key (locales `sandbox.plan_*`) when failed_at is `plan`. */
@@ -119,7 +119,7 @@ export function sandboxUser(cfg: Config, uid = process.getuid?.() ?? 0, gid = pr
 export interface RunArgs {
   name: string;
   runId: string;
-  side: 'base' | 'head';
+  side: 'base' | 'head' | 'fix';
   appDir: string;
   user: string;
   script: string;

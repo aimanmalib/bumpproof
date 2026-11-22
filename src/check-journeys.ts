@@ -20,6 +20,8 @@ export interface JourneyCheck {
   check: CheckRecord;
   report: RunReport;
   journeys: JourneyFile[];
+  base: SideRuns;
+  head: SideRuns | null;
 }
 
 /** `package.json` of the app folder at one commit, or null when it is missing or not JSON. */
@@ -81,7 +83,7 @@ export async function runJourneyCheck(
     for (const b of bumps) report.timeline.splice(1, 0, { at_s: 0, key: 'bump', vars: { name: b.name, from: b.from ?? '?', to: b.to ?? '?', type: b.type }, tone: 'info' });
     report.timeline.push({ at_s: report.duration_s, key: 'verdict', vars: { verdict: report.verdict.verdict },
       tone: report.verdict.verdict === 'safe' ? 'ok' : report.verdict.verdict === 'unrunnable' ? 'warn' : 'fail' });
-    return { check, report, journeys };
+    return { check, report, journeys, base, head };
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }

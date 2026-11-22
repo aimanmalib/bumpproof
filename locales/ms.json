@@ -31,7 +31,8 @@
     "bad_number": "{option} perlukan nombor sifar atau lebih, diberi \"{value}\".",
     "opt_find": "Cari calon banci dan tulis senarainya (tanpa Kane)",
     "opt_build_only": "dengan check: bina dan mulakan kedua-dua sisi sahaja; langkau perjalanan pelayar",
-    "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan"
+    "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan",
+    "opt_fix": "dengan check: bila kepala regresi atau gagal dibina, biar fixer menampalnya dan ulang perjalanan"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -120,12 +121,15 @@
     "refused_docker": "Docker enggan memulakan kontena ({detail})"
   },
   "fix": {
-    "need_check": "fix memerlukan larian check dengan regresi atau binaan gagal. Gelung fix penuh datang bersama perjalanan Kane CLI; buat masa ini hanya `bumpproof fix --canary` berjalan.",
+    "need_check": "fix perlukan --base dan --head (ia menjalankan check --fix), atau --canary.",
     "canary_running": "Kanari: meminta fixer membaca fail di luar salinan kerjanya…",
     "canary_pass": "Kanari lulus: token kekal di luar. Mod fixer: hos. ({date})",
     "canary_leak": "Kanari gagal: token sampai kepada ejen. Mod hos ditolak; tetapkan fixer.mode kepada \"container\". ({date})",
     "canary_error": "Kanari tidak dapat menjalankan fixer: {detail}",
-    "denied": "Panggilan alat ditolak: {tools}"
+    "denied": "Panggilan alat ditolak: {tools}",
+    "running": "Membaiki: Claude Code menerima kegagalan dan nota keluaran (hingga {attempts} cubaan)…",
+    "fixed": "Dibaiki selepas {attempts} cubaan: {lines} baris berubah dalam {files}. Tampalan ada dalam fix.patch bersebelahan run.json.",
+    "failed": "Tidak dibaiki selepas {attempts} cubaan: setiap tampalan ditolak pengawal atau masih gagal satu perjalanan."
   },
   "side": {
     "base": "Cawangan asas",

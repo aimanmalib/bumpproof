@@ -161,6 +161,8 @@ export interface FixDeps {
   verify: (changes: FileChange[]) => Promise<Verification>;
   root?: string;
   name?: string;
+  /** Timeline hook: `fixer_start`, `fixer_rejected`, `fixer_done` (locale keys under `timeline.`). */
+  onEvent?: (key: string, vars: Record<string, string | number>, tone: 'info' | 'ok' | 'fail') => void;
 }
 
 const reason = (v: Violation) => `${v.rule}${v.path ? ` (${v.path})` : ''}: ${v.detail}`;
@@ -173,6 +175,7 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
   const rejected: string[] = [];
   for (let n = 1; n <= cfg.fixer.max_attempts; n++) {
     const prompt = buildPrompt(cfg, input, rejected, d.root);
+    d.onEvent?.('fixer_start', { attempt: n }, 'info');
     const agent = await runAgent(d.run, cfg, fixerInvocation(cfg, workDir, prompt, `${d.name ?? 'bumpproof-fixer'}-${n}`), d.env);
     const after = snapshotTree(workDir, cfg.fixer.snapshot_skip);
     const changes = diffTrees(before, after);
@@ -184,6 +187,7 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
     if (violations.length === 0) {
       attempt.verification = await d.verify(changes);
       if (attempt.verification.ok) {
+        d.onEvent?.('fixer_done', { lines: changedLines }, 'ok');
         const note = after.get(cfg.fixer.explanation_file)?.data.toString('utf8') ?? '';
         return { status: 'fixed', attempts, patch: renderPatch(changes), explanation: note, changes };
       }
@@ -191,6 +195,7 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
     } else {
       rejected.push(...violations.map(reason));
     }
+    d.onEvent?.('fixer_rejected', { attempt: n, reason: rejected[rejected.length - 1] ?? '' }, 'fail');
     restoreTree(workDir, before, changes);
   }
   return { status: 'failed', attempts, patch: '', explanation: '', changes: [] };
