@@ -36,6 +36,57 @@ jobs:
       - run: node dist/cli.js --version
       - run: node dist/cli.js --help
 
+  readme-commands:
+    # The same commands the README gives, from an empty folder, on a machine with no clone and no build step.
+    name: README install and replay from an empty folder (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    env:
+      RUN_ID: 20261122-0453-53ba
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/checkout@v4
+        if: github.event_name != 'push'
+      - name: Choose the package to install
+        env:
+          SPEC_PUSH: github:${{ github.repository }}#${{ github.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            echo "SPEC=$SPEC_PUSH" >> "$GITHUB_ENV"
+          else
+            # A pull request's merge commit cannot be fetched by npm, so pack the checkout instead.
+            npm pack --pack-destination "$RUNNER_TEMP"
+            echo "SPEC=$(ls "$RUNNER_TEMP"/bumpproof-*.tgz)" >> "$GITHUB_ENV"
+          fi
+      - name: Install globally, then replay by id and by path
+        run: |
+          set -o pipefail
+          cd "$(mktemp -d)"
+          npm install -g "$SPEC"
+          bumpproof --version
+          bumpproof replay "$RUN_ID" | tee by-id.txt
+          grep -q '^Verdict: ' by-id.txt
+          bumpproof replay "docs/runs/$RUN_ID" | tee by-path.txt
+          grep -q '^Verdict: ' by-path.txt
+          if bumpproof replay no-such-run; then echo "an unknown run must fail"; exit 1; fi
+          if bumpproof init; then echo "a command that is not built must fail"; exit 1; fi
+      - name: npx replay from an empty folder
+        run: |
+          set -o pipefail
+          cd "$(mktemp -d)"
+          # The README form on a push; npx reads a bare tarball path as a command, so name the package for a pull request.
+          case "$SPEC" in
+            github:*) npx -y "$SPEC" replay "docs/runs/$RUN_ID" | tee npx.txt ;;
+            *) npx -y --package="$SPEC" bumpproof replay "docs/runs/$RUN_ID" | tee npx.txt ;;
+          esac
+          grep -q '^Verdict: ' npx.txt
+
   example-shop:
     name: Build the demo shop
     runs-on: ubuntu-latest
