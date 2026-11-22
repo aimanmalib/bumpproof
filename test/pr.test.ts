@@ -10,7 +10,8 @@ import { makeTranslator } from '../src/i18n.ts';
 import {
   appDirOf, canWrite, mergeLocally, fillVars, parsePrInfo, parsePrRef, PR_MARKER, PrError, pushFix, upsertComment, type PrInfo,
 } from '../src/pr.ts';
-import { parsePrArgs, runPr } from '../src/pr-cli.ts';
+import { parsePrArgs, prComment, runPr } from '../src/pr-cli.ts';
+import { readRun } from '../src/report/run.ts';
 import { run, type Runner } from '../src/proc.ts';
 import { repoName } from '../src/report/words.ts';
 import { makePaint } from '../src/ui.ts';
@@ -210,5 +211,21 @@ test('pushFix refuses forks, empty fixes, paths outside the app and files that c
     assert.equal(o.g(o.origin, 'rev-parse', 'bump'), o.info.head_sha);
   } finally {
     rmSync(o.root, { recursive: true, force: true });
+  }
+});
+
+test('a verified fix left off the branch says so, with the command that reproduces the break', () => {
+  const fixed = readRun(join(import.meta.dirname, 'fixtures', 'synthetic-run'));
+  const o = { version: '0', runUrl: null, bugCode: 740, pushed: null, branch: 'dependabot/x', target: 'o/r#3' };
+  for (const lang of ['en', 'ms'] as const) {
+    const t = makeTranslator(lang);
+    const kept = prComment(fixed, t, o);
+    assert.match(kept, /`bumpproof pr o\/r#3`/);
+    assert.match(kept, /`dependabot\/x`/);
+    const pushed = prComment(fixed, t, { ...o, pushed: 'a'.repeat(40) });
+    assert.doesNotMatch(pushed, /bumpproof pr o\/r#3/);
+    assert.match(pushed, new RegExp('a'.repeat(40)));
+    const safe = { ...fixed, verdict: { ...fixed.verdict, verdict: 'safe' as const } };
+    assert.doesNotMatch(prComment(safe, t, o), /bumpproof pr o\/r#3/);
   }
 });

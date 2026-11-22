@@ -367,6 +367,7 @@
     "push_refused": "Pembaikan tidak ditolak: {detail}",
     "nothing_to_push": "Tiada apa untuk ditolak: verdict ialah {verdict}.",
     "comment_pushed": "Pembaikan yang disahkan ada di `{branch}` sebagai komit {sha}. Pull request tidak digabung; manusia yang memutuskan.",
+    "comment_not_pushed": "Pembaikan tidak ditolak. `{branch}` kekal seperti semasa dibuka, jadi sesiapa boleh mengulang kerosakan ini: `bumpproof pr {target}`. Tampalan yang disahkan ada di halaman larian. Pull request tidak digabung; manusia yang memutuskan.",
     "commented": "Komen: {url}",
     "error": "Pull request: {detail}"
   },

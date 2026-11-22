@@ -367,6 +367,7 @@
     "push_refused": "The fix was not pushed: {detail}",
     "nothing_to_push": "Nothing to push: the verdict is {verdict}.",
     "comment_pushed": "The verified fix is on `{branch}` as commit {sha}. The pull request is not merged; a person decides.",
+    "comment_not_pushed": "The fix was not pushed. `{branch}` stays as it was opened, so anyone can reproduce the break: `bumpproof pr {target}`. The verified patch is on the run page. The pull request is not merged; a person decides.",
     "commented": "Comment: {url}",
     "error": "Pull request: {detail}"
   },
