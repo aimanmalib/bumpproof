@@ -436,7 +436,8 @@ draw highlights, cards and captions, then pipe the frame to ffmpeg. A slow or bu
 A test in a clean `node:22-alpine` container found three problems with the README commands.
 `npm install -g github:aimanmalib/bumpproof` stopped at `sh: tsc: not found`, because the `prepare` build needs dev
 dependencies that a global install does not have. `npx … replay docs/runs/<id>` from an empty folder could not find
-the run. `bumpproof init` printed "not built yet" and looked like a success.
+the run. The README also told people to run `bumpproof init`, which was not built: it printed "not built yet" and
+exited 2.
 
 - `dist/` is now committed and `prepare` is gone, so npm installs the package as it is. `test/dist.test.ts` builds
   `src/` into a temporary folder and fails when the committed `dist/` differs. After changing `src/`, run
@@ -444,7 +445,10 @@ the run. `bumpproof init` printed "not built yet" and looked like a success.
 - The recorded runs ship in the package (`docs/runs/` in `files`, about 250 KB). `replay` reads a folder in the
   current directory first. If there is none, it uses the run with the same name inside the package. An unknown id
   still exits 2.
-- A listed command that is not built yet exits 2.
+- `bumpproof init` is now built (PRD §5.1). It writes `.bumpproof/config.json` from the same detection the sandbox
+  uses and drafts journeys from templates in `config/`. It refuses to replace an existing config without `--force`.
+- `bumpproof <command> --help` exits 2 for a command that does not exist. CI reads the installed README and runs
+  `--help` for every `bumpproof` command in its code blocks, so a documented command that is missing fails CI.
 - Even with no build step, `npm install -g github:…` linked the global package to a temporary clone that npm then
   deleted, so the `bumpproof` command was missing (npm 10.8 and 10.9, measured in `node:20-alpine` and
   `node:22-alpine`). `--install-links` makes npm pack the clone and install a real copy, so the install line is

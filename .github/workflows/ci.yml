@@ -77,7 +77,30 @@ jobs:
           bumpproof replay "docs/runs/$RUN_ID" | tee by-path.txt
           grep -q '^Verdict: ' by-path.txt
           if bumpproof replay no-such-run; then echo "an unknown run must fail"; exit 1; fi
-          if bumpproof init; then echo "a command that is not built must fail"; exit 1; fi
+      - name: Every bumpproof command in the README exists
+        shell: sh
+        run: |
+          set -eo pipefail
+          # npm ships README.md in every package, so the installed copy is the one to read.
+          readme="$(npm root -g)/bumpproof/README.md"
+          cmds=$(awk '/^ *```/ { f = !f; next } f' "$readme" | sed -n 's/^ *bumpproof \([a-z][a-z-]*\).*/\1/p' | sort -u)
+          test -n "$cmds"
+          for c in $cmds; do
+            bumpproof "$c" --help > /dev/null || { echo "the README names a command that does not exist: $c"; exit 1; }
+          done
+          if bumpproof no-such-command --help > /dev/null; then echo "an unknown command must fail"; exit 1; fi
+      - name: init writes a config and draft journeys in an empty app
+        shell: sh
+        run: |
+          set -eo pipefail
+          cd "$(mktemp -d)"
+          echo '{"scripts":{"build":"vite build"},"devDependencies":{"vite":"5.0.0"}}' > package.json
+          echo '{}' > package-lock.json
+          bumpproof init
+          grep -q '"serve": "npx --no-install vite preview' .bumpproof/config.json
+          test -f .bumpproof/journeys/home_test.md
+          test -f .bumpproof/journeys/nav_test.md
+          if bumpproof init; then echo "a second init must not replace the config"; exit 1; fi
       - name: npx replay from an empty folder
         shell: sh
         run: |
