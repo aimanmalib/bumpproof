@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0914-99de",
+  "synthetic": false,
+  "started_at": "2026-11-22T09:21:33.269Z",
+  "duration_s": 576,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/Abhirajgautam28/Chatraj",
+    "pr": 1391,
+    "pr_url": "https://github.com/Abhirajgautam28/Chatraj/pull/1391",
+    "pr_title": "chore(deps): bump antd from 6.7.0 to 6.7.1 in /frontend",
+    "ci": "red"
+  },
+  "app_dir": "frontend",
+  "base": {
+    "ref": "924c6529197811ccf94a28c685fc3287fde4c978",
+    "sha": "924c6529197811ccf94a28c685fc3287fde4c978"
+  },
+  "head": {
+    "ref": "becc296ac5b306d153ea97c565c26af0ab182260",
+    "sha": "becc296ac5b306d153ea97c565c26af0ab182260"
+  },
+  "bumps": [
+    {
+      "name": "antd",
+      "from": "^6.7.0",
+      "to": "^6.7.1",
+      "type": "patch"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 67.1,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 59.6,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 93,
+        "credits": 14.413,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 75,
+        "credits": 14.399,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "failed",
+        "seconds": 82,
+        "credits": 27.104,
+        "healed": false,
+        "failed_step": "Follow the main navigation",
+        "remark": "Child agent failed: Final verification failed: \"the home page still shows its content\"",
+        "result_code": 440
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 26,
+        "credits": 0.81,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 45,
+        "credits": 0.812,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 2
+  },
+  "fix": null,
+  "credits_consumed": 57.538,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "924c6529197811ccf94a28c685fc3287fde4c978",
+        "head": "becc296ac5b306d153ea97c565c26af0ab182260"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "antd",
+        "from": "^6.7.0",
+        "to": "^6.7.1",
+        "type": "patch"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 67,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 67.1
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 180,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 93
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 284,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "failed",
+        "s": 82
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 327,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 26
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 390,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 59.6
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 482,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 75
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 544,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 45
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 576,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}

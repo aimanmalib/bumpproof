@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "total": 1868.453,
-  "census": 1250.992,
+  "total": 2015.955,
+  "census": 1398.494,
   "runs": [
     {
       "at": "2026-11-22T01:53:29.156Z",
@@ -829,6 +829,54 @@
       "at": "2026-11-22T09:13:21.989Z",
       "id": "20261122-0907-c69d:base:specific:1",
       "credits": 11.748,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:16:00.330Z",
+      "id": "20261122-0914-99de-author:base:home:1",
+      "credits": 11.316,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:17:25.276Z",
+      "id": "20261122-0914-99de-author:base:nav:1",
+      "credits": 25.489,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:19:12.280Z",
+      "id": "20261122-0914-99de-author:base:specific:1",
+      "credits": 53.159,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:22:43.789Z",
+      "id": "20261122-0914-99de:base:home:1",
+      "credits": 14.413,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:24:36.582Z",
+      "id": "20261122-0914-99de:base:nav:1",
+      "credits": 27.104,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:26:19.057Z",
+      "id": "20261122-0914-99de:base:specific:1",
+      "credits": 0.81,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:28:05.841Z",
+      "id": "20261122-0914-99de:head:home:1",
+      "credits": 14.399,
+      "census": true
+    },
+    {
+      "at": "2026-11-22T09:29:36.900Z",
+      "id": "20261122-0914-99de:head:specific:1",
+      "credits": 0.812,
       "census": true
     }
   ]
