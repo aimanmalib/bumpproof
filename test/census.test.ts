@@ -177,8 +177,10 @@ test('needs-secrets and missing lockfile are reasons; over the cap is listed as 
   };
   const file = await findCandidates({ cfg: smallCfg({ max_evaluate: 1 }), run: fakeGh(routes, []), now: () => 0, sleep: async () => {} });
   assert.deepEqual(file.candidates[0]!.reasons.map((r) => r.code), ['no_lockfile', 'needs_secrets']);
-  assert.equal(file.candidates[1]!.status, 'not_evaluated');
-  assert.deepEqual(file.candidates[1]!.reasons, [{ code: 'limit' }]);
+  assert.equal(file.candidates.length, 1, 'repositories never reached are counted, not listed');
+  assert.deepEqual(file.not_checked, { limit: 1 });
+  assert.equal(file.counts.not_evaluated, 1);
+  assert.doesNotMatch(JSON.stringify(file), /late\/app/);
 });
 
 test('a rate limit waits once and retries; a second one stops the search and is recorded', async () => {
@@ -211,7 +213,8 @@ test('the time box stops evaluation and lists the rest as not checked', async ()
   };
   const file = await findCandidates({ cfg: smallCfg({ timebox_min: 45 }), run, now: () => clock, sleep: async () => {} });
   assert.equal(file.stopped, 'timebox');
-  assert.ok(file.candidates.some((c) => c.status === 'not_evaluated' && c.reasons[0]!.code === 'timebox'));
+  assert.deepEqual(file.not_checked, { timebox: 1 });
+  assert.deepEqual(file.candidates.map((c) => c.repo), ['a/x']);
 });
 
 test('writeCandidates refuses to write when the publication scan finds an e-mail', () => {
@@ -219,7 +222,7 @@ test('writeCandidates refuses to write when the publication scan finds an e-mail
   try {
     const path = join(dir, 'census', 'candidates.json');
     const file = { schema_version: 1, generated_at: '', rules: {}, order: 'newest_pr_first', stopped: null, searches: [],
-      counts: { found: 0, evaluated: 0, eligible: 0, excluded: 0, not_evaluated: 0 }, candidates: [] };
+      counts: { found: 0, evaluated: 0, eligible: 0, excluded: 0, not_evaluated: 0 }, not_checked: {}, candidates: [] };
     assert.deepEqual(writeCandidates(path, file, cfg, []), []);
     assert.equal(JSON.parse(readFileSync(path, 'utf8')).schema_version, 1);
     rmSync(path);
@@ -242,6 +245,6 @@ test('checking stops once target_eligible repositories pass; the rest are listed
   });
   const routes = { 'search q=': { items: [item('a/one', 1, '2026-11-10'), item('b/two', 1, '2026-11-09')] }, ...one('a/one'), ...one('b/two') };
   const file = await findCandidates({ cfg: smallCfg({ target_eligible: 1 }), run: fakeGh(routes, []), now: () => 0, sleep: async () => {} });
-  assert.deepEqual(file.candidates.map((c) => c.status), ['eligible', 'not_evaluated']);
-  assert.deepEqual(file.candidates[1]!.reasons, [{ code: 'enough' }]);
+  assert.deepEqual(file.candidates.map((c) => c.status), ['eligible']);
+  assert.deepEqual(file.not_checked, { enough: 1 });
 });

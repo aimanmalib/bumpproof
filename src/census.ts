@@ -36,7 +36,7 @@ export interface Hit { repo: string; number: number; title: string; url: string;
 export interface Candidate {
   repo: string;
   url: string;
-  status: 'eligible' | 'excluded' | 'not_evaluated';
+  status: 'eligible' | 'excluded';
   reasons: Reason[];
   pr: Hit & { base_sha?: string; head_sha?: string; ci?: CiState };
   license?: string | null;
@@ -61,6 +61,9 @@ export interface CandidatesFile {
   stopped: null | 'rate_limit' | 'timebox' | 'max_searches';
   searches: SearchLog[];
   counts: { found: number; evaluated: number; eligible: number; excluded: number; not_evaluated: number };
+  /** Repositories found but never checked, by reason (`enough`, `limit`, `timebox`). */
+  not_checked: Record<string, number>;
+  /** Every repository checked, in search order, with the reasons when it is left out. */
   candidates: Candidate[];
 }
 
@@ -280,21 +283,29 @@ export async function findCandidates(d: FindDeps): Promise<CandidatesFile> {
   let stopped = s.stopped;
   const unique = dedupe(s.hits, ownRepoOf(d.cfg.report.repo_url));
   const candidates: Candidate[] = [];
+  // Repositories never reached are counted by why, not listed: nothing about them was looked at.
+  const notChecked: Record<string, number> = {};
+  let rest: string | null = null;
+  const eligible = (): number => candidates.filter((x) => x.status === 'eligible').length;
   for (const [i, hit] of unique.entries()) {
-    const skip = (code: string): Candidate =>
-      ({ repo: hit.repo, url: `https://github.com/${hit.repo}`, status: 'not_evaluated', reasons: [{ code }], pr: { ...hit } });
-    if (i >= c.max_evaluate) { candidates.push(skip('limit')); continue; }
-    if (candidates.filter((x) => x.status === 'eligible').length >= c.target_eligible) { candidates.push(skip('enough')); continue; }
-    if (stopped === 'timebox' || !gh.timeLeft()) { stopped = 'timebox'; candidates.push(skip('timebox')); continue; }
-    try {
-      candidates.push(await evaluate(gh, d.cfg, c, hit));
-    } catch (e) {
-      if (e instanceof Timebox) { stopped = 'timebox'; candidates.push(skip('timebox')); continue; }
-      if (e instanceof ApiError || e instanceof SyntaxError) { candidates.push({ ...skip('api_error'), status: 'excluded' }); continue; }
-      throw e;
+    if (!rest) rest = eligible() >= c.target_eligible ? 'enough' : i >= c.max_evaluate ? 'limit' : gh.timeLeft() ? null : 'timebox';
+    if (!rest) {
+      try {
+        candidates.push(await evaluate(gh, d.cfg, c, hit));
+        d.progress?.(`census.progress_${candidates.at(-1)!.status}`, { repo: hit.repo });
+        continue;
+      } catch (e) {
+        if (e instanceof ApiError || e instanceof SyntaxError) {
+          candidates.push({ repo: hit.repo, url: `https://github.com/${hit.repo}`, status: 'excluded', reasons: [{ code: 'api_error' }], pr: { ...hit } });
+          continue;
+        }
+        if (!(e instanceof Timebox)) throw e;
+        rest = 'timebox';
+      }
     }
-    d.progress?.(`census.progress_${candidates.at(-1)!.status}`, { repo: hit.repo });
+    notChecked[rest] = (notChecked[rest] ?? 0) + 1;
   }
+  if (rest === 'timebox') stopped = 'timebox';
   const count = (st: Candidate['status']): number => candidates.filter((x) => x.status === st).length;
   const { bots, watchlist, created_since, max_searches, search_gap_ms, per_page, max_evaluate, target_eligible, timebox_min, ...filters } = c;
   return {
@@ -306,8 +317,9 @@ export async function findCandidates(d: FindDeps): Promise<CandidatesFile> {
     order: 'newest_pr_first',
     stopped,
     searches: s.log,
-    counts: { found: unique.length, evaluated: candidates.length - count('not_evaluated'), eligible: count('eligible'),
-      excluded: count('excluded'), not_evaluated: count('not_evaluated') },
+    counts: { found: unique.length, evaluated: candidates.length, eligible: count('eligible'), excluded: count('excluded'),
+      not_evaluated: Object.values(notChecked).reduce((a, b) => a + b, 0) },
+    not_checked: notChecked,
     candidates,
   };
 }
@@ -338,6 +350,7 @@ export async function runCensusFind(d: FindDeps, t: (k: string, v?: Record<strin
   if (file.stopped) io.out(t(`census.stopped_${file.stopped}`));
   const tally = new Map<string, number>();
   for (const c of file.candidates) for (const r of c.reasons) tally.set(r.code, (tally.get(r.code) ?? 0) + 1);
+  for (const [code, n] of Object.entries(file.not_checked)) tally.set(code, (tally.get(code) ?? 0) + n);
   for (const [code, n] of [...tally].sort((a, b) => b[1] - a[1])) io.out(`  ${String(n).padStart(3)}  ${t(`census.reason_${code}`)}`);
   io.out(t('census.written', { path: out }));
   return 0;
