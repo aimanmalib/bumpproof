@@ -1,6 +1,6 @@
 // The journey part of `bumpproof check`: run, print, save the run record, and optionally publish it under docs/runs/.
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fixNeeded, runFixStage, type FixedFile } from './check-fix.ts';
 import { runJourneyCheck, type JourneyCheckDeps } from './check-journeys.ts';
 import { renderCheck, saveRecord, type CheckOptions } from './check.ts';
@@ -8,9 +8,10 @@ import type { Config } from './config.ts';
 import { scanText, secretsFromEnv } from './evidence.ts';
 import { cleanSubdir } from './git.ts';
 import type { Translate } from './i18n.ts';
-import { findJourneys, journeysDir } from './journeys.ts';
+import { findJourneys, journeysDir, type SideRuns } from './journeys.ts';
 import type { Fetcher } from './notes.ts';
 import type { RunReport } from './report/run.ts';
+import { collectShots, imageText, type ShotFile, type Side } from './shots.ts';
 import type { Paint } from './ui.ts';
 
 /** True when the working tree has journeys for the app folder (the base export is what actually runs). */
@@ -69,14 +70,22 @@ export function renderJourneys(r: RunReport, t: Translate, p: Paint): string {
  * Writes `run.json` (and the fix patch, when there is one) to `dir` after the publication scan of both;
  * returns the problems found (nothing is written then).
  */
-export function writeRunJson(dir: string, r: RunReport, cfg: Config, env: NodeJS.ProcessEnv, patch = ''): string[] {
+export function writeRunJson(
+  dir: string, r: RunReport, cfg: Config, env: NodeJS.ProcessEnv, patch = '', images: ShotFile[] = [],
+): string[] {
   const files: [string, string][] = [['run.json', `${JSON.stringify(r, null, 2)}\n`]];
   if (r.fix?.patch_file && patch) files.push([r.fix.patch_file, patch]);
   const secrets = secretsFromEnv(env, cfg.publish.secret_env);
-  const findings = files.flatMap(([name, text]) => scanText(name, text, cfg.publish, secrets).map((f) => `${name}: ${f.kind} line ${f.line}`));
+  // An image is scanned through its file name and the text in its metadata.
+  const scanned: [string, string][] = [...files, ...images.map((i): [string, string] => [i.file, `${i.file}\n${imageText(i.bytes)}`])];
+  const findings = scanned.flatMap(([name, text]) => scanText(name, text, cfg.publish, secrets).map((f) => `${name}: ${f.kind} line ${f.line}`));
   if (findings.length > 0) return findings;
   mkdirSync(dir, { recursive: true });
   for (const [name, text] of files) writeFileSync(join(dir, name), text);
+  for (const i of images) {
+    mkdirSync(dirname(join(dir, i.file)), { recursive: true });
+    writeFileSync(join(dir, i.file), i.bytes);
+  }
   return [];
 }
 
@@ -117,21 +126,25 @@ export async function runJourneyCommand(c: JourneyCommand, t: Translate, p: Pain
   c.out(renderJourneys(res.report, t, p));
   let patch = '';
   let files: FixedFile[] = [];
+  let afterFix: SideRuns | null = null;
   if (c.fix && fixNeeded(res.report)) {
     c.out(`\n${t('fix.running', { attempts: cfg.fixer.max_attempts })}`);
-    ({ patch, files } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
+    ({ patch, files, afterFix } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
     c.out(renderFix(res.report, t, p));
   }
+  const sides: Record<Side, SideRuns | null> = { base: res.base, head: res.head, after_fix: afterFix };
+  const shots = collectShots(res.report, (name, side) => sides[side]?.get(name)?.at(-1)?.pack ?? null, cfg.evidence.image_exts);
+  res.report.shots = shots.shots;
   c.out(t('check.record', { path: saveRecord(c.opts.repo, res.check) }));
   const local = join(c.opts.repo, '.bumpproof', 'runs', res.report.run_id);
-  const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch);
+  const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch, shots.files);
   if (problems.length === 0) c.out(t('check.record', { path: relative(c.opts.repo, join(local, 'run.json')) }));
   let published = false;
   if (c.publish) {
     const dest = resolve(c.cwd, cfg.report.runs_dir, res.report.run_id);
     if (problems.length > 0) c.err(t('check.publish_blocked', { n: problems.length, first: problems[0]! }));
     else {
-      writeRunJson(dest, res.report, cfg, c.deps.env, patch);
+      writeRunJson(dest, res.report, cfg, c.deps.env, patch, shots.files);
       published = true;
       c.out(t('check.published', { path: relative(c.cwd, join(dest, 'run.json')) }));
     }

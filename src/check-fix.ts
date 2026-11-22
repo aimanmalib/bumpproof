@@ -135,7 +135,7 @@ export function applyFix(r: RunReport, fix: FixResult, last: LastVerify, d: FixS
 /** A file the verified fix changed, relative to the app folder: its new text, or null when the fix deleted it. */
 export interface FixedFile { path: string; content: string | null }
 
-export interface FixStage { fix: FixResult; patch: string; files: FixedFile[] }
+export interface FixStage { fix: FixResult; patch: string; files: FixedFile[]; afterFix: SideRuns }
 
 /**
  * Runs the fixer on a fresh export of the head. The record in `res.report` is updated in place;
@@ -175,7 +175,7 @@ export async function runFixStage(d: FixStageDeps, res: JourneyCheck, repo: stri
     const files: FixedFile[] = fix.status === 'fixed'
       ? fix.changes.map((c) => ({ path: c.path, content: existsSync(join(workCopy, c.path)) ? readFileSync(join(workCopy, c.path), 'utf8') : null }))
       : [];
-    return { fix, patch: fix.patch, files };
+    return { fix, patch: fix.patch, files, afterFix: last.runs };
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }

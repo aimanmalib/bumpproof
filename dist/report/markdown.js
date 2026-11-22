@@ -30,6 +30,10 @@ export function renderComment(run, t, o) {
             if (j.head.result_code !== null && j.head.result_code === o.bugCode)
                 out.push(`  ${t('comment.bug', { code: j.head.result_code })}`);
         }
+        const shots = run.shots.filter((s) => s.journey === j.name);
+        if (o.runUrl && shots.length) {
+            out.push('', t('comment.shots', { name: cell(j.name) }), '', `| ${shots.map((s) => t(`side.${s.side}`)).join(' | ')} |`, `|${shots.map(() => '---').join('|')}|`, `| ${shots.map((s) => `![${cell(`${j.name} · ${t(`side.${s.side}`)}`)}](${o.runUrl}${s.file})`).join(' | ')} |`, '');
+        }
         if (j.new_console_errors.length)
             out.push(`- ${t('comment.console', { list: j.new_console_errors.map(cell).join('; ') })}`);
         if (j.new_network_errors.length)

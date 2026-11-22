@@ -99,6 +99,7 @@ test('secretsFromEnv reads the configured variables and splits lists', () => {
 // The gate: everything that would be published must be clean. KANE_USERNAME and BUMPPROOF_PRIVATE_EMAILS are
 // read from the environment of whoever runs the tests (the owner's machine has them; CI checks e-mail and links).
 test('publication scan: docs/ and census/ hold no identities, private links or stray e-mail', () => {
-  const findings = scanTree(ROOT.replace(/\/$/, ''), PUB.scan_dirs, PUB.scan_exts, RULES, secretsFromEnv(process.env, PUB.secret_env));
+  const findings = scanTree(ROOT.replace(/\/$/, ''), PUB.scan_dirs, PUB.scan_exts, RULES, secretsFromEnv(process.env, PUB.secret_env),
+    cfg.evidence.image_exts);
   assert.deepEqual(findings, []);
 });

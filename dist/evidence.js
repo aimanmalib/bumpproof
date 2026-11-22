@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import { strFromU8, unzipSync } from 'fflate';
+import { imageText } from "./shots.js";
 export const REDACTED = '[redacted]';
 export function readPack(bytes) {
     return new Map(Object.entries(unzipSync(bytes)));
@@ -159,8 +160,11 @@ export function scanText(file, text, rules, secrets) {
 export function mask(s) {
     return s.length <= 4 ? '****' : `${s.slice(0, 2)}…(${s.length})`;
 }
-/** Scans every text file under `dirs` (missing dirs are skipped). Binary files are skipped by extension. */
-export function scanTree(root, dirs, exts, rules, secrets) {
+/**
+ * Scans every text file under `dirs` (missing dirs are skipped), and every image by its file name and the text in
+ * its metadata. Other binary files are skipped by extension.
+ */
+export function scanTree(root, dirs, exts, rules, secrets, imageExts = []) {
     const out = [];
     const walk = (dir) => {
         let names;
@@ -174,8 +178,14 @@ export function scanTree(root, dirs, exts, rules, secrets) {
             const p = join(dir, n);
             if (statSync(p).isDirectory())
                 walk(p);
-            else if (exts.includes(extname(n).slice(1).toLowerCase()))
-                out.push(...scanText(p.slice(root.length + 1), readFileSync(p, 'utf8'), rules, secrets));
+            else {
+                const ext = extname(n).slice(1).toLowerCase();
+                const rel = p.slice(root.length + 1);
+                if (exts.includes(ext))
+                    out.push(...scanText(rel, readFileSync(p, 'utf8'), rules, secrets));
+                else if (imageExts.includes(ext))
+                    out.push(...scanText(rel, `${rel}\n${imageText(readFileSync(p))}`, rules, secrets));
+            }
         }
     };
     for (const d of dirs)

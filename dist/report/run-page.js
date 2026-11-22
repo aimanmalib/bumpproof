@@ -61,8 +61,8 @@ export function runPage(run, patch, replayCommand) {
                     + `<h3>${esc(t('site.run_patch'))}</h3>${patch ? patchHtml(patch) : `<p class="empty">${esc(t('site.no_patch'))}</p>`}</section>`);
             }
             if (run.shots.length) {
-                parts.push(`<section><h2>${esc(t('site.run_shots'))}</h2><div class="shots">${run.shots.map((s) => `<figure>`
-                    + `<img src="${esc(s.file)}" alt="${esc(`${s.journey} · ${t(`side.${s.side}`)}`)}" loading="lazy">`
+                parts.push(`<section><h2>${esc(t('site.run_shots'))}</h2><p>${esc(t('site.run_shots_note'))}</p><div class="shots">${run.shots.map((s) => `<figure>`
+                    + `<a href="${esc(s.file)}"><img src="${esc(s.file)}" alt="${esc(t('site.shot_alt', { journey: s.journey, side: t(`side.${s.side}`) }))}" loading="lazy"></a>`
                     + `<figcaption><span class="mono">${esc(s.journey)}</span> · ${esc(t(`side.${s.side}`))}</figcaption></figure>`).join('')}</div></section>`);
             }
             const timeline = [...run.timeline].sort((a, b) => a.at_s - b.at_s).map((e) => `<li class="tl-${esc(e.tone)}">`

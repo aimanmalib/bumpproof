@@ -1,12 +1,13 @@
 // The journey part of `bumpproof check`: run, print, save the run record, and optionally publish it under docs/runs/.
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fixNeeded, runFixStage } from "./check-fix.js";
 import { runJourneyCheck } from "./check-journeys.js";
 import { renderCheck, saveRecord } from "./check.js";
 import { scanText, secretsFromEnv } from "./evidence.js";
 import { cleanSubdir } from "./git.js";
 import { findJourneys, journeysDir } from "./journeys.js";
+import { collectShots, imageText } from "./shots.js";
 /** True when the working tree has journeys for the app folder (the base export is what actually runs). */
 export function hasJourneys(cfg, repo, dir) {
     return findJourneys(journeysDir(join(repo, cleanSubdir(dir)), cfg), cfg.kane.journey_suffix).length > 0;
@@ -63,17 +64,23 @@ export function renderJourneys(r, t, p) {
  * Writes `run.json` (and the fix patch, when there is one) to `dir` after the publication scan of both;
  * returns the problems found (nothing is written then).
  */
-export function writeRunJson(dir, r, cfg, env, patch = '') {
+export function writeRunJson(dir, r, cfg, env, patch = '', images = []) {
     const files = [['run.json', `${JSON.stringify(r, null, 2)}\n`]];
     if (r.fix?.patch_file && patch)
         files.push([r.fix.patch_file, patch]);
     const secrets = secretsFromEnv(env, cfg.publish.secret_env);
-    const findings = files.flatMap(([name, text]) => scanText(name, text, cfg.publish, secrets).map((f) => `${name}: ${f.kind} line ${f.line}`));
+    // An image is scanned through its file name and the text in its metadata.
+    const scanned = [...files, ...images.map((i) => [i.file, `${i.file}\n${imageText(i.bytes)}`])];
+    const findings = scanned.flatMap(([name, text]) => scanText(name, text, cfg.publish, secrets).map((f) => `${name}: ${f.kind} line ${f.line}`));
     if (findings.length > 0)
         return findings;
     mkdirSync(dir, { recursive: true });
     for (const [name, text] of files)
         writeFileSync(join(dir, name), text);
+    for (const i of images) {
+        mkdirSync(dirname(join(dir, i.file)), { recursive: true });
+        writeFileSync(join(dir, i.file), i.bytes);
+    }
     return [];
 }
 export async function journeyCommand(c, t, p) {
@@ -88,14 +95,18 @@ export async function runJourneyCommand(c, t, p) {
     c.out(renderJourneys(res.report, t, p));
     let patch = '';
     let files = [];
+    let afterFix = null;
     if (c.fix && fixNeeded(res.report)) {
         c.out(`\n${t('fix.running', { attempts: cfg.fixer.max_attempts })}`);
-        ({ patch, files } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
+        ({ patch, files, afterFix } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
         c.out(renderFix(res.report, t, p));
     }
+    const sides = { base: res.base, head: res.head, after_fix: afterFix };
+    const shots = collectShots(res.report, (name, side) => sides[side]?.get(name)?.at(-1)?.pack ?? null, cfg.evidence.image_exts);
+    res.report.shots = shots.shots;
     c.out(t('check.record', { path: saveRecord(c.opts.repo, res.check) }));
     const local = join(c.opts.repo, '.bumpproof', 'runs', res.report.run_id);
-    const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch);
+    const problems = writeRunJson(local, res.report, cfg, c.deps.env, patch, shots.files);
     if (problems.length === 0)
         c.out(t('check.record', { path: relative(c.opts.repo, join(local, 'run.json')) }));
     let published = false;
@@ -104,7 +115,7 @@ export async function runJourneyCommand(c, t, p) {
         if (problems.length > 0)
             c.err(t('check.publish_blocked', { n: problems.length, first: problems[0] }));
         else {
-            writeRunJson(dest, res.report, cfg, c.deps.env, patch);
+            writeRunJson(dest, res.report, cfg, c.deps.env, patch, shots.files);
             published = true;
             c.out(t('check.published', { path: relative(c.cwd, join(dest, 'run.json')) }));
         }

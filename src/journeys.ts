@@ -11,12 +11,15 @@ import { parseCredits } from './doctor.ts';
 import { readPack, secretsFromEnv, summarize, type EvidenceSummary } from './evidence.ts';
 import { addRun, checkBudget, parseNdjson, readLedger, testmdArgs, toFacts, writeLedger, type KaneRun } from './kane.ts';
 import type { Runner } from './proc.ts';
+import type { Pack } from './shots.ts';
 
 export interface JourneyFile { name: string; file: string }
 
 export interface JourneyAttempt {
   kane: KaneRun;
   evidence: EvidenceSummary | null;
+  /** The unzipped evidence pack, kept for step screenshots (never written out as is). */
+  pack?: Pack | null;
   /** Credits charged for this run: the balance drop when the balance could be read, else the NDJSON sum. */
   credits: number;
   seconds: number;
@@ -105,10 +108,12 @@ export async function runJourney(d: KaneDeps, cwd: string, j: JourneyFile, id: s
     at: new Date(started).toISOString(), id, credits, census: d.census === true,
   }));
   let evidence: EvidenceSummary | null = null;
-  const pack = evidencePath(r.stdout, cwd);
-  if (pack) {
+  let pack: Pack | null = null;
+  const packPath = evidencePath(r.stdout, cwd);
+  if (packPath) {
     try {
-      evidence = summarize(readPack(readFileSync(pack)), d.cfg.publish, {
+      pack = readPack(readFileSync(packPath));
+      evidence = summarize(pack, d.cfg.publish, {
         min_status: d.cfg.compare.network_min_status, image_exts: d.cfg.evidence.image_exts,
         secrets: secretsFromEnv(d.env, d.cfg.publish.secret_env),
       });
@@ -116,7 +121,7 @@ export async function runJourney(d: KaneDeps, cwd: string, j: JourneyFile, id: s
       evidence = null; // unreadable pack: the exit code still decides
     }
   }
-  return { kane, evidence, credits, seconds };
+  return { kane, evidence, pack, credits, seconds };
 }
 
 export function factsOf(a: JourneyAttempt): RunFacts {

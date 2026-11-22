@@ -83,10 +83,12 @@ export async function runJourney(d, cwd, j, id) {
         at: new Date(started).toISOString(), id, credits, census: d.census === true,
     }));
     let evidence = null;
-    const pack = evidencePath(r.stdout, cwd);
-    if (pack) {
+    let pack = null;
+    const packPath = evidencePath(r.stdout, cwd);
+    if (packPath) {
         try {
-            evidence = summarize(readPack(readFileSync(pack)), d.cfg.publish, {
+            pack = readPack(readFileSync(packPath));
+            evidence = summarize(pack, d.cfg.publish, {
                 min_status: d.cfg.compare.network_min_status, image_exts: d.cfg.evidence.image_exts,
                 secrets: secretsFromEnv(d.env, d.cfg.publish.secret_env),
             });
@@ -95,7 +97,7 @@ export async function runJourney(d, cwd, j, id) {
             evidence = null; // unreadable pack: the exit code still decides
         }
     }
-    return { kane, evidence, credits, seconds };
+    return { kane, evidence, pack, credits, seconds };
 }
 export function factsOf(a) {
     return toFacts(a.kane, a.evidence?.console_errors ?? [], a.evidence?.network_errors ?? []);

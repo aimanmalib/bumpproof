@@ -155,7 +155,7 @@ export async function runFixStage(d, res, repo, dir, patchFile) {
         const files = fix.status === 'fixed'
             ? fix.changes.map((c) => ({ path: c.path, content: existsSync(join(workCopy, c.path)) ? readFileSync(join(workCopy, c.path), 'utf8') : null }))
             : [];
-        return { fix, patch: fix.patch, files };
+        return { fix, patch: fix.patch, files, afterFix: last.runs };
     }
     finally {
         rmSync(scratch, { recursive: true, force: true });
