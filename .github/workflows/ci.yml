@@ -90,6 +90,11 @@ jobs:
             *) npx -y --package="$SPEC" bumpproof replay "docs/runs/$RUN_ID" | tee npx.txt ;;
           esac
           grep -q '^Verdict: ' npx.txt
+      - name: npm's debug log, when a step above failed
+        if: failure()
+        shell: sh
+        run: |
+          for f in "$HOME"/.npm/_logs/*.log; do grep -E 'verbose (stack|cwd|argv|title)|http fetch|git|error' "$f" | tail -60; done
 
   example-shop:
     name: Build the demo shop
