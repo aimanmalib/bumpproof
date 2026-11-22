@@ -26,7 +26,7 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 | P1 | It works end to end | Pull request [#2](https://github.com/aimanmalib/bumpproof/pull/2): Dependabot opened it, CI was green, Bumpproof commented and pushed a verified fix. [Run page](https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/). |
 | P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. |
 | P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L32`](src/check-fix.ts#L32)). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L60`](src/check-fix.ts#L60)). |
-| K1 | Ships | `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` runs from a clean clone. CI runs the full test suite on every push. |
+| K1 | Ships | `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder on Node 20 and 22. CI runs it that way, and the full test suite, on every push. |
 | K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. |
 | K3 | Closed loop | One command goes from the pull request to a fix that Kane CLI has passed. The fix is pushed only after that ([`src/pr.ts`](src/pr.ts)). |
 | K4 | Craft | Docker sandbox, file-only fixer with guards ([`test/guards.test.ts`](test/guards.test.ts)), English and Malay output, every number below counted from JSON. |
@@ -55,7 +55,7 @@ The other numbers, counted the same way as on the report site:
 
 ## Judge it in 2 minutes
 
-No keys, no credits, no network needed.
+No keys and no credits. The replay needs the network once, to download the package.
 
 1. Open the [report site](https://aimanmalib.github.io/bumpproof/) and a run page.
 2. Replay a recorded run in your terminal:

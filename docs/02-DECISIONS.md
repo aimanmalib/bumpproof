@@ -430,3 +430,23 @@ draw highlights, cards and captions, then pipe the frame to ffmpeg. A slow or bu
 - Audio: each line is placed at its scene start, then normalised in two passes to -16.5 LUFS, true peak -2 dBTP.
   No music.
 - Every number on screen comes from `docs/runs/20261122-0453-53ba/run.json`, `census/results.json` or README.md.
+
+## 21. Installing from GitHub works with no build step (22 Nov 2026)
+
+A test in a clean `node:22-alpine` container found three problems with the README commands.
+`npm install -g github:aimanmalib/bumpproof` stopped at `sh: tsc: not found`, because the `prepare` build needs dev
+dependencies that a global install does not have. `npx … replay docs/runs/<id>` from an empty folder could not find
+the run. `bumpproof init` printed "not built yet" and looked like a success.
+
+- `dist/` is now committed and `prepare` is gone, so npm installs the package as it is. `test/dist.test.ts` builds
+  `src/` into a temporary folder and fails when the committed `dist/` differs. After changing `src/`, run
+  `npm run build`. `scripts/uji.sh` no longer builds in place, so CI cannot hide a stale `dist/`.
+- The recorded runs ship in the package (`docs/runs/` in `files`, about 250 KB). `replay` reads a folder in the
+  current directory first. If there is none, it uses the run with the same name inside the package. An unknown id
+  still exits 2.
+- A listed command that is not built yet exits 2.
+- The `readme-commands` CI job runs the README commands from an empty folder on Node 20 and 22. On a push it installs
+  `github:<repo>#<sha>`. On a pull request it installs `npm pack` of the checkout, because npm cannot fetch a merge
+  commit.
+- Undo: put `dist/` back in `.gitignore`, restore `prepare`, and change every install line to
+  `npx github:aimanmalib/bumpproof <command>`. That form builds on first use and takes about 25 s.

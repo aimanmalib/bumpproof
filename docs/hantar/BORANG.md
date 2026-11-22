@@ -63,7 +63,7 @@ Numbers, all counted by script from the run records
 
 How to run it
 
-Without keys: open the report site, or run `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` from a clean clone. It replays the recorded run in the terminal, with no network and no credits.
+Without keys: open the report site, or run `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` from any folder. It replays the recorded run in the terminal. It needs no keys and no credits, and the network only to download the package.
 
 Live: Node 20+, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. Then `bumpproof doctor`, `bumpproof init`, and `bumpproof pr <owner>/<repo>#<number> --fix`.
 
