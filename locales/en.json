@@ -33,7 +33,8 @@
     "opt_build_only": "with check: build and start both sides only; skip the browser journeys",
     "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site",
     "opt_fix": "with check: when the head regresses or does not build, let the fixer patch it and replay the journeys",
-    "opt_push_fix": "with pr --fix: push a verified fix onto the pull request branch (our repositories only)"
+    "opt_push_fix": "with pr --fix: push a verified fix onto the pull request branch (our repositories only)",
+    "opt_run": "Run the next eligible census candidates (--limit n, --only owner/repo)"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -294,7 +295,7 @@
     "stopped_timebox": "Stopped early: the time box ran out. Repositories not reached are listed as not checked.",
     "stopped_max_searches": "Stopped early: the search cap was reached.",
     "written": "Every repository found, with the reason when it is left out, is in {path}.",
-    "need_find": "The census run needs Kane CLI and is not built yet. Use --find to list candidates.",
+    "need_find": "Use --find to list candidates, or --run to run the next ones (needs Kane CLI and Docker).",
     "reason_archived": "repository is archived",
     "reason_license": "license is not on the allowed list",
     "reason_too_big": "repository is too big",
@@ -316,7 +317,13 @@
     "progress_search": "  {bot} {pkg}: {n} pull requests",
     "progress_eligible": "  {repo}: passes the rules",
     "progress_excluded": "  {repo}: left out",
-    "reason_enough": "enough repositories already pass"
+    "reason_enough": "enough repositories already pass",
+    "no_candidates": "No candidate list at {path}. Run bumpproof census --find first.",
+    "nothing_left": "Every eligible candidate already has a result.",
+    "timebox": "Stopped: the census time box is used up ({used} of {limit} minutes).",
+    "running": "Census: {repo} #{n} ({bump})",
+    "authoring": "Adding {n} journeys to a local commit on the base of {repo} and authoring them once (nothing is pushed).",
+    "row": "{repo}: {verdict} ({reason}); control {control}; {credits} credits; {s} s"
   },
   "pr": {
     "need_ref": "Name the pull request: bumpproof pr <owner>/<repo>#<number>",

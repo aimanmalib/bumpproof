@@ -18,6 +18,7 @@ import { httpStatus, portFree, SandboxError } from './sandbox.ts';
 import { makePaint, useColor } from './ui.ts';
 import { runReplay, runReport } from './report-cli.ts';
 import { runCensusFind } from './census.ts';
+import { runCensus } from './census-run.ts';
 import { parsePrArgs, runPr } from './pr-cli.ts';
 import { secretsFromEnv } from './evidence.ts';
 import { httpFetcher } from './notes.ts';
@@ -54,6 +55,7 @@ export function helpText(t: Translate): string {
     `  --push-fix      ${t('cli.opt_push_fix')}`,
     `  --canary        ${t('cli.opt_canary')}`,
     `  --find          ${t('cli.opt_find')}`,
+    `  --run           ${t('cli.opt_run')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
     `  --comment <run> ${t('cli.opt_comment')}`,
     `  --speed <n>     ${t('cli.opt_speed')}`,
@@ -78,6 +80,9 @@ export async function main(argv: string[], io: Io): Promise<number> {
       repo: { type: 'string' },
       canary: { type: 'boolean' },
       find: { type: 'boolean' },
+      run: { type: 'boolean' },
+      limit: { type: 'string' },
+      only: { type: 'string' },
       markdown: { type: 'string' },
       'min-free-gb': { type: 'string' },
       out: { type: 'string' },
@@ -183,6 +188,18 @@ export async function main(argv: string[], io: Io): Promise<number> {
       sleep: (ms: number) => new Promise<void>((r) => setTimeout(r, ms)) };
     return runPr({ deps: { ...sandbox, env: io.env, ledgerRoot: io.cwd, version: version() }, fetch: httpFetcher(cfg.notes.timeout_ms),
       version: version(), cwd: io.cwd, out: io.out, err: io.err }, parsePrArgs(argv), t, makePaint(useColor(io.env, io.isTTY)));
+  }
+  if (cmd === 'census' && values.run === true) {
+    const limit = typeof values.limit === 'string' ? Number(values.limit) : cfg.census.run_limit;
+    if (!Number.isInteger(limit) || limit < 1) {
+      io.err(t('cli.bad_number', { option: '--limit', value: String(values.limit) }));
+      return 2;
+    }
+    const sandbox = { cfg, run, freeBytes: freeBytesOf, probe: httpStatus, isPortFree: portFree, now: Date.now,
+      sleep: (ms: number) => new Promise<void>((r) => setTimeout(r, ms)) };
+    return runCensus({ ...sandbox, env: io.env, ledgerRoot: io.cwd, version: version(), fetch: httpFetcher(cfg.notes.timeout_ms),
+      cwd: io.cwd, out: io.out, err: io.err }, { limit, ...(typeof values.only === 'string' ? { only: values.only } : {}) },
+    t, makePaint(useColor(io.env, io.isTTY)));
   }
   if (cmd === 'census') {
     if (!values.find) {

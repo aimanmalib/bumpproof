@@ -29,6 +29,12 @@ export interface CensusConfig extends CensusRules {
   target_eligible: number;
   timebox_min: number;
   candidates_path: string;
+  /** `census --run`: repositories per call, wall-clock budget over all runs, journey folders, run records. */
+  run_limit: number;
+  run_timebox_min: number;
+  generic_journeys_dir: string;
+  specific_journeys_dir: string;
+  runs_dir: string;
 }
 
 export interface Hit { repo: string; number: number; title: string; url: string; created_at: string; bot: string }

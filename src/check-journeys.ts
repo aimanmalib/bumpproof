@@ -14,7 +14,8 @@ import type { RunReport } from './report/run.ts';
 import type { SandboxDeps } from './sandbox.ts';
 import type { Runner } from './proc.ts';
 
-export type JourneyCheckDeps = SandboxDeps & { run: Runner; env: NodeJS.ProcessEnv; ledgerRoot: string; version: string };
+/** `census`: Kane CLI runs also count against the census credit budget. */
+export type JourneyCheckDeps = SandboxDeps & { run: Runner; env: NodeJS.ProcessEnv; ledgerRoot: string; version: string; census?: boolean };
 
 export interface JourneyCheck {
   check: CheckRecord;
@@ -42,7 +43,7 @@ export async function runJourneyCheck(
 ): Promise<JourneyCheck> {
   const started = d.now();
   const tl = new Timeline(started, d.now);
-  const kd: KaneDeps = { run: d.run, cfg: d.cfg, env: d.env, now: d.now, ledgerRoot: d.ledgerRoot };
+  const kd: KaneDeps = { run: d.run, cfg: d.cfg, env: d.env, now: d.now, ledgerRoot: d.ledgerRoot, census: d.census === true };
   const tmp = mkdtempSync(join(tmpdir(), `bumpproof-journeys-${o.runId}-`));
   let journeys: JourneyFile[] = [];
   let base: SideRuns = new Map();

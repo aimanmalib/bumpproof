@@ -380,6 +380,11 @@
     "env_key_pattern": "API_KEY|SECRET|DATABASE_URL|TOKEN",
     "require_lockfile": true,
     "candidates_path": "census/candidates.json",
-    "target_eligible": 20
+    "target_eligible": 20,
+    "run_limit": 4,
+    "run_timebox_min": 360,
+    "generic_journeys_dir": "config/census-journeys",
+    "specific_journeys_dir": "census/journeys",
+    "runs_dir": "census/runs"
   }
 }

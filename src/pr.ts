@@ -81,7 +81,7 @@ export function appDirOf(info: PrInfo, configured: string, given: string | undef
   return configured;
 }
 
-async function git(run: Runner, repo: string, args: string[], timeoutMs = 600000): Promise<string> {
+export async function git(run: Runner, repo: string, args: string[], timeoutMs = 600000): Promise<string> {
   const r = await run('git', ['-C', repo, ...args], { timeoutMs, env: gitEnv() });
   if (!r.ok) throw new GitError(`git ${args[0]}: ${(r.stderr || r.error || '').trim().split('\n').pop() ?? ''}`);
   return r.stdout.trim();
@@ -90,7 +90,7 @@ async function git(run: Runner, repo: string, args: string[], timeoutMs = 600000
 export interface PrRefs { base: string; head: string }
 
 /** Identity for the local merge commit only; it is never pushed. */
-const MERGE_IDENTITY = ['-c', 'user.name=Bumpproof', '-c', 'user.email=bumpproof@localhost.invalid'];
+export const MERGE_IDENTITY = ['-c', 'user.name=Bumpproof', '-c', 'user.email=bumpproof@localhost.invalid'];
 
 /**
  * Merges the PR head into the current tip of its base branch inside the clone (no push) and checks the base out, so
@@ -104,12 +104,17 @@ export async function mergeLocally(run: Runner, clone: string, info: PrInfo): Pr
   const base = await git(run, clone, ['rev-parse', 'refs/bumpproof/base^{commit}']);
   const pr = await git(run, clone, ['rev-parse', 'refs/bumpproof/pr^{commit}']);
   if (pr !== info.head_sha) throw new PrError(`the PR head moved while it was read (${pr.slice(0, 7)}); run again`);
+  const head = await mergeOnto(run, clone, base, pr, info);
+  await git(run, clone, ['checkout', '--quiet', '--detach', base]);
+  return { base, head };
+}
+
+/** A local merge commit of `pr` on top of `base` (nothing is checked out or pushed). */
+export async function mergeOnto(run: Runner, clone: string, base: string, pr: string, info: Pick<PrInfo, 'number' | 'base_ref'>): Promise<string> {
   const tree = await run('git', ['-C', clone, 'merge-tree', '--write-tree', base, pr], { timeoutMs: 600000, env: gitEnv() });
   if (!tree.ok) throw new PrError(`#${info.number} does not merge cleanly into ${info.base_ref}; rebase it first`);
   const treeSha = tree.stdout.trim().split('\n')[0]!;
-  const head = await git(run, clone, [...MERGE_IDENTITY, 'commit-tree', treeSha, '-p', base, '-p', pr, '-m', `Merge #${info.number} into ${info.base_ref}`]);
-  await git(run, clone, ['checkout', '--quiet', '--detach', base]);
-  return { base, head };
+  return git(run, clone, [...MERGE_IDENTITY, 'commit-tree', treeSha, '-p', base, '-p', pr, '-m', `Merge #${info.number} into ${info.base_ref}`]);
 }
 
 /** Comment bodies start with this line so a later run edits its own comment instead of adding another. */

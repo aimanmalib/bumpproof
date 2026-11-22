@@ -75,7 +75,7 @@ export async function verifyFix(
       return { ok: false, detail: `the patched app did not build or start (${build.failed_at ?? 'start'}); last log lines:\n${build.log_tail.join('\n')}` };
     }
     tl.add('built', { side: 'fix', s: build.seconds }, 'ok');
-    const kd: KaneDeps = { run: d.run, cfg: d.cfg, env: d.env, now: d.now, ledgerRoot: d.ledgerRoot };
+    const kd: KaneDeps = { run: d.run, cfg: d.cfg, env: d.env, now: d.now, ledgerRoot: d.ledgerRoot, census: d.census === true };
     for (const j of replayOrder(res)) {
       const runs = await runSide(kd, replay, [j], 'after_fix', res.report.run_id, undefined,
         (nm, a) => tl.add('journey', { side: 'after_fix', name: nm, status: a.kane.status, s: a.kane.duration_s ?? a.seconds },

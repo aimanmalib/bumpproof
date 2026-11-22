@@ -33,7 +33,8 @@
     "opt_build_only": "dengan check: bina dan mulakan kedua-dua sisi sahaja; langkau perjalanan pelayar",
     "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan",
     "opt_fix": "dengan check: bila kepala regresi atau gagal dibina, biar fixer menampalnya dan ulang perjalanan",
-    "opt_push_fix": "dengan pr --fix: tolak pembaikan yang disahkan ke cawangan pull request (repositori kita sahaja)"
+    "opt_push_fix": "dengan pr --fix: tolak pembaikan yang disahkan ke cawangan pull request (repositori kita sahaja)",
+    "opt_run": "Jalankan calon banci layak seterusnya (--limit n, --only pemilik/repo)"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -294,7 +295,7 @@
     "stopped_timebox": "Berhenti awal: kotak masa habis. Repositori yang belum dicapai disenaraikan sebagai tidak disemak.",
     "stopped_max_searches": "Berhenti awal: had bilangan carian dicapai.",
     "written": "Setiap repositori yang ditemui, dengan sebab bila dikecualikan, ada dalam {path}.",
-    "need_find": "Larian banci memerlukan Kane CLI dan belum dibina. Guna --find untuk menyenaraikan calon.",
+    "need_find": "Guna --find untuk menyenaraikan calon, atau --run untuk menjalankan calon seterusnya (perlu Kane CLI dan Docker).",
     "reason_archived": "repositori diarkibkan",
     "reason_license": "lesen tiada dalam senarai dibenarkan",
     "reason_too_big": "repositori terlalu besar",
@@ -316,7 +317,13 @@
     "progress_search": "  {bot} {pkg}: {n} pull request",
     "progress_eligible": "  {repo}: lulus peraturan",
     "progress_excluded": "  {repo}: dikecualikan",
-    "reason_enough": "sudah cukup repositori yang lulus"
+    "reason_enough": "sudah cukup repositori yang lulus",
+    "no_candidates": "Tiada senarai calon di {path}. Jalankan bumpproof census --find dahulu.",
+    "nothing_left": "Setiap calon yang layak sudah ada keputusan.",
+    "timebox": "Berhenti: kotak masa banci sudah habis ({used} daripada {limit} minit).",
+    "running": "Banci: {repo} #{n} ({bump})",
+    "authoring": "Menambah {n} perjalanan ke komit tempatan di atas asas {repo} dan mengarangnya sekali (tiada apa ditolak).",
+    "row": "{repo}: {verdict} ({reason}); kawalan {control}; {credits} kredit; {s} s"
   },
   "pr": {
     "need_ref": "Namakan pull request: bumpproof pr <pemilik>/<repo>#<nombor>",

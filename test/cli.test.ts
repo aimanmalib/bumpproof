@@ -38,10 +38,13 @@ test('unknown command and unsupported language exit 2', async () => {
   assert.match(b.stderr[0] ?? '', /Unsupported language 'xx'/);
 });
 
-test('commands that are not built yet say so instead of pretending', async () => {
+test('census without --find or --run says which one to use; a bad --limit is refused', async () => {
   const o = io();
   assert.equal(await main(['census'], o), 2);
-  assert.match(o.stderr[0] ?? '', /not built yet/);
+  assert.match(o.stderr[0] ?? '', /--find .* --run/);
+  const b = io();
+  assert.equal(await main(['census', '--run', '--limit', '0'], b), 2);
+  assert.match(b.stderr[0] ?? '', /--limit/);
 });
 
 test('no arguments prints help and exits 1', async () => {
