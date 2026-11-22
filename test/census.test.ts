@@ -98,8 +98,9 @@ test('search: query shape, hits parsed, newest first, one per repository, our ow
   assert.equal(hits.length, 1);
   assert.equal(hits[0]!.repo, 'a/one');
   const h = (repo: string, created: string, number = 1): Hit => ({ repo, number, title: '', url: '', created_at: created, bot: 'dependabot' });
-  const out = dedupe([h('a/one', '2026-11-01'), h('b/two', '2026-11-05'), h('A/One', '2026-11-03', 9), h('aimanmalib/bumpproof', '2026-11-20')],
-    ownRepoOf(cfg.report.repo_url));
+  const own = ownRepoOf(cfg.report.repo_url)!;
+  assert.match(own, /^[^/]+\/bumpproof$/);
+  const out = dedupe([h('a/one', '2026-11-01'), h('b/two', '2026-11-05'), h('A/One', '2026-11-03', 9), h(own, '2026-11-20')], own);
   assert.deepEqual(out.map((x) => `${x.repo}#${x.number}`), ['b/two#1', 'A/One#9']);
 });
 
