@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0620-5f46",
+  "synthetic": false,
+  "started_at": "2026-11-22T06:31:52.975Z",
+  "duration_s": 1058,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/ebcFlagman/wiis-pwa",
+    "pr": 144,
+    "pr_url": "https://github.com/ebcFlagman/wiis-pwa/pull/144",
+    "pr_title": "chore(deps): update dependency i18next to v27.2.1",
+    "ci": "green"
+  },
+  "app_dir": "",
+  "base": {
+    "ref": "3f8a7d50a631be142d18c8671e22c60b79674ead",
+    "sha": "3f8a7d50a631be142d18c8671e22c60b79674ead"
+  },
+  "head": {
+    "ref": "ea122ea91aadbbe3dc0523b3502781ce674a0f6c",
+    "sha": "ea122ea91aadbbe3dc0523b3502781ce674a0f6c"
+  },
+  "bumps": [
+    {
+      "name": "i18next",
+      "from": "27.1.1",
+      "to": "27.2.1",
+      "type": "minor"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 37.1,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 32.1,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 101,
+        "credits": 4.803,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 121,
+        "credits": 2.426,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "passed",
+        "seconds": 118,
+        "credits": 12.499,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 132,
+        "credits": 3.972,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 109,
+        "credits": 1.851,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 90,
+        "credits": 0.417,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 25.968,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "3f8a7d50a631be142d18c8671e22c60b79674ead",
+        "head": "ea122ea91aadbbe3dc0523b3502781ce674a0f6c"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "i18next",
+        "from": "27.1.1",
+        "to": "27.2.1",
+        "type": "minor"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 38,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 37.1
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 179,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 101
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 336,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "passed",
+        "s": 118
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 487,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 109
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 525,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 32.1
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 688,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 121
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 865,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "nav",
+        "status": "passed",
+        "s": 132
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1006,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 90
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1058,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}

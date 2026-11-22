@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T06:18:34.571Z",
+  "generated_at": "2026-11-22T06:49:32.494Z",
   "rules": {
     "order": "newest_pr_first",
     "generic_journeys": [
@@ -10,18 +10,18 @@
     "patches": "kept in this report only"
   },
   "counts": {
-    "run": 1,
-    "runnable": 1,
-    "safe": 1,
+    "run": 3,
+    "runnable": 2,
+    "safe": 2,
     "fixed": 0,
     "broken": 0,
-    "unrunnable": 0,
+    "unrunnable": 1,
     "ci_green_but_broken": 0,
-    "control_same": 1,
+    "control_same": 2,
     "control_false_alarm": 0,
     "control_inconclusive": 0,
-    "credits": 139.25,
-    "duration_s": 1169
+    "credits": 264.713,
+    "duration_s": 2962
   },
   "repos": [
     {
@@ -72,6 +72,79 @@
       "run_id": "20261122-0559-70dd",
       "patch": null,
       "ran_at": "2026-11-22T05:59:05.853Z"
+    },
+    {
+      "repo": "torn4dom4n/journey",
+      "url": "https://github.com/torn4dom4n/journey",
+      "license": "MIT",
+      "stars": 0,
+      "pr_url": "https://github.com/torn4dom4n/journey/pull/90",
+      "pr_number": 90,
+      "pr_title": "Update dependency vite to v8",
+      "bot": "renovate",
+      "ci": "red",
+      "dir": "",
+      "bump": "vite npm:@voidzero-dev/vite-plus-core@^1.6.0 → npm:@voidzero-dev/vite-plus-core@^8.3.8000",
+      "verdict": "unrunnable",
+      "reason": "base_build_failed",
+      "detail": "serve: The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):\n  - plugin vite:worker load (41%, 1.4s, 1 call)\nAdditional callback time came from callbacks under 1s.\nSee https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.\nnpm error npx canceled due to missing packages and no YES option: [\"vite@8.3.8\"]\nnpm error A complete log of this run can be found in: /tmp/home/.npm/_logs/2026-11-22T06_20_10_783Z-debug-0.log",
+      "control": "not_run",
+      "ci_green_but_broken": false,
+      "journeys": [],
+      "credits": 0,
+      "duration_s": 40,
+      "run_id": null,
+      "patch": null,
+      "ran_at": "2026-11-22T06:19:38.864Z"
+    },
+    {
+      "repo": "ebcFlagman/wiis-pwa",
+      "url": "https://github.com/ebcFlagman/wiis-pwa",
+      "license": "MIT",
+      "stars": 0,
+      "pr_url": "https://github.com/ebcFlagman/wiis-pwa/pull/144",
+      "pr_number": 144,
+      "pr_title": "chore(deps): update dependency i18next to v27.2.1",
+      "bot": "renovate",
+      "ci": "green",
+      "dir": "",
+      "bump": "i18next 27.1.1 → 27.2.1",
+      "verdict": "safe",
+      "reason": "ok",
+      "detail": null,
+      "control": "same",
+      "ci_green_but_broken": false,
+      "journeys": [
+        {
+          "name": "home",
+          "kind": "generic",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        },
+        {
+          "name": "nav",
+          "kind": "generic",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        },
+        {
+          "name": "specific",
+          "kind": "specific",
+          "author": "passed",
+          "control": "same",
+          "head": "same",
+          "after_fix": null
+        }
+      ],
+      "credits": 125.463,
+      "duration_s": 1753,
+      "run_id": "20261122-0620-5f46",
+      "patch": null,
+      "ran_at": "2026-11-22T06:20:19.177Z"
     }
   ]
 }
