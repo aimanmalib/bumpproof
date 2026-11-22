@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `scripts/video-shots.py`: captures the stills for the demo video from real states (the pull request on GitHub, the demo
+  shop at the base, the bot's commit and the fix, the replay, the report pages) and writes the numbers it may quote to `facts.json`.
+
 ## 0.1.0 (22 Nov 2026)
 
 First release, built during the KaneCLI Online Hackathon.
