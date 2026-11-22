@@ -20,16 +20,16 @@
     {"id": "s03", "shots": [
       {"card": {"bg": "ink", "lines": [{"t": "CI checks that the code builds.", "font": "display", "size": 76, "colour": "code_ink"}, {"t": "It does not open the app.", "font": "display", "size": 76, "colour": "code_ink", "chunk": 1}, {"t": "Bumpproof does.", "font": "display", "size": 112, "colour": "amber", "chunk": 2, "gap": 56, "logo": true}]}}]},
     {"id": "s04", "shots": [
-      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "$ bumpproof pr aimanmalib/bumpproof#2 --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [1, 11]}], "overlays": [
+      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "Terminal · bumpproof pr (PR #2) --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [1, 11]}], "overlays": [
       {"type": "tag", "text": "Real run, sped up · 22 min 34 s in total", "colour": "fixed", "xy": [1262, 30], "t0": 0.0},
       {"type": "panel", "xy": [1236, 150], "w": 640, "t0": 4.76, "font": "mono", "size": 22, "title": ".bumpproof/journeys/account_test.md", "lines": [["# Account orders", "white"], ["", "white"], ["## Open the orders tab", "amber"], ["Verify the heading \"Your account\" is", "code_ink"], ["shown. Click the \"Orders\" tab. Verify", "code_ink"], ["the heading \"Past orders\" lists order", "code_ink"], ["\"#1042\" and order \"#1057\".", "code_ink"], ["", "white"], ["## Open an order", "amber"], ["Click order \"#1042\". Verify the heading", "code_ink"], ["\"Order 1042\" is shown ...", "code_ink"]]}]},
     {"id": "r01", "shots": [
-      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "$ bumpproof pr aimanmalib/bumpproof#2 --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [11, 16]}], "overlays": [
+      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "Terminal · bumpproof pr (PR #2) --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [11, 16]}], "overlays": [
       {"type": "tag", "text": "Real run, sped up · 22 min 34 s in total", "colour": "fixed", "xy": [1262, 30], "t0": 0.0},
       {"type": "inset", "img": "kane2-account-base.jpg", "xy": [1262, 200], "w": 600, "label": "Kane CLI · base · account", "tag": "passed", "tag_colour": "safe", "t0": 0.0, "crop": [540, 0, 1380, 472]},
       {"type": "inset", "img": "kane2-account-head.jpg", "xy": [1262, 590], "w": 600, "label": "Kane CLI · pull request · account", "tag": "failed", "tag_colour": "broken", "t0": 4.78, "crop": [540, 0, 1380, 472]}]},
     {"id": "s05", "shots": [
-      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "$ bumpproof pr aimanmalib/bumpproof#2 --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [16, 25]}], "overlays": [
+      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "Terminal · bumpproof pr (PR #2) --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "reveal": [16, 25]}], "overlays": [
       {"type": "tag", "text": "Real run, sped up · 22 min 34 s in total", "colour": "fixed", "xy": [1262, 30], "t0": 0.0},
       {"type": "inset", "img": "kane2-account-base.jpg", "xy": [1262, 200], "w": 600, "label": "Kane CLI · base · account", "tag": "passed", "tag_colour": "safe", "t0": 0.0, "crop": [540, 0, 1380, 472]},
       {"type": "inset", "img": "kane2-account-head.jpg", "xy": [1262, 590], "w": 600, "label": "Kane CLI · pull request · account", "tag": "failed", "tag_colour": "broken", "t0": 0.0, "crop": [540, 0, 1380, 472]}]},
@@ -43,7 +43,7 @@
     {"id": "s08", "shots": [
       {"img": "pr-comment.png", "from": [1224, 2860, 2448], "to": [1224, 2960, 2448], "hl": [{"box": [90, 2688, 1960, 2750], "t0": 0.2, "t1": 3.4}, {"box": [130, 3185, 2380, 3365], "t0": 3.4}]}]},
     {"id": "s09", "shots": [
-      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "$ bumpproof pr aimanmalib/bumpproof#2 --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "dur": 5.0, "reveal": [26, 31]},
+      {"file": "run2.log", "box": [48, 40, 1160, 900], "size": 21, "hang": 4, "title": "Terminal · bumpproof pr (PR #2) --fix --publish --comment --push-fix", "colours": [["✓", "green"], ["✗", "red"], ["│", "grey"], ["Verdict", "amber"], ["Result", "amber"]], "dur": 5.0, "reveal": [26, 31]},
       {"img": "kane2-account-after_fix.jpg", "from": [960, 540, 1920], "to": [960, 300, 1100]}], "overlays": [
       {"type": "tag", "text": "Real run, sped up · 22 min 34 s in total", "colour": "fixed", "xy": [1262, 30], "t0": 0.0, "t1": 5.0},
       {"type": "tag", "text": "What Kane CLI saw after the fix · 456c2cb · Orders tab", "colour": "fixed", "xy": [72, 880], "t0": 5.0}]},
