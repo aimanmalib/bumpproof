@@ -445,6 +445,10 @@ the run. `bumpproof init` printed "not built yet" and looked like a success.
   current directory first. If there is none, it uses the run with the same name inside the package. An unknown id
   still exits 2.
 - A listed command that is not built yet exits 2.
+- Even with no build step, `npm install -g github:…` linked the global package to a temporary clone that npm then
+  deleted, so the `bumpproof` command was missing (npm 10.8 and 10.9, measured in `node:20-alpine` and
+  `node:22-alpine`). `--install-links` makes npm pack the clone and install a real copy, so the install line is
+  `npm install -g --install-links github:aimanmalib/bumpproof`. `npx github:…` was not affected.
 - The `readme-commands` CI job runs the README commands from an empty folder on Node 20 and 22. On a push it installs
   `github:<repo>#<sha>`. On a pull request it installs `npm pack` of the checkout, because npm cannot fetch a merge
   commit.

@@ -72,7 +72,7 @@ No keys and no credits. The replay needs the network once, to download the packa
 Needs Node 20 or later, Docker, `gh` logged in, Kane CLI logged in, and Claude Code for `--fix`.
 
 ```sh
-npm install -g github:aimanmalib/bumpproof
+npm install -g --install-links github:aimanmalib/bumpproof
 bumpproof doctor
 bumpproof init                                  # writes .bumpproof/config.json and draft journeys
 bumpproof pr <owner>/<repo>#<number> --fix      # check one pull request, fix what breaks

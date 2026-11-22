@@ -68,7 +68,8 @@ jobs:
         run: |
           set -o pipefail
           cd "$(mktemp -d)"
-          npm install -g "$SPEC"
+          # Without --install-links npm links a global git install to a temporary clone it then deletes.
+          npm install -g --install-links "$SPEC"
           bumpproof --version
           bumpproof replay "$RUN_ID" | tee by-id.txt
           grep -q '^Verdict: ' by-id.txt

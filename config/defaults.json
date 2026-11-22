@@ -284,7 +284,7 @@
     "readme_path": "README.md",
     "repo_url": "https://github.com/aimanmalib/bumpproof",
     "pages_url": "https://aimanmalib.github.io/bumpproof/",
-    "install_command": "npm install -g github:aimanmalib/bumpproof\nbumpproof doctor\nbumpproof pr <owner>/<repo>#<number> --fix",
+    "install_command": "npm install -g --install-links github:aimanmalib/bumpproof\nbumpproof doctor\nbumpproof pr <owner>/<repo>#<number> --fix",
     "replay_command": "npx github:aimanmalib/bumpproof replay docs/runs/{id}",
     "proof_links": [
       {

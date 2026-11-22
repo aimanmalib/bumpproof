@@ -1,4 +1,4 @@
-// `dist/` is committed so that `npm install -g github:…` works without a build step on the user's machine.
+// `dist/` is committed so that `npm install -g --install-links github:…` works without a build step on the user's machine.
 // This test fails when someone changes `src/` and forgets `npm run build`.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
