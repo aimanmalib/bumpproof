@@ -1,12 +1,20 @@
-# Bumpproof
+<p align="center"><img src="brand/logo-512.png" width="112" height="112" alt="Bumpproof"></p>
 
-Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.
+<h1 align="center">Bumpproof</h1>
+
+<p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b><br>
+<a href="https://aimanmalib.github.io/bumpproof/"><b>Report site</b></a> · <a href="#judge-it-in-2-minutes">Judge it in 2 minutes</a> · <a href="#run-it-live">Run it live</a> · <a href="#limitations">Limitations</a> · <a href="#bahasa-melayu">Bahasa Melayu</a><br>
+Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
+
+<p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a></p>
 
 ![Replay of a recorded run: the bump breaks every journey, Claude Code writes a two-line fix, Kane CLI passes all three again](docs/media/bumpproof-loop.gif)
 
 - Report site: https://aimanmalib.github.io/bumpproof/
 - Census of other people's pull requests: https://aimanmalib.github.io/bumpproof/census.html
 - For judges, one page: https://aimanmalib.github.io/bumpproof/judges.html
+
+<p align="center"><img src="docs/images/screenshot-desktop.png" width="640" alt="The report site on desktop: the overview page"> <img src="docs/images/screenshot-mobile.png" width="180" alt="The report site on an iPhone"></p>
 
 ## For judges
 
@@ -162,6 +170,15 @@ author's voice cloned with ElevenLabs.
 Built during the KaneCLI Online Hackathon (12–26 Nov 2026). First commit:
 [`813035c`](https://github.com/aimanmalib/bumpproof/commit/813035c), 21 Nov 2026.
 Changes are listed in [CHANGELOG.md](CHANGELOG.md). Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Bahasa Melayu
+
+Bumpproof menyemak PR naik taraf pakej (Dependabot atau Renovate) dalam pelayar sebenar. Ia membina aplikasi dua kali dalam
+Docker, sekali pada cawangan asas dan sekali pada PR. Kane CLI menjalankan perjalanan pengguna yang sama dalam Chrome pada
+kedua-duanya. Bila PR merosakkan perjalanan, Claude Code menulis pembaikan dan Kane CLI menjalankan semula semua perjalanan.
+Ia tidak pernah menggabung PR.
+
+Laman laporan dalam Bahasa Melayu: https://aimanmalib.github.io/bumpproof/?lang=ms
 
 ## License
 
