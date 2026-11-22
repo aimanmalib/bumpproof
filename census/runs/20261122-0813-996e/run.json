@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0813-996e",
+  "synthetic": false,
+  "started_at": "2026-11-22T08:21:51.658Z",
+  "duration_s": 503,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/TepMan/TarotApp",
+    "pr": 60,
+    "pr_url": "https://github.com/TepMan/TarotApp/pull/60",
+    "pr_title": "build(deps-dev): bump vite from 8.3.5 to 8.3.8 in /frontend",
+    "ci": "green"
+  },
+  "app_dir": "frontend",
+  "base": {
+    "ref": "410bcd5c2b1a6e8b615808a88708cc4b72d79e93",
+    "sha": "410bcd5c2b1a6e8b615808a88708cc4b72d79e93"
+  },
+  "head": {
+    "ref": "ec75a9c9673e0089bc757fb27c5f79174898c81a",
+    "sha": "ec75a9c9673e0089bc757fb27c5f79174898c81a"
+  },
+  "bumps": [
+    {
+      "name": "vite",
+      "from": "^8.3.5",
+      "to": "^8.3.8",
+      "type": "patch"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 19.5,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 19.4,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 56,
+        "credits": 12.497,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 62,
+        "credits": 11.467,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [
+        "Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED"
+      ],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "failed",
+        "seconds": 86,
+        "credits": 31.885,
+        "healed": false,
+        "failed_step": "Follow the main navigation",
+        "remark": "Final verification failed: \"After each click, verify the page shows content and does not show an error screen such as \"Something went wrong\", \"Application error\", \"404\" or a stack trace.\"",
+        "result_code": 710
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 61,
+        "credits": 0.459,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 45,
+        "credits": 0.356,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 2
+  },
+  "fix": null,
+  "credits_consumed": 56.664,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "410bcd5c2b1a6e8b615808a88708cc4b72d79e93",
+        "head": "ec75a9c9673e0089bc757fb27c5f79174898c81a"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "vite",
+        "from": "^8.3.5",
+        "to": "^8.3.8",
+        "type": "patch"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 20,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 19.5
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 109,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 56
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 219,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "failed",
+        "s": 86
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 310,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 61
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 332,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 19.4
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 421,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 62
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 498,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 45
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 503,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
