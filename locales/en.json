@@ -28,7 +28,8 @@
     "opt_speed": "replay: recorded seconds per real second (0 = no pauses)",
     "opt_markdown": "with check: also write a pull request comment in Markdown to this file",
     "opt_min_free_gb": "with check: refuse to start below this much free disk (GB)",
-    "bad_number": "{option} needs a number of zero or more, got \"{value}\"."
+    "bad_number": "{option} needs a number of zero or more, got \"{value}\".",
+    "opt_find": "Find census candidates and write the list (no Kane needed)"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -271,5 +272,36 @@
     "no_journeys": "This Action builds and starts the base and this pull request in a locked-down Docker container. It does not run browser journeys or fixes, and it holds no LLM key. For Kane CLI journeys and fixes, run `bumpproof pr <owner>/<repo>#<number> --fix` on your own machine.",
     "footer": "Bumpproof {version} · {url}",
     "log": "{side}: last lines of the log"
+  },
+  "census": {
+    "finding": "Searching GitHub for open bot pull requests ({searches} searches, one every {gap} s). This takes a few minutes.",
+    "found": "{searches} searches, {found} repositories found: {eligible} pass the rules, {excluded} left out, {not_evaluated} not checked.",
+    "stopped_rate_limit": "Stopped early: GitHub's search rate limit was hit twice.",
+    "stopped_timebox": "Stopped early: the time box ran out. Repositories not reached are listed as not checked.",
+    "stopped_max_searches": "Stopped early: the search cap was reached.",
+    "written": "Every repository found, with the reason when it is left out, is in {path}.",
+    "need_find": "The census run needs Kane CLI and is not built yet. Use --find to list candidates.",
+    "reason_archived": "repository is archived",
+    "reason_license": "license is not on the allowed list",
+    "reason_too_big": "repository is too big",
+    "reason_not_found": "repository not found",
+    "reason_pr_closed": "pull request is no longer open",
+    "reason_no_manifest_change": "pull request changes no package.json or lockfile",
+    "reason_no_package_json": "package.json missing or unreadable",
+    "reason_no_watched_bump": "no package from the watch list changes",
+    "reason_framework": "not a Vite, Next.js, Create React App or Astro app",
+    "reason_no_build": "no build script",
+    "reason_no_serve": "no start, serve or preview script",
+    "reason_lifecycle": "has an install hook (preinstall, postinstall or prepare)",
+    "reason_no_lockfile": "no lockfile in the app folder",
+    "reason_needs_secrets": "env example asks for keys or secrets",
+    "reason_api_error": "GitHub API error",
+    "reason_limit": "over the evaluation cap",
+    "reason_timebox": "time box ran out",
+    "progress_wait": "GitHub rate limit; waiting {s} s, then one retry.",
+    "progress_search": "  {bot} {pkg}: {n} pull requests",
+    "progress_eligible": "  {repo}: passes the rules",
+    "progress_excluded": "  {repo}: left out",
+    "reason_enough": "enough repositories already pass"
   }
 }

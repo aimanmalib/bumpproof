@@ -28,7 +28,8 @@
     "opt_speed": "replay: saat direkod setiap saat sebenar (0 = tanpa jeda)",
     "opt_markdown": "dengan check: tulis juga komen pull request dalam Markdown ke fail ini",
     "opt_min_free_gb": "dengan check: enggan bermula bila ruang cakera kosong kurang daripada ini (GB)",
-    "bad_number": "{option} perlukan nombor sifar atau lebih, diberi \"{value}\"."
+    "bad_number": "{option} perlukan nombor sifar atau lebih, diberi \"{value}\".",
+    "opt_find": "Cari calon banci dan tulis senarainya (tanpa Kane)"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -271,5 +272,36 @@
     "no_journeys": "Action ini membina dan menghidupkan asas dan pull request ini dalam bekas Docker yang dikunci. Ia tidak menjalankan perjalanan pelayar atau pembaikan, dan tidak memegang kunci LLM. Untuk perjalanan Kane CLI dan pembaikan, jalankan `bumpproof pr <owner>/<repo>#<number> --fix` pada mesin anda sendiri.",
     "footer": "Bumpproof {version} · {url}",
     "log": "{side}: baris akhir log"
+  },
+  "census": {
+    "finding": "Mencari pull request bot yang terbuka di GitHub ({searches} carian, satu setiap {gap} s). Ini mengambil beberapa minit.",
+    "found": "{searches} carian, {found} repositori ditemui: {eligible} lulus peraturan, {excluded} dikecualikan, {not_evaluated} tidak disemak.",
+    "stopped_rate_limit": "Berhenti awal: had kadar carian GitHub dicapai dua kali.",
+    "stopped_timebox": "Berhenti awal: kotak masa habis. Repositori yang belum dicapai disenaraikan sebagai tidak disemak.",
+    "stopped_max_searches": "Berhenti awal: had bilangan carian dicapai.",
+    "written": "Setiap repositori yang ditemui, dengan sebab bila dikecualikan, ada dalam {path}.",
+    "need_find": "Larian banci memerlukan Kane CLI dan belum dibina. Guna --find untuk menyenaraikan calon.",
+    "reason_archived": "repositori diarkibkan",
+    "reason_license": "lesen tiada dalam senarai dibenarkan",
+    "reason_too_big": "repositori terlalu besar",
+    "reason_not_found": "repositori tidak ditemui",
+    "reason_pr_closed": "pull request sudah tidak terbuka",
+    "reason_no_manifest_change": "pull request tidak mengubah package.json atau lockfile",
+    "reason_no_package_json": "package.json tiada atau tidak boleh dibaca",
+    "reason_no_watched_bump": "tiada pakej dari senarai pantau yang berubah",
+    "reason_framework": "bukan aplikasi Vite, Next.js, Create React App atau Astro",
+    "reason_no_build": "tiada skrip build",
+    "reason_no_serve": "tiada skrip start, serve atau preview",
+    "reason_lifecycle": "ada cangkuk pemasangan (preinstall, postinstall atau prepare)",
+    "reason_no_lockfile": "tiada lockfile dalam folder aplikasi",
+    "reason_needs_secrets": "contoh env meminta kunci atau rahsia",
+    "reason_api_error": "ralat API GitHub",
+    "reason_limit": "melebihi had penilaian",
+    "reason_timebox": "kotak masa habis",
+    "progress_wait": "Had kadar GitHub; menunggu {s} s, kemudian cuba sekali lagi.",
+    "progress_search": "  {bot} {pkg}: {n} pull request",
+    "progress_eligible": "  {repo}: lulus peraturan",
+    "progress_excluded": "  {repo}: dikecualikan",
+    "reason_enough": "sudah cukup repositori yang lulus"
   }
 }

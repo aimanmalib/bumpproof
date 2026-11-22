@@ -15,6 +15,8 @@ import { run } from './proc.ts';
 import { httpStatus, portFree, SandboxError } from './sandbox.ts';
 import { makePaint, useColor } from './ui.ts';
 import { runReplay, runReport } from './report-cli.ts';
+import { runCensusFind } from './census.ts';
+import { secretsFromEnv } from './evidence.ts';
 
 export const COMMANDS = ['doctor', 'init', 'check', 'fix', 'pr', 'census', 'report', 'replay'] as const;
 
@@ -43,6 +45,7 @@ export function helpText(t: Translate): string {
     `  --markdown <f>  ${t('cli.opt_markdown')}`,
     `  --min-free-gb <n> ${t('cli.opt_min_free_gb')}`,
     `  --canary        ${t('cli.opt_canary')}`,
+    `  --find          ${t('cli.opt_find')}`,
     `  --out <dir>     ${t('cli.opt_out')}`,
     `  --comment <run> ${t('cli.opt_comment')}`,
     `  --speed <n>     ${t('cli.opt_speed')}`,
@@ -66,6 +69,7 @@ export async function main(argv: string[], io: Io): Promise<number> {
       dir: { type: 'string' },
       repo: { type: 'string' },
       canary: { type: 'boolean' },
+      find: { type: 'boolean' },
       markdown: { type: 'string' },
       'min-free-gb': { type: 'string' },
       out: { type: 'string' },
@@ -159,6 +163,15 @@ export async function main(argv: string[], io: Io): Promise<number> {
     io.out(t(`fix.canary_${r.status}`, { date: r.date, detail: r.detail }));
     if (r.denied_tools.length > 0) io.out(t('fix.denied', { tools: r.denied_tools.join(', ') }));
     return r.status === 'pass' ? 0 : r.status === 'leak' ? 1 : 2;
+  }
+  if (cmd === 'census') {
+    if (!values.find) {
+      io.err(t('census.need_find'));
+      return 2;
+    }
+    const out = resolve(io.cwd, typeof values.out === 'string' && values.out ? values.out : cfg.census.candidates_path);
+    return runCensusFind({ cfg, run, now: Date.now, sleep: (ms) => new Promise((r) => setTimeout(r, ms)), progress: (k, v) => io.err(t(k, v)) },
+      t, out, secretsFromEnv(io.env, cfg.publish.secret_env), io);
   }
   if (cmd === 'report') return runReport(cfg, t, values, io);
   if (cmd === 'replay') return runReplay(cfg, t, positionals[1], values.speed, io);

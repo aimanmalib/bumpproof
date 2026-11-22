@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type { CensusConfig } from './census.ts';
 
 /** Package root: works from src/ (tests) and dist/ (installed), both one level down. */
 export const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -50,6 +51,7 @@ export interface Config {
     changelog_files: string[]; guides: Record<string, string>;
   };
   github: { command: string };
+  census: CensusConfig;
   doctor: { timeout_ms: number };
   publish: {
     email_allowlist: string[]; strip_keys: string[]; email_ignore_tlds: string[]; private_url_patterns: string[];

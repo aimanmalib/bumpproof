@@ -300,5 +300,75 @@
   "replay": {
     "speed": 40,
     "max_gap_ms": 900
+  },
+  "census": {
+    "created_since": "2026-10-22",
+    "bots": [
+      {
+        "name": "dependabot",
+        "author": "app/dependabot",
+        "title": "bump {pkg} from"
+      },
+      {
+        "name": "renovate",
+        "author": "app/renovate",
+        "title": "update dependency {pkg}"
+      }
+    ],
+    "watchlist": [
+      "react-router-dom",
+      "@tanstack/react-query",
+      "date-fns",
+      "tailwindcss",
+      "vite",
+      "next",
+      "react",
+      "@mui/material",
+      "zod",
+      "react-hook-form",
+      "framer-motion",
+      "axios",
+      "swr",
+      "recharts",
+      "chart.js",
+      "styled-components",
+      "antd",
+      "i18next"
+    ],
+    "max_searches": 60,
+    "search_gap_ms": 5000,
+    "request_gap_ms": 400,
+    "per_page": 30,
+    "rate_limit_wait_s": 60,
+    "max_evaluate": 300,
+    "timebox_min": 75,
+    "licenses": [
+      "MIT",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "ISC",
+      "MPL-2.0"
+    ],
+    "max_repo_mb": 50,
+    "frameworks": {
+      "vite": "vite",
+      "next": "next",
+      "react-scripts": "cra",
+      "astro": "astro"
+    },
+    "lifecycle_scripts": [
+      "preinstall",
+      "postinstall",
+      "prepare"
+    ],
+    "env_files": [
+      ".env.example",
+      ".env.sample"
+    ],
+    "env_key_pattern": "API_KEY|SECRET|DATABASE_URL|TOKEN",
+    "require_lockfile": true,
+    "candidates_path": "census/candidates.json",
+    "target_eligible": 20
   }
 }
