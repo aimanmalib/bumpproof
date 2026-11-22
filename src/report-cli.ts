@@ -29,6 +29,7 @@ export function runReport(cfg: Config, t: Translate, values: Record<string, unkn
     const res = buildSite(cfg, { outDir, runsDir, censusPath, version: version(), translators,
       candidatesPath: at(io.cwd, cfg.census.candidates_path), censusRunsDir: at(io.cwd, cfg.census.runs_dir),
       ledgerPath: at(io.cwd, cfg.kane.ledger_path),
+      readmePath: str(values.out) ? undefined : at(io.cwd, cfg.report.readme_path),
       secrets: secretsFromEnv(io.env, cfg.publish.secret_env) });
     if (res.findings.length > 0) {
       io.err(t('report.scan_failed', { count: res.findings.length }));
@@ -36,6 +37,7 @@ export function runReport(cfg: Config, t: Translate, values: Record<string, unkn
       return 1;
     }
     if (!res.census) io.out(t('report.census_missing', { path: str(values.census) ?? cfg.report.census_path }));
+    if (res.readme) io.out(t('report.readme_written', { path: cfg.report.readme_path }));
     io.out(t('report.written', { pages: res.pages.length, runs: res.runs, dir: str(values.out) ?? cfg.report.out_dir }));
     return 0;
   } catch (e) {

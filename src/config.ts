@@ -62,7 +62,7 @@ export interface Config {
     secret_env: string[]; scan_dirs: string[]; scan_exts: string[];
   };
   report: {
-    out_dir: string; runs_dir: string; census_path: string; repo_url: string; pages_url: string;
+    out_dir: string; runs_dir: string; census_path: string; readme_path: string; repo_url: string; pages_url: string;
     install_command: string; replay_command: string; proof_links: { key: string; path: string }[];
   };
   /** `speed` = recorded seconds per real second (0 = no pauses). */

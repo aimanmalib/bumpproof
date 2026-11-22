@@ -10,6 +10,7 @@ import { measure, readCandidates, readLedger } from './metrics.ts';
 import { censusPage, homePage, judgesPage, type CensusRow, type SiteData } from './pages.ts';
 import { RunFormatError, readRuns, type RunReport } from './run.ts';
 import { runPage } from './run-page.ts';
+import { readmeBlock, replaceReadmeBlock } from './readme.ts';
 
 export interface ReportOptions {
   outDir: string;
@@ -19,6 +20,8 @@ export interface ReportOptions {
   candidatesPath?: string;
   censusRunsDir?: string;
   ledgerPath?: string;
+  /** README.md with the numbers markers; its block is rewritten in English. Left out or without markers, untouched. */
+  readmePath?: string;
   version: string;
   translators: Map<string, Translate>;
   secrets: string[];
@@ -28,6 +31,8 @@ export interface ReportResult {
   pages: string[];
   runs: number;
   census: boolean;
+  /** True when the README numbers block was rewritten. */
+  readme: boolean;
   findings: Finding[];
 }
 
@@ -92,8 +97,14 @@ export function buildSite(cfg: Config, o: ReportOptions): ReportResult {
   ]);
   for (const r of runs) pages.set(`runs/${r.run_id}/index.html`, renderPage(runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command), site('../../')));
 
-  const findings = [...pages].flatMap(([file, html]) => scanText(file, html, cfg.publish, o.secrets));
-  if (findings.length > 0) return { pages: [], runs: runs.length, census: census !== null, findings };
+  const en = o.translators.get('en');
+  const oldReadme = o.readmePath && en && existsSync(o.readmePath) ? readFileSync(o.readmePath, 'utf8') : null;
+  const readme = oldReadme === null ? null
+    : replaceReadmeBlock(oldReadme, readmeBlock(en!, runs, metrics, cfg.report.pages_url));
+  const findings = [...pages, ...(readme === null ? [] : [['README.md', readme] as const])]
+    .flatMap(([file, text]) => scanText(file, text, cfg.publish, o.secrets));
+  if (findings.length > 0) return { pages: [], runs: runs.length, census: census !== null, readme: false, findings };
+  if (readme !== null && readme !== oldReadme) writeFileSync(o.readmePath!, readme);
   for (const [file, html] of pages) {
     const path = join(o.outDir, file);
     mkdirSync(dirname(path), { recursive: true });
@@ -101,5 +112,5 @@ export function buildSite(cfg: Config, o: ReportOptions): ReportResult {
   }
   copyAssets(o.outDir);
   if (!existsSync(join(o.outDir, '.nojekyll'))) writeFileSync(join(o.outDir, '.nojekyll'), '');
-  return { pages: [...pages.keys()], runs: runs.length, census: census !== null, findings };
+  return { pages: [...pages.keys()], runs: runs.length, census: census !== null, readme: readme !== null, findings };
 }

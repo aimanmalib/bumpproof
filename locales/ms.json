@@ -202,7 +202,8 @@
     "written": "{pages} halaman untuk {runs} larian ditulis ke {dir}",
     "census_missing": "Belum ada keputusan banci ({path}); halaman banci menyatakannya.",
     "bad_input": "Tidak dapat membina laporan: {detail}",
-    "scan_failed": "Laporan tidak ditulis: {count} penemuan yang tidak boleh diterbitkan."
+    "scan_failed": "Laporan tidak ditulis: {count} penemuan yang tidak boleh diterbitkan.",
+    "readme_written": "Blok angka dalam {path} dikemas kini."
   },
   "site": {
     "lang_label": "Bahasa",
@@ -367,5 +368,23 @@
     "comment_pushed": "Pembaikan yang disahkan ada di `{branch}` sebagai komit {sha}. Pull request tidak digabung; manusia yang memutuskan.",
     "commented": "Komen: {url}",
     "error": "Pull request: {detail}"
+  },
+  "readme": {
+    "table_intro": "Setiap baris ialah satu larian `bumpproof pr … --fix --publish --comment --push-fix` pada PR yang Dependabot buka di repo ini. Tiada apa digabung.",
+    "col_pr": "PR",
+    "col_change": "Perubahan",
+    "col_ci": "CI di GitHub",
+    "col_verdict": "Bumpproof",
+    "col_credits": "Kredit Kane CLI",
+    "col_fixer": "Pembaik (API Claude)",
+    "col_time": "Masa",
+    "cell_safe": "{same} daripada {n} perjalanan sama seperti asas",
+    "cell_fixed_regression": "{failed} daripada {n} perjalanan gagal, pembaikan {lines} baris, {passed} daripada {n} lulus",
+    "cell_fixed_build": "binaan gagal, pembaikan {lines} baris, {passed} daripada {n} lulus",
+    "cell_broken": "{failed} daripada {n} perjalanan gagal, tidak dibaiki",
+    "cell_unrunnable": "tidak dapat dijalankan",
+    "empty": "Belum ada larian PR direkod.",
+    "facts_intro": "Angka lain, dikira dengan cara yang sama seperti di laman laporan:",
+    "source": "Sumber: `{files}`."
   }
 }

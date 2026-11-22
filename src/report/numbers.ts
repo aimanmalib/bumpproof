@@ -5,12 +5,12 @@ import { esc } from './layout.ts';
 import type { Metrics } from './metrics.ts';
 import { duration } from './words.ts';
 
-interface Tile { id: string; big: string | null; body: string | null; source: string }
+export interface Tile { id: string; big: string | null; body: string | null; source: string }
 
 const dash = '—';
 const num = (n: number | null): string => (n === null ? dash : String(n));
 
-function tiles(t: Translate, m: Metrics): Tile[] {
+export function numberTiles(t: Translate, m: Metrics): Tile[] {
   const { h1, h2, h3, h4, h5, h6 } = m;
   return [
     { id: 'h1', big: h1.prs > 0 ? String(h1.prs) : null, source: 'docs/runs/*/run.json',
@@ -37,7 +37,7 @@ function tiles(t: Translate, m: Metrics): Tile[] {
 
 export function numbersSection(t: Translate, m: Metrics, lang: string): string {
   const id = lang === 'en' ? 'measured' : `measured-${lang}`;
-  const items = tiles(t, m).map((x) => `<li class="metric"><p class="metric-id">${x.id.toUpperCase()}</p>`
+  const items = numberTiles(t, m).map((x) => `<li class="metric"><p class="metric-id">${x.id.toUpperCase()}</p>`
     + `<p class="metric-n${x.big === null ? ' metric-none' : ''}">${esc(x.big ?? dash)}</p>`
     + `<h3>${esc(t(`site.${x.id}_title`))}</h3><p>${esc(x.body ?? t('site.not_measured'))}</p>`
     + `<p class="metric-src"><code>${esc(x.source)}</code></p></li>`).join('');

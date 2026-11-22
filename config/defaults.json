@@ -281,6 +281,7 @@
     "out_dir": "docs",
     "runs_dir": "docs/runs",
     "census_path": "census/results.json",
+    "readme_path": "README.md",
     "repo_url": "https://github.com/aimanmalib/bumpproof",
     "pages_url": "https://aimanmalib.github.io/bumpproof/",
     "install_command": "npm install -g github:aimanmalib/bumpproof\nbumpproof doctor\nbumpproof pr <owner>/<repo>#<number> --fix",

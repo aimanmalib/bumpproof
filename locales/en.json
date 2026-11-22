@@ -202,7 +202,8 @@
     "written": "Wrote {pages} pages for {runs} runs to {dir}",
     "census_missing": "No census results yet ({path}); the census page says so.",
     "bad_input": "Cannot build the report: {detail}",
-    "scan_failed": "Refused to write the report: {count} finding(s) that must not be published."
+    "scan_failed": "Refused to write the report: {count} finding(s) that must not be published.",
+    "readme_written": "Measured block updated in {path}."
   },
   "site": {
     "lang_label": "Language",
@@ -367,5 +368,23 @@
     "comment_pushed": "The verified fix is on `{branch}` as commit {sha}. The pull request is not merged; a person decides.",
     "commented": "Comment: {url}",
     "error": "Pull request: {detail}"
+  },
+  "readme": {
+    "table_intro": "Each row is one `bumpproof pr … --fix --publish --comment --push-fix` run on a pull request Dependabot opened on this repository. Nothing was merged.",
+    "col_pr": "Pull request",
+    "col_change": "Change",
+    "col_ci": "CI on GitHub",
+    "col_verdict": "Bumpproof",
+    "col_credits": "Kane CLI credits",
+    "col_fixer": "Fixer (Claude API)",
+    "col_time": "Time",
+    "cell_safe": "{same} of {n} journeys same as base",
+    "cell_fixed_regression": "{failed} of {n} journeys failed, {lines}-line fix, {passed} of {n} pass",
+    "cell_fixed_build": "build failed, {lines}-line fix, {passed} of {n} pass",
+    "cell_broken": "{failed} of {n} journeys failed, not fixed",
+    "cell_unrunnable": "could not run",
+    "empty": "No pull request runs recorded yet.",
+    "facts_intro": "The other numbers, counted the same way as on the report site:",
+    "source": "Source: `{files}`."
   }
 }
