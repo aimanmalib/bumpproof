@@ -397,3 +397,22 @@ the control (8 of 8 the same). 1398.494 census credits and 11404 s of wall clock
   on the head, but it is not counted in the control, which needs a passing authored run.
 - **CI and the result are separate.** Chatraj's CI was red for this pull request and every journey behaved the same on
   the head. The census reports what the app did, not what CI said.
+
+## 19. The measured numbers on the pages (22 Nov 2026)
+
+`bumpproof report` computes H1 to H6 in `src/report/metrics.ts` from committed files only. No number is typed into a
+page or a locale file. Each tile names the files it reads.
+
+- **H1** counts run records with a pull request number on this repository, by verdict and reason. Local branch runs
+  and synthetic test records are left out.
+- **H2** counts the evaluated candidates from the list in `census/candidates.json` (`eligible` plus `excluded`), not
+  from its summary block, and the run and runnable rows from `census/results.json`.
+- **H3 and H4** count census rows: `ci_green_but_broken`, and the control outcome. A row with no control (could not run)
+  is not in the false alarm count.
+- **H5 loop time** is `fixer_start` to `fixer_done` on the run timeline, for runs the fixer fixed. `fixer_start` comes
+  right after the failed check, and `fixer_done` comes after Kane CLI has run every journey on the patch. Credits per
+  pull request is the median of `credits_consumed` over H1 runs. The authoring against replay ratio uses census entries
+  in the credit ledger: entries whose id has `-author:` are authoring runs, the rest are replays.
+- **H6** divides fixed runs by runs where the fixer ran (`fix` is not null). Two early demo runs were checked without
+  `--fix`; the fixer never saw them, so they are not in the count. The demo app and the census are shown apart.
+- The census table becomes one card per repository below 40rem, so a long bump name no longer squeezes the columns.
