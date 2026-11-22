@@ -1,5 +1,5 @@
 // `dist/` is committed so that `npm install -g --install-links github:…` works without a build step on the user's machine.
-// This test fails when someone changes `src/` and forgets `npm run build`.
+// This test fails when someone changes `src/` and forgets `npm run compile`.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -15,7 +15,7 @@ function files(dir: string): string[] {
     .sort();
 }
 
-test('the committed dist/ is the current build of src/ (run npm run build after changing src/)', () => {
+test('the committed dist/ is the current build of src/ (run npm run compile after changing src/)', () => {
   const out = mkdtempSync(join(tmpdir(), 'bumpproof-dist-'));
   try {
     const tsc = join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc');

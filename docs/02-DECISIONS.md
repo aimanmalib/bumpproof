@@ -440,7 +440,7 @@ the run. `bumpproof init` printed "not built yet" and looked like a success.
 
 - `dist/` is now committed and `prepare` is gone, so npm installs the package as it is. `test/dist.test.ts` builds
   `src/` into a temporary folder and fails when the committed `dist/` differs. After changing `src/`, run
-  `npm run build`. `scripts/uji.sh` no longer builds in place, so CI cannot hide a stale `dist/`.
+  `npm run compile`. `scripts/uji.sh` no longer builds in place, so CI cannot hide a stale `dist/`.
 - The recorded runs ship in the package (`docs/runs/` in `files`, about 250 KB). `replay` reads a folder in the
   current directory first. If there is none, it uses the run with the same name inside the package. An unknown id
   still exits 2.
@@ -449,6 +449,8 @@ the run. `bumpproof init` printed "not built yet" and looked like a success.
   deleted, so the `bumpproof` command was missing (npm 10.8 and 10.9, measured in `node:20-alpine` and
   `node:22-alpine`). `--install-links` makes npm pack the clone and install a real copy, so the install line is
   `npm install -g --install-links github:aimanmalib/bumpproof`. `npx github:…` was not affected.
+- npm also runs a nested `npm install` inside a git clone when the package has a `build` script. Next to a global
+  install the two collide (`ENOTEMPTY` in CI with a `#<sha>` spec). The build script is named `compile` for that reason.
 - The `readme-commands` CI job runs the README commands from an empty folder on Node 20 and 22. On a push it installs
   `github:<repo>#<sha>`. On a pull request it installs `npm pack` of the checkout, because npm cannot fetch a merge
   commit.

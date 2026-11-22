@@ -8,8 +8,10 @@ Needs Node 22 (see `.nvmrc`).
 
 ```sh
 npm ci
-bash scripts/uji.sh        # type check, build, tests
+bash scripts/uji.sh        # type check and tests
 ```
+
+`dist/` is committed. After changing `src/`, run `npm run compile`; a test fails when `dist/` is out of date.
 
 Tests that need Docker, Kane CLI or Claude Code are off by default. Turn them on one at a time:
 `BUMPPROOF_DOCKER=1`, `BUMPPROOF_KANE=1`, `BUMPPROOF_KANARI=1`. The last two use paid credits.
