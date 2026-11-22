@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0153-843f",
+  "synthetic": false,
+  "started_at": "2026-11-22T01:53:04.566Z",
+  "duration_s": 992,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": null,
+    "pr": null,
+    "pr_url": null,
+    "pr_title": null,
+    "ci": null
+  },
+  "app_dir": "examples/shop",
+  "base": {
+    "ref": "main",
+    "sha": "8ff77fe75337d40568b6039383ac4762909e28be"
+  },
+  "head": {
+    "ref": "origin/dependabot/npm_and_yarn/examples/shop/tanstack/react-query-5.108.0",
+    "sha": "5243b1d4360f388ec013b94541e49bf52c9a5f77"
+  },
+  "bumps": [
+    {
+      "name": "@tanstack/react-query",
+      "from": "4.36.1",
+      "to": "5.108.0",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 18.2,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 12.1,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "account",
+      "base": {
+        "status": "passed",
+        "seconds": 65,
+        "credits": 0.378,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 245,
+        "credits": 34.99,
+        "healed": true,
+        "failed_step": "Open the orders tab",
+        "remark": "analyzer_failed: @ step 7",
+        "result_code": 740
+      },
+      "after_fix": null,
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'orders')"
+      ],
+      "new_network_errors": []
+    },
+    {
+      "name": "browse",
+      "base": {
+        "status": "passed",
+        "seconds": 37,
+        "credits": 0.826,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 182,
+        "credits": 15.072,
+        "healed": true,
+        "failed_step": "Open the Tea shelf",
+        "remark": "action_failed: click @ step 2",
+        "result_code": 740
+      },
+      "after_fix": null,
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'categories')"
+      ],
+      "new_network_errors": []
+    },
+    {
+      "name": "checkout",
+      "base": {
+        "status": "passed",
+        "seconds": 65,
+        "credits": 1.081,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 197,
+        "credits": 17.882,
+        "healed": true,
+        "failed_step": "Add a product to the cart",
+        "remark": "action_failed: click @ step 2",
+        "result_code": 740
+      },
+      "after_fix": null,
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'products')"
+      ],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "broken",
+    "reason": "regression",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 70.229,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "main",
+        "head": "origin/dependabot/npm_and_yarn/examples/shop/tanstack/react-query-5.108.0"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "@tanstack/react-query",
+        "from": "4.36.1",
+        "to": "5.108.0",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 19,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 18.2
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 112,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "account",
+        "status": "passed",
+        "s": 65
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 172,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "browse",
+        "status": "passed",
+        "s": 37
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 263,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "checkout",
+        "status": "passed",
+        "s": 65
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 276,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 12.1
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 553,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "account",
+        "status": "failed",
+        "s": 245
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 763,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "browse",
+        "status": "failed",
+        "s": 182
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 986,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "checkout",
+        "status": "failed",
+        "s": 197
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 992,
+      "key": "verdict",
+      "vars": {
+        "verdict": "broken"
+      },
+      "tone": "fail"
+    }
+  ],
+  "shots": []
+}

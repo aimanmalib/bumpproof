@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0210-5b86",
+  "synthetic": false,
+  "started_at": "2026-11-22T02:10:33.267Z",
+  "duration_s": 530,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": null,
+    "pr": null,
+    "pr_url": null,
+    "pr_title": null,
+    "ci": null
+  },
+  "app_dir": "examples/shop",
+  "base": {
+    "ref": "main",
+    "sha": "b3c6e634c75fcaa7e0ab9651931e80afa197375a"
+  },
+  "head": {
+    "ref": "origin/dependabot/npm_and_yarn/examples/shop/react-router-dom-7.18.6",
+    "sha": "05f11be2254aa4c5b2f05002f36278f395c410d1"
+  },
+  "bumps": [
+    {
+      "name": "react-router-dom",
+      "from": "6.30.1",
+      "to": "7.18.6",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 13.2,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 15.6,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "account",
+      "base": {
+        "status": "passed",
+        "seconds": 46,
+        "credits": 0.364,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 160,
+        "credits": 31.362,
+        "healed": true,
+        "failed_step": "Use the tabs again",
+        "remark": "assertion_failed: @ step 4",
+        "result_code": 710
+      },
+      "after_fix": null,
+      "outcome": "regression",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "browse",
+      "base": {
+        "status": "passed",
+        "seconds": 29,
+        "credits": 0.192,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 46,
+        "credits": 0.174,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "checkout",
+      "base": {
+        "status": "passed",
+        "seconds": 45,
+        "credits": 1.015,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 37,
+        "credits": 1.684,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "broken",
+    "reason": "regression",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 34.791,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "main",
+        "head": "origin/dependabot/npm_and_yarn/examples/shop/react-router-dom-7.18.6"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "react-router-dom",
+        "from": "6.30.1",
+        "to": "7.18.6",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 13,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 13.2
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 86,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "account",
+        "status": "passed",
+        "s": 46
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 136,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "browse",
+        "status": "passed",
+        "s": 29
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 199,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "checkout",
+        "status": "passed",
+        "s": 45
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 216,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 15.6
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 400,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "account",
+        "status": "failed",
+        "s": 160
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 472,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "browse",
+        "status": "passed",
+        "s": 46
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 527,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "checkout",
+        "status": "passed",
+        "s": 37
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 530,
+      "key": "verdict",
+      "vars": {
+        "verdict": "broken"
+      },
+      "tone": "fail"
+    }
+  ],
+  "shots": []
+}

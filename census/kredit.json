@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "total": 327.748,
+  "census": 0,
+  "runs": [
+    {
+      "at": "2026-11-22T01:53:29.156Z",
+      "id": "20261122-0153-843f:base:account:1",
+      "credits": 0.378,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T01:55:00.360Z",
+      "id": "20261122-0153-843f:base:browse:1",
+      "credits": 0.826,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T01:55:58.889Z",
+      "id": "20261122-0153-843f:base:checkout:1",
+      "credits": 1.081,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T01:57:45.356Z",
+      "id": "20261122-0153-843f:head:account:1",
+      "credits": 34.99,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:02:22.074Z",
+      "id": "20261122-0153-843f:head:browse:1",
+      "credits": 15.072,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:05:53.969Z",
+      "id": "20261122-0153-843f:head:checkout:1",
+      "credits": 17.882,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:10:50.877Z",
+      "id": "20261122-0210-5b86:base:account:1",
+      "credits": 0.364,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:12:03.016Z",
+      "id": "20261122-0210-5b86:base:browse:1",
+      "credits": 0.192,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:12:51.079Z",
+      "id": "20261122-0210-5b86:base:checkout:1",
+      "credits": 1.015,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:14:12.992Z",
+      "id": "20261122-0210-5b86:head:account:1",
+      "credits": 31.362,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:17:16.158Z",
+      "id": "20261122-0210-5b86:head:browse:1",
+      "credits": 0.174,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:18:29.254Z",
+      "id": "20261122-0210-5b86:head:checkout:1",
+      "credits": 1.684,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:19:39.458Z",
+      "id": "20261122-0219-35e6:base:account:1",
+      "credits": 0.366,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:20:32.793Z",
+      "id": "20261122-0219-35e6:base:browse:1",
+      "credits": 0.838,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:22:05.760Z",
+      "id": "20261122-0219-35e6:base:checkout:1",
+      "credits": 1.049,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:24:17.148Z",
+      "id": "20261122-0219-35e6:head:account:1",
+      "credits": 1.632,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:26:05.083Z",
+      "id": "20261122-0219-35e6:head:browse:1",
+      "credits": 0.184,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:27:20.212Z",
+      "id": "20261122-0219-35e6:head:checkout:1",
+      "credits": 1.043,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:28:30.334Z",
+      "id": "20261122-0228-4927:base:account:1",
+      "credits": 0.337,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:29:19.487Z",
+      "id": "20261122-0228-4927:base:browse:1",
+      "credits": 0.2,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:30:15.696Z",
+      "id": "20261122-0228-4927:base:checkout:1",
+      "credits": 1.057,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:31:44.690Z",
+      "id": "20261122-0228-4927:head:account:1",
+      "credits": 0.358,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:33:17.991Z",
+      "id": "20261122-0228-4927:head:browse:1",
+      "credits": 0.24,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T02:34:24.689Z",
+      "id": "20261122-0228-4927:head:checkout:1",
+      "credits": 1.023,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T01:40:58.000Z",
+      "id": "author:examples/shop:browse,checkout,account",
+      "credits": 214.401,
+      "census": false
+    }
+  ]
+}
