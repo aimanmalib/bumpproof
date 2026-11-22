@@ -17,6 +17,7 @@ export interface InitConfig {
   max_files: number;
   route_patterns: string[];
   file_route_dirs: string[];
+  file_route_parents: string[];
   max_page_journeys: number;
 }
 
@@ -56,9 +57,10 @@ export function sourceFiles(appDir: string, ic: InitConfig): string[] {
   return out;
 }
 
-/** A route from a file-system router file (Next `app/**\/page.*`, `pages/**`), or undefined. */
+/** A route from a file-system router file (Next `app/**\/page.*`, `pages/**`, also under `src/`), or undefined. */
 export function fileRoute(rel: string, ic: InitConfig): string | undefined {
   const parts = rel.split(sep).join('/').split('/');
+  if (parts.length > 2 && ic.file_route_parents.includes(parts[0]!) && ic.file_route_dirs.includes(parts[1]!)) parts.shift();
   const top = parts.shift();
   if (!top || !ic.file_route_dirs.includes(top) || parts.length === 0) return undefined;
   const file = parts.pop()!;

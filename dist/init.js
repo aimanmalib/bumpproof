@@ -40,9 +40,11 @@ export function sourceFiles(appDir, ic) {
         walk(join(appDir, d));
     return out;
 }
-/** A route from a file-system router file (Next `app/**\/page.*`, `pages/**`), or undefined. */
+/** A route from a file-system router file (Next `app/**\/page.*`, `pages/**`, also under `src/`), or undefined. */
 export function fileRoute(rel, ic) {
     const parts = rel.split(sep).join('/').split('/');
+    if (parts.length > 2 && ic.file_route_parents.includes(parts[0]) && ic.file_route_dirs.includes(parts[1]))
+        parts.shift();
     const top = parts.shift();
     if (!top || !ic.file_route_dirs.includes(top) || parts.length === 0)
         return undefined;

@@ -427,6 +427,9 @@
       "app",
       "pages"
     ],
+    "file_route_parents": [
+      "src"
+    ],
     "max_page_journeys": 1
   }
 }

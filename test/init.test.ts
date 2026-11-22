@@ -106,6 +106,11 @@ test('routes from Next file routers skip parameters, API routes and private file
   assert.equal(fileRoute(join('pages', 'pricing.js'), ic.init), '/pricing');
   assert.equal(fileRoute(join('pages', '_app.js'), ic.init), undefined);
   assert.equal(fileRoute(join('pages', 'api', 'hello.js'), ic.init), undefined);
+  // Next also reads app/ and pages/ from src/ (measured on a census app: src/app/(main)/trips/page.tsx).
+  assert.equal(fileRoute(join('src', 'app', '(main)', 'trips', 'page.tsx'), ic.init), '/trips');
+  assert.equal(fileRoute(join('src', 'pages', 'pricing.js'), ic.init), '/pricing');
+  assert.equal(fileRoute(join('src', 'components', 'page.tsx'), ic.init), undefined);
+  assert.equal(fileRoute(join('src', 'page.tsx'), ic.init), undefined);
   write(join(dir, 'app', 'settings', 'page.tsx'), 'export default () => null');
   write(join(dir, 'node_modules', 'x', 'src', 'y.js'), 'path: "/hidden"');
   assert.deepEqual(findRoutes(dir, ic.init), ['/settings']);
