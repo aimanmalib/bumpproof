@@ -3,6 +3,7 @@
 
   python3 scripts/video-render.py SHOTS VOICE OUT.mp4            full render (frames, audio, mux)
   python3 scripts/video-render.py SHOTS VOICE SHEET.jpg --stills 0,12.5,40   contact sheet of single frames
+  python3 scripts/video-render.py SHOTS VOICE OUT.srt --srt      the burned-in captions as a subtitle file
 
 SHOTS = folder of PNG stills (scripts/video-shots.py). VOICE = folder with skrip.json ({"baris": [{"id", "sari"}]}) and
 work/suara/<id>.mp3 + <id>.json (text and per-character timings). Every frame is a pure function of time, so a frame
@@ -303,6 +304,19 @@ def audio(clips: list, dur: float, out: Path):
     raw.unlink()
 
 
+def srt_time(t: float) -> str:
+    ms = round(t * 1000)
+    return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
+
+
+def srt(caps: list) -> str:
+    """The same caption chunks and times the frames show, as SubRip text. The frames switch to the next chunk as soon as
+    it starts, so each end is cut at the next start; otherwise a player would stack two lines."""
+    ends = [min(c['t1'], n['t0']) for c, n in zip(caps, caps[1:])] + [caps[-1]['t1']] if caps else []
+    return ''.join(f"{k}\n{srt_time(c['t0'])} --> {srt_time(e)}\n{c['text']}\n\n"
+                   for k, (c, e) in enumerate(zip(caps, ends), 1))
+
+
 def main(argv: list[str]):
     if len(argv) < 3:
         sys.exit(__doc__)
@@ -310,6 +324,10 @@ def main(argv: list[str]):
     init(shots, voice)
     p = STATE['plan']
     print(f"duration {p['duration']:.2f} s, {len(p['scenes'])} scenes, {len(p['captions'])} captions")
+    if '--srt' in argv:
+        out.write_text(srt(p['captions']), encoding='utf-8')
+        print(f'wrote {out}')
+        return
     if '--stills' in argv:
         times = [float(x) for x in argv[argv.index('--stills') + 1].split(',')]
         tw, th = W // 3, H // 3

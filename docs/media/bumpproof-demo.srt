@@ -1,0 +1,232 @@
+1
+00:00:00,420 --> 00:00:03,007
+Dependabot opened this pull request on my demo shop.
+
+2
+00:00:03,007 --> 00:00:05,740
+It bumps React Query from version 4 to version 5.
+
+3
+00:00:05,740 --> 00:00:08,120
+All three CI checks are green.
+
+4
+00:00:09,999 --> 00:00:11,459
+This is the shop on that commit.
+
+5
+00:00:11,459 --> 00:00:12,419
+The page is blank.
+
+6
+00:00:12,419 --> 00:00:16,339
+The build passed, the tests passed, and the app does not render.
+
+7
+00:00:18,720 --> 00:00:20,400
+CI checks that the code builds.
+
+8
+00:00:20,400 --> 00:00:21,840
+It does not open the app.
+
+9
+00:00:21,840 --> 00:00:23,540
+Bumpproof does.
+
+10
+00:00:24,869 --> 00:00:27,795
+Bumpproof builds the base branch and the pull request in a
+
+11
+00:00:27,795 --> 00:00:28,949
+Docker sandbox.
+
+12
+00:00:28,949 --> 00:00:32,682
+Then Kane CLI drives a real Chrome through three journeys in
+
+13
+00:00:32,682 --> 00:00:36,409
+plain English: browse, checkout, and the account page.
+
+14
+00:00:38,788 --> 00:00:40,895
+On the base, all three journeys pass.
+
+15
+00:00:40,895 --> 00:00:42,788
+On the pull request, all three fail.
+
+16
+00:00:42,788 --> 00:00:45,578
+Kane says the Orders tab leads to a blank page.
+
+17
+00:00:45,578 --> 00:00:47,241
+The browser console shows why:
+
+18
+00:00:47,241 --> 00:00:50,088
+it cannot read "orders" of undefined.
+
+19
+00:00:52,472 --> 00:00:55,392
+The verdict is written by code, not by a model.
+
+20
+00:00:55,392 --> 00:00:58,632
+A journey that passes on the base and fails on the pull request
+
+21
+00:00:58,632 --> 00:01:00,252
+is a regression.
+
+22
+00:01:02,630 --> 00:01:04,330
+Then Claude Code gets the failure,
+
+23
+00:01:04,330 --> 00:01:06,363
+the console error and the release notes.
+
+24
+00:01:06,363 --> 00:01:07,937
+It has file tools only.
+
+25
+00:01:07,937 --> 00:01:09,217
+No shell and no web.
+
+26
+00:01:09,217 --> 00:01:11,610
+It may not change the bumped version.
+
+27
+00:01:13,989 --> 00:01:15,349
+It changes two lines.
+
+28
+00:01:15,349 --> 00:01:18,576
+In version 5 the "loading" status is called "pending".
+
+29
+00:01:18,576 --> 00:01:21,529
+It quotes that line from the upgrade guide.
+
+30
+00:01:23,911 --> 00:01:27,258
+The fix is built again, and Kane runs every journey again.
+
+31
+00:01:27,258 --> 00:01:28,727
+Three of three pass.
+
+32
+00:01:28,727 --> 00:01:32,091
+Only then does Bumpproof accept the fix.
+
+33
+00:01:34,461 --> 00:01:37,293
+It posts one comment on the pull request: the table,
+
+34
+00:01:37,293 --> 00:01:39,074
+what Kane saw, and the patch.
+
+35
+00:01:39,074 --> 00:01:41,288
+It pushes the fix to the bot's branch.
+
+36
+00:01:41,288 --> 00:01:42,741
+It does not merge.
+
+37
+00:01:42,741 --> 00:01:44,801
+A person decides.
+
+38
+00:01:47,178 --> 00:01:51,658
+That run took 22 minutes and 102 Kane credits.
+
+39
+00:01:51,658 --> 00:01:54,878
+The fix cost 18 cents.
+
+40
+00:01:57,258 --> 00:02:00,838
+On this repository it ran on three Dependabot pull requests.
+
+41
+00:02:00,838 --> 00:02:02,145
+One was safe.
+
+42
+00:02:02,145 --> 00:02:03,438
+React Query was fixed.
+
+43
+00:02:03,438 --> 00:02:05,938
+The date-fns bump broke the build,
+
+44
+00:02:05,938 --> 00:02:08,958
+and Claude Code fixed it in six lines.
+
+45
+00:02:11,333 --> 00:02:13,813
+Then I ran it on other people's pull requests.
+
+46
+00:02:13,813 --> 00:02:15,733
+14 repositories, read only.
+
+47
+00:02:15,733 --> 00:02:17,333
+8 could run in the sandbox.
+
+48
+00:02:17,333 --> 00:02:18,293
+7 were safe.
+
+49
+00:02:18,293 --> 00:02:21,273
+1 broke the build, and the fixer did not fix it.
+
+50
+00:02:23,659 --> 00:02:27,259
+To test for false alarms, I ran each base against itself.
+
+51
+00:02:27,259 --> 00:02:29,519
+8 of 8 came back the same.
+
+52
+00:02:31,910 --> 00:02:35,574
+In the census, no pull request had green CI and a broken app.
+
+53
+00:02:35,574 --> 00:02:38,170
+This shop is the only case I have.
+
+54
+00:02:40,652 --> 00:02:42,412
+Limits: npm only.
+
+55
+00:02:42,412 --> 00:02:45,012
+Apps that need a database or secrets cannot run.
+
+56
+00:02:45,012 --> 00:02:49,232
+A failing journey costs many times the credits of a passing one.
+
+57
+00:02:51,920 --> 00:02:55,140
+Everything here comes from the run files in the repository.
+
+58
+00:02:55,140 --> 00:02:57,940
+You can replay any run without a key.
+
