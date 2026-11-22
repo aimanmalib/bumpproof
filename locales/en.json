@@ -34,7 +34,8 @@
     "opt_publish": "with check: also write the run record to docs/runs/<id>/ for the report site",
     "opt_fix": "with check: when the head regresses or does not build, let the fixer patch it and replay the journeys",
     "opt_push_fix": "with pr --fix: push a verified fix onto the pull request branch (our repositories only)",
-    "opt_run": "Run the next eligible census candidates (--limit n, --only owner/repo)"
+    "opt_run": "Run the next eligible census candidates (--limit n, --only owner/repo)",
+    "opt_force": "init: replace files that already exist"
   },
   "doctor": {
     "title": "Bumpproof doctor",
@@ -386,5 +387,18 @@
     "empty": "No pull request runs recorded yet.",
     "facts_intro": "The other numbers, counted the same way as on the report site:",
     "source": "Source: `{files}`."
+  },
+  "init": {
+    "found": "Found an app in {dir} (package manager: {pm}).",
+    "commands": "Install: {install}\nBuild:   {build}\nServe:   {serve}\nPort:    {port}",
+    "none": "(none)",
+    "routes": "Routes in the source: {list}",
+    "routes_none": "No routes found in the source. The drafts start at /.",
+    "wrote": "Wrote {path}",
+    "kept": "Kept {path}: it already exists. --force replaces it.",
+    "config_exists": "{path} already exists. Nothing was written. --force replaces it.",
+    "no_plan": "Cannot set up the app in {dir}: {reason}. Nothing was written.",
+    "bad_dir": "The app folder must stay inside this folder: {dir}",
+    "next": "These journeys are drafts. Read each one and change the steps to what your app must do.\nThen run: bumpproof check --base <ref> --head <ref>"
   }
 }

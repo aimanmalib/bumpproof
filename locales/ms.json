@@ -34,7 +34,8 @@
     "opt_publish": "dengan check: tulis juga rekod larian ke docs/runs/<id>/ untuk laman laporan",
     "opt_fix": "dengan check: bila kepala regresi atau gagal dibina, biar fixer menampalnya dan ulang perjalanan",
     "opt_push_fix": "dengan pr --fix: tolak pembaikan yang disahkan ke cawangan pull request (repositori kita sahaja)",
-    "opt_run": "Jalankan calon banci layak seterusnya (--limit n, --only pemilik/repo)"
+    "opt_run": "Jalankan calon banci layak seterusnya (--limit n, --only pemilik/repo)",
+    "opt_force": "init: ganti fail yang sudah wujud"
   },
   "doctor": {
     "title": "Semakan Bumpproof",
@@ -386,5 +387,18 @@
     "empty": "Belum ada larian PR direkod.",
     "facts_intro": "Angka lain, dikira dengan cara yang sama seperti di laman laporan:",
     "source": "Sumber: `{files}`."
+  },
+  "init": {
+    "found": "Aplikasi ditemui dalam {dir} (pengurus pakej: {pm}).",
+    "commands": "Pasang: {install}\nBina:   {build}\nHidang: {serve}\nPort:   {port}",
+    "none": "(tiada)",
+    "routes": "Laluan dalam kod sumber: {list}",
+    "routes_none": "Tiada laluan ditemui dalam kod sumber. Draf bermula di /.",
+    "wrote": "Ditulis {path}",
+    "kept": "Dikekalkan {path}: fail itu sudah wujud. --force menggantinya.",
+    "config_exists": "{path} sudah wujud. Tiada apa ditulis. --force menggantinya.",
+    "no_plan": "Aplikasi dalam {dir} tidak dapat disediakan: {reason}. Tiada apa ditulis.",
+    "bad_dir": "Folder aplikasi mesti kekal dalam folder ini: {dir}",
+    "next": "Perjalanan ini draf. Baca setiap satu dan ubah langkahnya kepada apa yang aplikasi anda mesti buat.\nKemudian jalankan: bumpproof check --base <ref> --head <ref>"
   }
 }

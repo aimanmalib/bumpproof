@@ -5,6 +5,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { CensusConfig } from './census.ts';
+import type { InitConfig } from './init.ts';
 
 /** Package root: works from src/ (tests) and dist/ (installed), both one level down. */
 export const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -55,6 +56,8 @@ export interface Config {
   /** `pr --comment/--push-fix` only on these repository URLs; the fix commit message (`{name} {from} {to} {run}`). */
   pr: { write_repos: string[]; fix_commit_message: string };
   census: CensusConfig;
+  /** `bumpproof init`: journey templates and where to look for routes. */
+  init: InitConfig;
   doctor: { timeout_ms: number };
   publish: {
     email_allowlist: string[]; strip_keys: string[]; email_ignore_tlds: string[]; private_url_patterns: string[];

@@ -38,10 +38,11 @@ test('unknown command and unsupported language exit 2', async () => {
   assert.match(b.stderr[0] ?? '', /Unsupported language 'xx'/);
 });
 
-test('a listed command that is not built yet exits non-zero, so scripts and CI notice', async () => {
+test('<command> --help exits 0 for every listed command and 2 for one that does not exist', async () => {
+  for (const c of COMMANDS) assert.equal(await main([c, '--help'], io()), 0, c);
   const o = io();
-  assert.equal(await main(['init'], o), 2);
-  assert.match(o.stderr[0] ?? '', /'init' command is not built yet/);
+  assert.equal(await main(['frobnicate', '--help'], o), 2);
+  assert.match(o.stderr[0] ?? '', /Unknown command: frobnicate/);
 });
 
 test('census without --find or --run says which one to use; a bad --limit is refused', async () => {

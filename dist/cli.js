@@ -22,6 +22,7 @@ import { runCensus } from "./census-run.js";
 import { parsePrArgs, runPr } from "./pr-cli.js";
 import { secretsFromEnv } from "./evidence.js";
 import { httpFetcher } from "./notes.js";
+import { runInit } from "./init.js";
 export const COMMANDS = ['doctor', 'init', 'check', 'fix', 'pr', 'census', 'report', 'replay'];
 export function version() {
     const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
@@ -39,6 +40,7 @@ export function helpText(t) {
         `  --markdown <f>  ${t('cli.opt_markdown')}`,
         `  --min-free-gb <n> ${t('cli.opt_min_free_gb')}`,
         `  --build-only    ${t('cli.opt_build_only')}`,
+        `  --force         ${t('cli.opt_force')}`,
         `  --publish       ${t('cli.opt_publish')}`,
         `  --fix           ${t('cli.opt_fix')}`,
         `  --push-fix      ${t('cli.opt_push_fix')}`,
@@ -81,6 +83,7 @@ export async function main(argv, io) {
             'build-only': { type: 'boolean' },
             publish: { type: 'boolean' },
             fix: { type: 'boolean' },
+            force: { type: 'boolean' },
         },
     });
     const cfg = loadConfig(io.cwd);
@@ -95,14 +98,15 @@ export async function main(argv, io) {
         return 0;
     }
     const cmd = positionals[0];
-    if (values.help || !cmd) {
-        io.out(helpText(t));
-        return cmd || values.help ? 0 : 1;
-    }
-    if (!COMMANDS.includes(cmd)) {
+    // Unknown commands fail even with --help, so `bumpproof <cmd> --help` proves a documented command exists.
+    if (cmd && !COMMANDS.includes(cmd)) {
         io.err(t('cli.unknown_command', { name: cmd }));
         io.err(helpText(t));
         return 2;
+    }
+    if (values.help || !cmd) {
+        io.out(helpText(t));
+        return cmd || values.help ? 0 : 1;
     }
     if (!cfg.enabled) {
         io.out(t('cli.disabled'));
@@ -202,6 +206,9 @@ export async function main(argv, io) {
         }
         const out = resolve(io.cwd, typeof values.out === 'string' && values.out ? values.out : cfg.census.candidates_path);
         return runCensusFind({ cfg, run, now: Date.now, sleep: (ms) => new Promise((r) => setTimeout(r, ms)), progress: (k, v) => io.err(t(k, v)) }, t, out, secretsFromEnv(io.env, cfg.publish.secret_env), io);
+    }
+    if (cmd === 'init') {
+        return runInit(cfg, t, { ...(typeof values.dir === 'string' ? { dir: values.dir } : {}), force: values.force === true }, io);
     }
     if (cmd === 'report')
         return runReport(cfg, t, values, io);

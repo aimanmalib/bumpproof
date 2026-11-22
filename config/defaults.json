@@ -387,5 +387,46 @@
     "generic_journeys_dir": "config/census-journeys",
     "specific_journeys_dir": "census/journeys",
     "runs_dir": "census/runs"
+  },
+  "init": {
+    "templates": {
+      "home": "config/census-journeys/home_test.md",
+      "nav": "config/census-journeys/nav_test.md",
+      "page": "config/init-journeys/page_test.md"
+    },
+    "source_dirs": [
+      "src",
+      "app",
+      "pages"
+    ],
+    "source_exts": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "mjs",
+      "vue",
+      "svelte",
+      "astro"
+    ],
+    "skip_dirs": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      ".next",
+      "coverage",
+      "__tests__"
+    ],
+    "max_files": 400,
+    "route_patterns": [
+      "\\bpath\\s*[=:]\\s*[\"'](/[^\"'\\s]*)[\"']",
+      "\\b(?:to|href)\\s*=\\s*\\{?\\s*[\"'](/[^\"'\\s]*)[\"']"
+    ],
+    "file_route_dirs": [
+      "app",
+      "pages"
+    ],
+    "max_page_journeys": 1
   }
 }
