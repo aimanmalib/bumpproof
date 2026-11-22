@@ -295,3 +295,32 @@ Measured (22 Nov, Kane CLI 0.10.7, Claude Code with `claude-opus-5-5`, host mode
 
 The date-fns fix also changed the default imports, quoting the v3 note on named exports. v4 still has default exports
 (§15), so that part was not needed. It still builds, and every journey passes.
+
+## 17. The pr command on real pull requests (22 Nov 2026)
+
+- **Command:** `bumpproof pr <owner>/<repo>#<n> [--fix] [--publish] [--comment] [--push-fix]`. It reads the pull
+  request with `gh pr view`, clones the repository and runs the same check and fix loop as `check --fix`.
+- **Merged locally, not GitHub's merge ref.** The first try used `refs/pull/<n>/merge`. Its first parent was a `main`
+  from before the journeys were added, so the run found no journeys. GitHub updates that ref lazily. The command now
+  fetches the base branch tip and the PR head, merges them with `git merge-tree`, and compares the base tip with that
+  merge. A conflict is refused with a hint to rebase.
+- **Write access is a list in config** (`pr.write_repos`). `--comment` and `--push-fix` are refused before any network
+  call for other repositories. A census run is read-only by construction.
+- **The fix is pushed as files, not as `fix.patch`.** `fix.patch` is a report diff with no hunk headers; `git apply`
+  cannot use it. The push writes the fixed files' new text. Each file must have the same blob on the PR branch as on
+  the merge the fix was verified on, so nothing the fix did not see is overwritten. The branch tip must still be the
+  head that was tested. One new commit, a normal push, never a force push, never a merge.
+- **One comment per pull request.** The body starts with `<!-- bumpproof-pr -->`; a later run edits that comment.
+- PR #1 was behind `main`; a `@dependabot rebase` comment on it had Dependabot rebase it so its head carries the
+  `date-fns/esm` import (§16). Its CI then went red.
+
+Measured (22 Nov, Kane CLI 0.10.7, Claude Code with `claude-opus-5-5`, host mode):
+
+| PR | Bump | CI | Verdict | Fix | Credits | Time |
+|---|---|---|---|---|---|---|
+| #4 | clsx 1.2.1 → 2.1.1 | green | safe, 3 of 3 same | none | 6.406 | 906 s |
+| #2 | @tanstack/react-query 4.36.1 → 5.108.0 | green | fixed: 3 of 3 failed on the head | 1 attempt, `src/lib.jsx`, $0.18, pushed | 101.979 | 1354 s |
+| #1 | date-fns 2.30.0 → 4.4.0 | red | fixed: the head did not build | 1 attempt, `src/lib.jsx` + `src/pages/Checkout.jsx`, $0.16, pushed | 3.806 | 950 s |
+
+The three failing head runs on PR #2 used 97.406 of its 101.979 credits. A failing journey costs far more than a
+passing replay.
