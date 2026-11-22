@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0649-4583",
+  "synthetic": false,
+  "started_at": "2026-11-22T06:59:26.464Z",
+  "duration_s": 881,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/heriberto04/Trip-Logs",
+    "pr": 26,
+    "pr_url": "https://github.com/heriberto04/Trip-Logs/pull/26",
+    "pr_title": "Bump next from 15.3.3 to 15.5.29",
+    "ci": "none"
+  },
+  "app_dir": "",
+  "base": {
+    "ref": "3826f6cb43ab2e739b86ef7f27ad2020c7f14110",
+    "sha": "3826f6cb43ab2e739b86ef7f27ad2020c7f14110"
+  },
+  "head": {
+    "ref": "c9bbebb33e0d76471019794e401c74428a492c49",
+    "sha": "c9bbebb33e0d76471019794e401c74428a492c49"
+  },
+  "bumps": [
+    {
+      "name": "next",
+      "from": "15.3.3",
+      "to": "15.5.29",
+      "type": "minor"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 114.7,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 95.8,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "passed",
+        "seconds": 87,
+        "credits": 10.292,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 115,
+        "credits": 2.999,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "passed",
+        "seconds": 45,
+        "credits": 0.171,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 112,
+        "credits": 0.193,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "passed",
+        "seconds": 32,
+        "credits": 0.194,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 81,
+        "credits": 0.222,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": null,
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "safe",
+    "reason": "ok",
+    "evaluated": 3
+  },
+  "fix": null,
+  "credits_consumed": 14.071,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "3826f6cb43ab2e739b86ef7f27ad2020c7f14110",
+        "head": "c9bbebb33e0d76471019794e401c74428a492c49"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "next",
+        "from": "15.3.3",
+        "to": "15.5.29",
+        "type": "minor"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 115,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 114.7
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 225,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "passed",
+        "s": 87
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 293,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "passed",
+        "s": 45
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 346,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "passed",
+        "s": 32
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 445,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 95.8
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 594,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "home",
+        "status": "passed",
+        "s": 115
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 746,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "nav",
+        "status": "passed",
+        "s": 112
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 856,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "specific",
+        "status": "passed",
+        "s": 81
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 881,
+      "key": "verdict",
+      "vars": {
+        "verdict": "safe"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
