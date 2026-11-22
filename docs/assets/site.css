@@ -144,7 +144,7 @@ p, li, dd, td, .timeline span { overflow-wrap: anywhere; }
 .failure { padding: 0.25rem 0 0.75rem; }
 .failure + .failure { border-top: 1px solid var(--rule); }
 .failure h3 { margin-top: 0.75rem; }
-blockquote { margin: 0.75rem 0 1rem; padding: 0.75rem 1rem; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); max-width: 68ch; color: var(--ink-2); }
+blockquote { margin: 0.75rem 0 1rem; padding: 0.75rem 1rem; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); max-width: 68ch; color: var(--ink-2); white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .cmd, .patch { background: var(--code-bg); color: var(--code-ink); padding: 0.9rem 1rem; border-radius: var(--radius); overflow-x: auto;
   font-size: 0.88rem; line-height: 1.55; max-width: 100%; margin: 0 0 1rem; }

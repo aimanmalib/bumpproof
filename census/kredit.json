@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "total": 327.748,
+  "total": 502.625,
   "census": 0,
   "runs": [
     {
@@ -151,6 +151,108 @@
       "at": "2026-11-22T01:40:58.000Z",
       "id": "author:examples/shop:browse,checkout,account",
       "credits": 214.401,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:18:46.901Z",
+      "id": "20261122-0318-89a9:base:account:1",
+      "credits": 1.661,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:19:29.385Z",
+      "id": "20261122-0318-89a9:base:browse:1",
+      "credits": 0.819,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:20:13.919Z",
+      "id": "20261122-0318-89a9:base:checkout:1",
+      "credits": 1.68,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:21:40.461Z",
+      "id": "20261122-0318-89a9:head:account:1",
+      "credits": 53.065,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:26:46.079Z",
+      "id": "20261122-0318-89a9:head:browse:1",
+      "credits": 22.851,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:28:57.160Z",
+      "id": "20261122-0318-89a9:head:checkout:1",
+      "credits": 22.89,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:33:31.248Z",
+      "id": "20261122-0333-17ad:base:account:1",
+      "credits": 0.346,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:34:41.271Z",
+      "id": "20261122-0333-17ad:base:browse:1",
+      "credits": 0.205,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:35:36.156Z",
+      "id": "20261122-0333-17ad:base:checkout:1",
+      "credits": 0.993,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:36:46.846Z",
+      "id": "20261122-0333-17ad:head:account:1",
+      "credits": 43.031,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:40:55.035Z",
+      "id": "20261122-0333-17ad:head:browse:1",
+      "credits": 10.979,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:43:43.159Z",
+      "id": "20261122-0333-17ad:head:checkout:1",
+      "credits": 12.937,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:47:34.675Z",
+      "id": "20261122-0333-17ad:after_fix:account:1",
+      "credits": 0.358,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:50:42.861Z",
+      "id": "20261122-0333-17ad:after_fix:browse:1",
+      "credits": 0.825,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:52:40.965Z",
+      "id": "20261122-0333-17ad:after_fix:checkout:1",
+      "credits": 1.027,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:55:26.999Z",
+      "id": "20261122-0355-0c11:base:account:1",
+      "credits": 1.004,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T03:56:56.073Z",
+      "id": "20261122-0355-0c11:base:browse:1",
+      "credits": 0.206,
       "census": false
     }
   ]
