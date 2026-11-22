@@ -194,8 +194,11 @@ export interface SandboxDeps {
   now: () => number;
 }
 
+/** Terminal colour and cursor codes (`ESC [ ... m`), which tools print even without a TTY. */
+const ANSI = /\u001b\[[0-9;?]*[A-Za-z]/g;
+
 export function tail(text: string, n: number): string[] {
-  const lines = text.split(/\r?\n/).filter((l) => l.trim() !== '' && !l.startsWith(MARK));
+  const lines = text.replace(ANSI, '').split(/\r?\n/).filter((l) => l.trim() !== '' && !l.startsWith(MARK));
   return lines.slice(-n);
 }
 

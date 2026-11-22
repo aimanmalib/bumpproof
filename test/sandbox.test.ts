@@ -95,6 +95,8 @@ test('sandboxUser never picks root', () => {
 
 test('tail drops markers and blank lines', () => {
   assert.deepEqual(tail(`a\n\n${phases('build')}\nb\nc`, 2), ['b', 'c']);
+  // Vite colours its errors even in a container; the log tail goes into comments, pages and the fixer prompt.
+  assert.deepEqual(tail('\u001b[31merror during build:\n\u001b[31mMissing "./esm/addDays"\u001b[39m', 2), ['error during build:', 'Missing "./esm/addDays"']);
 });
 
 const shop = () => app({ 'package.json': pkg({ scripts: { build: 'b', start: 's' } }), 'package-lock.json': '{}' });
