@@ -372,7 +372,7 @@
     "error": "Pull request: {detail}"
   },
   "readme": {
-    "table_intro": "Setiap baris ialah satu larian `bumpproof pr … --fix --publish --comment --push-fix` pada PR yang Dependabot buka di repo ini. Tiada apa digabung.",
+    "table_intro": "Setiap baris ialah satu larian `bumpproof pr … --fix --publish --comment` pada PR yang Dependabot buka di repo ini. Pada #1 dan #2 pembaikan yang disahkan turut ditolak (`--push-fix`). #3 dibiar seperti Dependabot membukanya, supaya kerosakan masih boleh diulang. Tiada apa digabung.",
     "col_pr": "PR",
     "col_change": "Perubahan",
     "col_ci": "CI di GitHub",

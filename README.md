@@ -35,11 +35,12 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 
 <!-- bumpproof:numbers:start -->
 
-Each row is one `bumpproof pr … --fix --publish --comment --push-fix` run on a pull request Dependabot opened on this repository. Nothing was merged.
+Each row is one `bumpproof pr … --fix --publish --comment` run on a pull request Dependabot opened on this repository. On #1 and #2 the verified fix was also pushed (`--push-fix`). #3 was left as Dependabot opened it, so the break can still be reproduced. Nothing was merged.
 
 | Pull request | Change | CI on GitHub | Bumpproof | Kane CLI credits | Fixer (Claude API) | Time |
 |---|---|---|---|---|---|---|
 | [#4](https://github.com/aimanmalib/bumpproof/pull/4) | clsx 1.2.1 → 2.1.1 | green | [Safe](https://aimanmalib.github.io/bumpproof/runs/20261122-0437-f93b/): 3 of 3 journeys same as base | 6.4 | — | 15 min 06 s |
+| [#3](https://github.com/aimanmalib/bumpproof/pull/3) | react-router-dom 6.30.1 → 7.18.6 | green | [Fixed](https://aimanmalib.github.io/bumpproof/runs/20261122-1830-1146/): 1 of 3 journeys failed, 8-line fix, 3 of 3 pass | 43.7 | $0.15 | 12 min 51 s |
 | [#2](https://github.com/aimanmalib/bumpproof/pull/2) | @tanstack/react-query 4.36.1 → 5.108.0 | green | [Fixed](https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/): 3 of 3 journeys failed, 2-line fix, 3 of 3 pass | 102 | $0.18 | 22 min 34 s |
 | [#1](https://github.com/aimanmalib/bumpproof/pull/1) | date-fns 2.30.0 → 4.4.0 | red | [Fixed](https://aimanmalib.github.io/bumpproof/runs/20261122-0516-0348/): build failed, 6-line fix, 3 of 3 pass | 3.8 | $0.16 | 15 min 50 s |
 
@@ -48,8 +49,8 @@ The other numbers, counted the same way as on the report site:
 - **H2 Census of third-party pull requests: 8 of 14.** 241 pull requests checked against the rules, 20 eligible, 14 run. 8 could be run in the sandbox. Source: `census/results.json · census/candidates.json`.
 - **H3 CI green, app broken: 0.** Census pull requests where CI was green or absent but Kane CLI found a break: 0 of 8. Source: `census/results.json`.
 - **H4 False alarms in the control run: 0 of 8.** Base replayed against base: 8 same, 0 false alarm, 0 inconclusive. Source: `census/results.json`.
-- **H5 Fix loop time and credits: 8 min 02 s.** Median time from the failed check to Kane CLI passing on the patch, over 3 fixes. Median 6.4 Kane CLI credits per pull request (3 pull requests). In the census, authoring a journey cost 33.4 credits on average and replaying a recording cost 8.1. That is 4.1 to 1. Source: `docs/runs/*/run.json · census/kredit.json`.
-- **H6 Breaks fixed: 3 of 4.** Among runs with the fixer switched on: 3 of 3 on the demo app, 0 of 1 in the census. 5 attempts in all. Source: `docs/runs/*/run.json · census/runs/*/run.json`.
+- **H5 Fix loop time and credits: 6 min 16 s.** Median time from the failed check to Kane CLI passing on the patch, over 4 fixes. Median 25 Kane CLI credits per pull request (4 pull requests). In the census, authoring a journey cost 33.4 credits on average and replaying a recording cost 8.1. That is 4.1 to 1. Source: `docs/runs/*/run.json · census/kredit.json`.
+- **H6 Breaks fixed: 4 of 5.** Among runs with the fixer switched on: 4 of 4 on the demo app, 0 of 1 in the census. 6 attempts in all. Source: `docs/runs/*/run.json · census/runs/*/run.json`.
 
 <!-- bumpproof:numbers:end -->
 
@@ -66,6 +67,30 @@ No keys and no credits. The replay needs the network once, to download the packa
 
 3. Check the numbers against the files they come from: [`docs/runs/*/run.json`](docs/runs) and
    [`census/results.json`](census/results.json).
+
+## Reproduce a catch live (no Anthropic key)
+
+Pull request [#3](https://github.com/aimanmalib/bumpproof/pull/3) is left as Dependabot opened it. Its verified fix is on the
+[run page](https://aimanmalib.github.io/bumpproof/runs/20261122-1830-1146/), not on the branch. You can make Kane CLI catch
+the break again with your own account. It needs Node 20 or later, Docker and a Kane CLI login. Without `--fix` nothing is
+patched, so no Anthropic key is needed.
+
+```sh
+npm install -g --install-links github:aimanmalib/bumpproof
+git clone https://github.com/aimanmalib/bumpproof
+cd bumpproof
+bumpproof check --base 8ff77fe --head 05f11be --dir examples/shop
+```
+
+`05f11be` is Dependabot's commit on #3. `8ff77fe` is the commit it branched from, plus the three journeys; the shop code is
+the same. Run from a fresh clone on 22 November: the base passed, and on the bump `account` failed at "Use the tabs again".
+Verdict Broken, 8 min 43 s, 25.0 Kane CLI credits. It was the third time that step failed on #3.
+
+#1 and #2 now carry their fixes. Their original Dependabot commits replay the same way, also measured from a fresh clone:
+
+- #1: `bumpproof check --base f68676c --head 8ea9eb6 --dir examples/shop`. The build fails
+  (`Missing "./esm/addDays" specifier`). 2 min 59 s, 1.6 credits.
+- #2: `bumpproof check --base 8ff77fe --head 5243b1d --dir examples/shop`. All three journeys fail. 11 min 06 s, 101.7 credits.
 
 ## Run it live
 

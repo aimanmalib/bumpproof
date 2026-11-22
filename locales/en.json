@@ -372,7 +372,7 @@
     "error": "Pull request: {detail}"
   },
   "readme": {
-    "table_intro": "Each row is one `bumpproof pr … --fix --publish --comment --push-fix` run on a pull request Dependabot opened on this repository. Nothing was merged.",
+    "table_intro": "Each row is one `bumpproof pr … --fix --publish --comment` run on a pull request Dependabot opened on this repository. On #1 and #2 the verified fix was also pushed (`--push-fix`). #3 was left as Dependabot opened it, so the break can still be reproduced. Nothing was merged.",
     "col_pr": "Pull request",
     "col_change": "Change",
     "col_ci": "CI on GitHub",

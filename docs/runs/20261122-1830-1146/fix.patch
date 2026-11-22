@@ -1,0 +1,47 @@
+--- /dev/null
++++ b/BUMPPROOF_FIX.md
++# Bumpproof fix: react-router-dom 6.30.1 -> 7.18.6
++
++## Cause
++
++`Account` is rendered by the splat route `account/*` (`src/App.jsx:39`). Its tab links
++were relative (`to="."` and `to="orders"`). React Router v7 turns on the v6
++`future.v7_relativeSplatPath` behaviour by default. With it, relative paths inside a splat
++route resolve against the full matched URL, splat included, not against the route's base
++path. So on `/account/orders`, the "Overview" tab (`to="."`) pointed to `/account/orders`
++instead of `/account`, and "Signed in as a demo customer." never showed up. That is the
++assertion that failed in step 4. (From `/account/orders`, the "Orders" tab would also have
++pointed to `/account/orders/orders`.)
++
++## Changes
++
++### `src/pages/Account.jsx`
++- Overview tab: `to="."` changed to `to="/account"` (still uses `end`).
++- Orders tab: `to="orders"` changed to `to="/account/orders"`.
++- Updated the comment above the component to explain why the paths are absolute.
++
++The links now point to the same URLs they did in v6, and the active-tab styling works the
++same way. Nothing else changed.
++
++## Release-note reference
++
++The supplied release notes do not explain this change. They only contain a link to the
++v7.1.3 changelog and the v8→v9 "Future Changes" guide, which says "_No future flags yet_".
++The explanation comes from React Router's v6→v7 upgrade guide, which is not included
++here. That guide describes the `v7_relativeSplatPath` future flag, which became the default
++in v7 and changes how relative paths resolve inside splat routes.
++
++## Notes on the release-notes data
++
++I found no instructions embedded in the release notes. They do not cover the v6→v7
++upgrade (the guide included is for v8→v9).
+--- a/src/pages/Account.jsx
++++ b/src/pages/Account.jsx
+-// Mounted at "account/*". The tab links are relative to this splat route.
+-        <NavLink to="." end className={tabClass}>{t('account.overview')}</NavLink>
+-        <NavLink to="orders" className={tabClass}>{t('account.orders')}</NavLink>
++// Mounted at "account/*". In React Router v7, relative links inside a splat
++// route resolve against the full URL (including the splat), so the tab links
++// use absolute paths to always point at the account root and its orders tab.
++        <NavLink to="/account" end className={tabClass}>{t('account.overview')}</NavLink>
++        <NavLink to="/account/orders" className={tabClass}>{t('account.orders')}</NavLink>

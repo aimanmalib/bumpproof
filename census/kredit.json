@@ -1,8 +1,14 @@
 {
   "schema_version": 1,
-  "total": 2015.955,
+  "total": 2187.793,
   "census": 1398.494,
   "runs": [
+    {
+      "at": "2026-11-22T01:40:58.000Z",
+      "id": "author:examples/shop:browse,checkout,account",
+      "credits": 214.401,
+      "census": false
+    },
     {
       "at": "2026-11-22T01:53:29.156Z",
       "id": "20261122-0153-843f:base:account:1",
@@ -145,12 +151,6 @@
       "at": "2026-11-22T02:34:24.689Z",
       "id": "20261122-0228-4927:head:checkout:1",
       "credits": 1.023,
-      "census": false
-    },
-    {
-      "at": "2026-11-22T01:40:58.000Z",
-      "id": "author:examples/shop:browse,checkout,account",
-      "credits": 214.401,
       "census": false
     },
     {
@@ -878,6 +878,150 @@
       "id": "20261122-0914-99de:head:specific:1",
       "credits": 0.812,
       "census": true
+    },
+    {
+      "at": "2026-11-22T18:31:07.394Z",
+      "id": "20261122-1830-1146:base:account:1",
+      "credits": 1.624,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:31:52.539Z",
+      "id": "20261122-1830-1146:base:browse:1",
+      "credits": 0.839,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:32:45.980Z",
+      "id": "20261122-1830-1146:base:checkout:1",
+      "credits": 1.688,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:33:42.234Z",
+      "id": "20261122-1830-1146:head:account:1",
+      "credits": 34.758,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:36:46.083Z",
+      "id": "20261122-1830-1146:head:browse:1",
+      "credits": 0.824,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:38:18.269Z",
+      "id": "20261122-1830-1146:head:checkout:1",
+      "credits": 1.69,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:40:27.084Z",
+      "id": "20261122-1830-1146:after_fix:account:1",
+      "credits": 1.06,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:41:36.064Z",
+      "id": "20261122-1830-1146:after_fix:browse:1",
+      "credits": 0.186,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:42:30.267Z",
+      "id": "20261122-1830-1146:after_fix:checkout:1",
+      "credits": 0.991,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:46:58.815Z",
+      "id": "20261122-1846-4605:base:account:1",
+      "credits": 0.349,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:48:29.094Z",
+      "id": "20261122-1846-4605:base:browse:1",
+      "credits": 0.184,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:49:35.886Z",
+      "id": "20261122-1846-4605:base:checkout:1",
+      "credits": 1.022,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:51:03.895Z",
+      "id": "20261122-1846-4605:head:account:1",
+      "credits": 22.202,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:53:42.399Z",
+      "id": "20261122-1846-4605:head:browse:1",
+      "credits": 0.192,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:54:26.804Z",
+      "id": "20261122-1846-4605:head:checkout:1",
+      "credits": 1.01,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:55:40.305Z",
+      "id": "20261122-1855-2fcd:base:account:1",
+      "credits": 0.377,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:56:35.844Z",
+      "id": "20261122-1855-2fcd:base:browse:1",
+      "credits": 0.181,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:57:17.669Z",
+      "id": "20261122-1855-2fcd:base:checkout:1",
+      "credits": 1,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:58:36.487Z",
+      "id": "20261122-1858-0138:base:account:1",
+      "credits": 0.367,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T18:59:27.856Z",
+      "id": "20261122-1858-0138:base:browse:1",
+      "credits": 0.188,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T19:00:13.870Z",
+      "id": "20261122-1858-0138:base:checkout:1",
+      "credits": 1.024,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T19:01:25.209Z",
+      "id": "20261122-1858-0138:head:account:1",
+      "credits": 55.479,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T19:06:19.749Z",
+      "id": "20261122-1858-0138:head:browse:1",
+      "credits": 20.323,
+      "census": false
+    },
+    {
+      "at": "2026-11-22T19:07:49.859Z",
+      "id": "20261122-1858-0138:head:checkout:1",
+      "credits": 24.28,
+      "census": false
     }
   ]
 }

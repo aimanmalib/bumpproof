@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-1830-1146",
+  "synthetic": false,
+  "started_at": "2026-11-22T18:30:44.664Z",
+  "duration_s": 771,
+  "bumpproof_version": "0.1.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/aimanmalib/bumpproof",
+    "pr": 3,
+    "pr_url": "https://github.com/aimanmalib/bumpproof/pull/3",
+    "pr_title": "Bump react-router-dom from 6.30.1 to 7.18.6 in /examples/shop",
+    "ci": "green"
+  },
+  "app_dir": "examples/shop",
+  "base": {
+    "ref": "8f437af3208a131ee32fce798fcefbb2bfe7af2d",
+    "sha": "8f437af3208a131ee32fce798fcefbb2bfe7af2d"
+  },
+  "head": {
+    "ref": "4af0a24e23f0df24696216b527711b54adf58c48",
+    "sha": "4af0a24e23f0df24696216b527711b54adf58c48"
+  },
+  "bumps": [
+    {
+      "name": "react-router-dom",
+      "from": "6.30.1",
+      "to": "7.18.6",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 20.3,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 10.7,
+      "failed_at": null
+    },
+    {
+      "side": "fix",
+      "built": true,
+      "seconds": 14.8,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "account",
+      "base": {
+        "status": "passed",
+        "seconds": 28,
+        "credits": 1.624,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 154,
+        "credits": 34.758,
+        "healed": true,
+        "failed_step": "Use the tabs again",
+        "remark": "assertion_failed: @ step 4",
+        "result_code": 710
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 41,
+        "credits": 1.06,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "regression",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "browse",
+      "base": {
+        "status": "passed",
+        "seconds": 36,
+        "credits": 0.839,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 60,
+        "credits": 0.824,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 31,
+        "credits": 0.186,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "checkout",
+      "base": {
+        "status": "passed",
+        "seconds": 27,
+        "credits": 1.688,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "passed",
+        "seconds": 48,
+        "credits": 1.69,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 42,
+        "credits": 0.991,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "same",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "fixed",
+    "reason": "regression",
+    "evaluated": 3
+  },
+  "fix": {
+    "status": "fixed",
+    "attempts": 1,
+    "changed_lines": 8,
+    "cost_usd": 0.15,
+    "files": [
+      "BUMPPROOF_FIX.md",
+      "src/pages/Account.jsx"
+    ],
+    "explanation": "# Bumpproof fix: react-router-dom 6.30.1 -> 7.18.6\n\n## Cause\n\n`Account` is rendered by the splat route `account/*` (`src/App.jsx:39`). Its tab links\nwere relative (`to=\".\"` and `to=\"orders\"`). React Router v7 turns on the v6\n`future.v7_relativeSplatPath` behaviour by default. With it, relative paths inside a splat\nroute resolve against the full matched URL, splat included, not against the route's base\npath. So on `/account/orders`, the \"Overview\" tab (`to=\".\"`) pointed to `/account/orders`\ninstead of `/account`, and \"Signed in as a demo customer.\" never showed up. That is the\nassertion that failed in step 4. (From `/account/orders`, the \"Orders\" tab would also have\npointed to `/account/orders/orders`.)\n\n## Changes\n\n### `src/pages/Account.jsx`\n- Overview tab: `to=\".\"` changed to `to=\"/account\"` (still uses `end`).\n- Orders tab: `to=\"orders\"` changed to `to=\"/account/orders\"`.\n- Updated the comment above the component to explain why the paths are absolute.\n\nThe links now point to the same URLs they did in v6, and the active-tab styling works the\nsame way. Nothing else changed.\n\n## Release-note reference\n\nThe supplied release notes do not explain this change. They only contain a link to the\nv7.1.3 changelog and the v8→v9 \"Future Changes\" guide, which says \"_No future flags yet_\".\nThe explanation comes from React Router's v6→v7 upgrade guide, which is not included\nhere. That guide describes the `v7_relativeSplatPath` future flag, which became the default\nin v7 and changes how relative paths resolve inside splat routes.\n\n## Notes on the release-notes data\n\nI found no instructions embedded in the release notes. They do not cover the v6→v7\nupgrade (the guide included is for v8→v9).",
+    "patch_file": "fix.patch"
+  },
+  "credits_consumed": 43.66,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "8f437af3208a131ee32fce798fcefbb2bfe7af2d",
+        "head": "4af0a24e23f0df24696216b527711b54adf58c48"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "react-router-dom",
+        "from": "6.30.1",
+        "to": "7.18.6",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 20,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 20.3
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 66,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "account",
+        "status": "passed",
+        "s": 28
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 119,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "browse",
+        "status": "passed",
+        "s": 36
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 163,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "checkout",
+        "status": "passed",
+        "s": 27
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 175,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 10.7
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 355,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "account",
+        "status": "failed",
+        "s": 154
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 449,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "browse",
+        "status": "passed",
+        "s": 60
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 523,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "checkout",
+        "status": "passed",
+        "s": 48
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 530,
+      "key": "fixer_start",
+      "vars": {
+        "attempt": 1
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 580,
+      "key": "built",
+      "vars": {
+        "side": "fix",
+        "s": 14.8
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 648,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "account",
+        "status": "passed",
+        "s": 41
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 701,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "browse",
+        "status": "passed",
+        "s": 31
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 768,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "checkout",
+        "status": "passed",
+        "s": 42
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 771,
+      "key": "fixer_done",
+      "vars": {
+        "lines": 8
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 771,
+      "key": "verdict",
+      "vars": {
+        "verdict": "fixed"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
