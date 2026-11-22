@@ -82,3 +82,33 @@ test('the committed README numbers are what bumpproof report writes today', () =
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+// Every `file#Lnn` link in the README points at the line it names. When code moves, this goes red until the README follows.
+const README_LINES: Record<string, string> = {
+  'config/defaults.json#L85': '"testmd_args"',
+  'src/census-run.ts#L86': 'async function authorOnBase',
+  'src/check-fix.ts#L34': 'export function failureOf',
+  'src/check-fix.ts#L62': 'export async function verifyFix',
+  'src/check-journeys.ts#L65': 'await runSide(',
+  'src/compare.ts#L43': 'export function runOutcome',
+  'src/compare.ts#L61': 'export function compareJourney',
+  'src/evidence.ts#L27': 'export function readPack',
+  'src/evidence.ts#L117': 'export function summarize',
+  'src/journeys.ts#L92': 'export async function runJourney',
+  'src/kane.ts#L57': 'export function parseNdjson',
+  'src/kane.ts#L106': "case 'run_end'",
+  'src/kane.ts#L139': 'export function testmdArgs',
+  'src/kane.ts#L186': 'export function checkBudget',
+  'src/report/markdown.ts#L42': 'o.bugCode',
+};
+
+test('README file#line links point at the code they name', () => {
+  const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
+  const links = [...new Set([...readme.matchAll(/\]\(([\w./-]+#L\d+)\)/g)].map((m) => m[1]!))].sort();
+  assert.deepEqual(links, Object.keys(README_LINES).sort(), 'every README line link has an expected text here');
+  for (const link of links) {
+    const [file, line] = link.split('#L') as [string, string];
+    const text = readFileSync(join(ROOT, file), 'utf8').split('\n')[Number(line) - 1] ?? '';
+    assert.ok(text.includes(README_LINES[link]!), `${link} is now: ${text.trim()}`);
+  }
+});

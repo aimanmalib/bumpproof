@@ -27,7 +27,7 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 |---|---|---|
 | P1 | It works end to end | Pull request [#2](https://github.com/aimanmalib/bumpproof/pull/2): Dependabot opened it, CI was green, Bumpproof commented and pushed a verified fix. [Run page](https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/). |
 | P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. The run page shows Kane CLI's screenshot of that step on the base, on the pull request and after the fix. |
-| P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L32`](src/check-fix.ts#L32)). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L60`](src/check-fix.ts#L60)). |
+| P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L34`](src/check-fix.ts#L34)). Read the prompt for #2, with Kane CLI's lines marked: [`fixer-prompt.md`](docs/runs/20261122-0453-53ba/fixer-prompt.md). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L62`](src/check-fix.ts#L62)). |
 | K1 | Ships | `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder on Node 20 and 22. CI runs it that way, and the full test suite, on every push. |
 | K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. |
 | K3 | Closed loop | One command goes from the pull request to a fix that Kane CLI has passed. The fix is pushed only after that ([`src/pr.ts`](src/pr.ts)). |
@@ -164,16 +164,33 @@ flowchart LR
 
 ## Where Kane CLI is used
 
+Kane CLI has three jobs in every run. The verdict is our code reading its results.
+
+| Job | What Kane CLI does | Where |
+|---|---|---|
+| Reference on the base | Replays each journey on the base branch first. A journey that fails there is left out of the verdict. | [`src/check-journeys.ts#L65`](src/check-journeys.ts#L65), [`src/compare.ts#L61`](src/compare.ts#L61) |
+| Detector on the pull request | Replays the same journeys on the head. Passed on the base and failed on the head is a regression. Its failed step, remark and result code go into the comment. | [`src/compare.ts#L43`](src/compare.ts#L43), [`src/report/markdown.ts#L42`](src/report/markdown.ts#L42) |
+| Proof after the fix | Its failed step, remark and console errors go into the fixer's prompt. Then it replays every journey on the patched app. The fix counts only when they all pass. | [`src/check-fix.ts#L34`](src/check-fix.ts#L34), [`src/check-fix.ts#L62`](src/check-fix.ts#L62) |
+
+How Bumpproof drives it:
+
 | What | Where |
 |---|---|
 | `kane-cli testmd run <journey> --agent --headless --bug-detection continue` | [`src/kane.ts#L139`](src/kane.ts#L139), flags in [`config/defaults.json#L85`](config/defaults.json#L85) |
-| One journey run, refused when the credit budget is spent | [`src/journeys.ts#L91`](src/journeys.ts#L91), budget [`src/kane.ts#L186`](src/kane.ts#L186) |
+| One journey run, refused when the credit budget is spent | [`src/journeys.ts#L92`](src/journeys.ts#L92), budget [`src/kane.ts#L186`](src/kane.ts#L186) |
 | Reading the JSON event stream: steps, healing, `run_end`, `test_md_done` | [`src/kane.ts#L57`](src/kane.ts#L57) |
 | `credits_consumed` per run, added to a ledger | [`src/kane.ts#L106`](src/kane.ts#L106), ledger [`census/kredit.json`](census/kredit.json) |
-| Exit code to pass or fail, and the bug detection code in the PR comment | [`src/compare.ts#L43`](src/compare.ts#L43), [`src/report/markdown.ts#L42`](src/report/markdown.ts#L42) |
 | Evidence pack (`.evidence` zip): console and network errors, scrubbed before publishing | [`src/evidence.ts#L27`](src/evidence.ts#L27), [`src/evidence.ts#L117`](src/evidence.ts#L117) |
-| Kane CLI's failure handed to the fixer, then the replay on the patch | [`src/check-fix.ts#L32`](src/check-fix.ts#L32), [`src/check-fix.ts#L60`](src/check-fix.ts#L60) |
 | Journeys authored once on a census repository's base, then replayed | [`src/census-run.ts#L86`](src/census-run.ts#L86) |
+
+What the agent was told: every fixed run has a `fixer-prompt.md` next to its `run.json`, linked from the run page as
+"What the agent was told". Lines that carry Kane CLI's words are marked `K`. Runs from 22 Nov 2026 have a copy rebuilt
+from the recorded inputs with the same code ([`scripts/add-prompt.ts`](scripts/add-prompt.ts)), and the file says so.
+New runs save the prompt as sent.
+
+Plainly: the loop starts on a developer's machine (`bumpproof pr … --fix`), not in CI. In every fixed run so far, the
+first patch passed Kane CLI's replay. No run yet has had a first attempt that Kane CLI turned down. In one census run
+the guards refused both attempts because no file changed.
 
 ## Bumpproof and kane-cli-pr
 

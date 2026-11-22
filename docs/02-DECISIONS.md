@@ -463,3 +463,22 @@ exited 2.
   as written, without a pin. Users do not pin a commit.
 - Undo: put `dist/` back in `.gitignore`, restore `prepare`, and change every install line to
   `npx github:aimanmalib/bumpproof <command>`. That form builds on first use and takes about 25 s.
+
+## 22. The fixer's prompt is published with each fixed run (22 Nov 2026)
+
+A reader could see Kane CLI's failure and the fix, but not what the agent was told in between.
+
+- `check --fix` keeps the prompt of every attempt and writes `fixer-prompt.md` next to `run.json`, through the same
+  publication scan (`fix.prompt_file` in `run.json`). The run page links it as "What the agent was told".
+- Lines that carry Kane CLI's words (failed step, remark, console and network errors) are marked `K`. A table lists
+  each Kane CLI fact with the prompt line it went to, or "not sent" (the result code goes to the comment, not the
+  agent). A value that also appears in the journey text people wrote is not marked there.
+- The release notes stay out of the copy: the opening line of each block (package, versions, sources) is kept, the
+  text is replaced by its size. It is third-party text, often long, and may carry names or addresses.
+- The four runs fixed on 22 Nov 2026 were recorded before this. `scripts/add-prompt.ts` rebuilds their first (and
+  only) attempt with the same `buildPrompt`, from `run.json`, the journey file at the base commit, the evidence pack
+  (screenshot names) and, for the build failure, the log the run printed. It refuses when `prompts/` changed after
+  the run. Each file says it was rebuilt and names what was not recorded (the release notes).
+- Seen while doing this: the prompt tells the agent the screenshots are "files in this folder", but the working copy
+  does not include them. Left as it is for now; the published prompt shows the sentence as sent.
+- Undo: `git revert` the commit; old run records without `prompt_file` still read.
