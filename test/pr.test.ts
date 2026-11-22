@@ -12,6 +12,7 @@ import {
 } from '../src/pr.ts';
 import { parsePrArgs, runPr } from '../src/pr-cli.ts';
 import { run, type Runner } from '../src/proc.ts';
+import { repoName } from '../src/report/words.ts';
 import { makePaint } from '../src/ui.ts';
 
 const cfg = loadConfig(tmpdir());
@@ -50,9 +51,18 @@ test('appDirOf: --dir, then the folder in the title, then config', () => {
 });
 
 test('canWrite only for repositories listed in config, any letter case', () => {
-  const c = { ...cfg, pr: { ...cfg.pr, write_repos: ['Octo/App'] } };
+  const c = { ...cfg, pr: { ...cfg.pr, write_repos: ['https://github.com/Octo/App'] } };
   assert.equal(canWrite(c, { owner: 'octo', repo: 'app', number: 1 }), true);
   assert.equal(canWrite(c, { owner: 'octo', repo: 'other', number: 1 }), false);
+  const forms = { ...cfg, pr: { ...cfg.pr, write_repos: ['github.com/octo/app.git', 'octo/lib/'] } };
+  assert.equal(canWrite(forms, { owner: 'octo', repo: 'app', number: 1 }), true);
+  assert.equal(canWrite(forms, { owner: 'octo', repo: 'lib', number: 1 }), true);
+});
+
+test('repoName shows any stored repository form as github.com/owner/repo', () => {
+  assert.equal(repoName('https://github.com/octo/app'), 'github.com/octo/app');
+  assert.equal(repoName('octo/app'), 'github.com/octo/app');
+  assert.equal(repoName('https://gitlab.example.com/octo/app.git'), 'gitlab.example.com/octo/app');
 });
 
 test('parsePrArgs: --comment is a flag for pr, not a value-taking option', () => {
@@ -84,7 +94,7 @@ test('runPr refuses to comment or push on a repository that is not ours, before 
   assert.equal(await runPr(c, parsePrArgs(['pr', 'someone/else#3', '--comment']), t, p), 2);
   assert.match(cap.err.join('\n'), /not one of them/);
   assert.equal(await runPr(c, parsePrArgs(['pr', 'nope']), t, p), 2);
-  assert.equal(await runPr(c, parsePrArgs(['pr', `${cfg.pr.write_repos[0]}#1`, '--push-fix']), t, p), 2);
+  assert.equal(await runPr(c, parsePrArgs(['pr', `${cfg.pr.write_repos[0]!.replace('https://github.com/', '')}#1`, '--push-fix']), t, p), 2);
   assert.match(cap.err.join('\n'), /needs --fix/);
   assert.deepEqual(calls, []);
 });

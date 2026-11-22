@@ -2,7 +2,7 @@
 // Reads one local file. No Kane CLI, no credits, no network, so a judge can run it from a fresh clone.
 import type { Translate } from './i18n.ts';
 import { readRun, short, type RunReport } from './report/run.ts';
-import { bumpList, duration, timelineText } from './report/words.ts';
+import { bumpList, duration, timelineText, repoName } from './report/words.ts';
 import type { Paint } from './ui.ts';
 
 export interface ReplayOptions {
@@ -18,7 +18,7 @@ export function headerLines(run: RunReport, t: Translate, p: Paint): string[] {
   const lines = [p.bold(t('replay.header', { id: run.run_id, date: run.started_at.slice(0, 16).replace('T', ' ') + 'Z' }))];
   if (run.synthetic) lines.push(p.fail(t('replay.synthetic')));
   if (run.source.repo && run.source.pr !== null) {
-    lines.push(t('replay.source', { repo: run.source.repo, pr: run.source.pr, title: run.source.pr_title ?? '' }));
+    lines.push(t('replay.source', { repo: repoName(run.source.repo), pr: run.source.pr, title: run.source.pr_title ?? '' }));
   }
   lines.push(p.dim(t('replay.refs', { base: run.base.ref, base_sha: short(run.base.sha), head: run.head.ref, head_sha: short(run.head.sha) })));
   lines.push(p.dim(t('comment.bumps', { list: bumpList(run, t('comment.none')) })), '');

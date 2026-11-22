@@ -64,9 +64,14 @@ export async function fetchPrInfo(run: Runner, cfg: Config, ref: PrRef): Promise
   return parsePrInfo(r.stdout);
 }
 
-/** Comment and push are allowed only on the repositories listed in config (`pr.write_repos`, case-insensitive). */
+/** `https://github.com/owner/repo`, the form run records and config use. */
+export const repoUrl = (r: PrRef) => `https://github.com/${slug(r)}`;
+
+const normRepo = (s: string) => s.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^github\.com\//, '').replace(/(\.git)?\/*$/, '');
+
+/** Comment and push are allowed only on the repositories listed in config (`pr.write_repos`, URLs, case-insensitive). */
 export function canWrite(cfg: Config, ref: PrRef): boolean {
-  return cfg.pr.write_repos.some((r) => r.toLowerCase() === slug(ref).toLowerCase());
+  return cfg.pr.write_repos.some((r) => normRepo(r) === slug(ref).toLowerCase());
 }
 
 /** The PR's own folder name in its title wins over the configured one: Dependabot names it. */

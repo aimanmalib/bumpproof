@@ -173,7 +173,7 @@
   },
   "pr": {
     "write_repos": [
-      "aimanmalib/bumpproof"
+      "https://github.com/aimanmalib/bumpproof"
     ],
     "fix_commit_message": "Fix the {name} {from} -> {to} upgrade\n\nPatched by Claude Code inside Bumpproof and replayed with Kane CLI\nagainst the base journeys (run {run}).\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
   },

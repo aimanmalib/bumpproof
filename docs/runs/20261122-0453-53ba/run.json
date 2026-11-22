@@ -7,7 +7,7 @@
   "bumpproof_version": "0.0.0",
   "kane_cli_version": "0.10.7",
   "source": {
-    "repo": "aimanmalib/bumpproof",
+    "repo": "https://github.com/aimanmalib/bumpproof",
     "pr": 2,
     "pr_url": "https://github.com/aimanmalib/bumpproof/pull/2",
     "pr_title": "Bump @tanstack/react-query from 4.36.1 to 5.108.0 in /examples/shop",

@@ -7,7 +7,7 @@
   "bumpproof_version": "0.0.0",
   "kane_cli_version": "0.10.7",
   "source": {
-    "repo": "aimanmalib/bumpproof",
+    "repo": "https://github.com/aimanmalib/bumpproof",
     "pr": 4,
     "pr_url": "https://github.com/aimanmalib/bumpproof/pull/4",
     "pr_title": "Bump clsx from 1.2.1 to 2.1.1 in /examples/shop",

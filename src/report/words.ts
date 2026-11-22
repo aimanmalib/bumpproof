@@ -30,9 +30,15 @@ export function bumpList(run: RunReport, none: string): string {
   return run.bumps.map((b) => `${b.name} ${b.from ?? '?'} → ${b.to ?? '?'}`).join(', ');
 }
 
-/** Pull request label: "owner/repo #7" or the two refs for a local run. */
+/** `https://github.com/owner/repo` (or a bare `owner/repo` in older records) as `github.com/owner/repo`. */
+export function repoName(repo: string): string {
+  const r = repo.trim().replace(/^https?:\/\//, '').replace(/(\.git)?\/*$/, '');
+  return /^[^/]+\.[^/]+\//.test(r) ? r : `github.com/${r}`;
+}
+
+/** Pull request label: "github.com/owner/repo #7" or the two refs for a local run. */
 export function sourceLabel(t: Translate, run: RunReport): string {
-  if (run.source.repo && run.source.pr !== null) return `${run.source.repo} #${run.source.pr}`;
+  if (run.source.repo && run.source.pr !== null) return `${repoName(run.source.repo)} #${run.source.pr}`;
   return `${t('site.local_run')}: ${run.base.ref} → ${run.head.ref}`;
 }
 

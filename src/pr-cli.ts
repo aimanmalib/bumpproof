@@ -11,7 +11,7 @@ import type { Translate } from './i18n.ts';
 import { BudgetError } from './journeys.ts';
 import type { Fetcher } from './notes.ts';
 import {
-  appDirOf, canWrite, mergeLocally, fetchPrInfo, fillVars, parsePrRef, PrError, pushFix, slug, upsertComment,
+  appDirOf, canWrite, mergeLocally, fetchPrInfo, fillVars, parsePrRef, PrError, pushFix, repoUrl, slug, upsertComment,
 } from './pr.ts';
 import type { Runner } from './proc.ts';
 import { renderComment } from './report/markdown.ts';
@@ -75,7 +75,7 @@ export async function runPr(c: PrCommand, f: PrFlags, t: Translate, p: Paint): P
     const res = await runJourneyCommand({
       deps: c.deps, opts: { repo: clone, base: refs.base, head: refs.head, dir, runId },
       publish: f.publish, cwd: c.cwd, out: c.out, err: c.err,
-      source: { repo: slug(ref), pr: ref.number, pr_url: info.url, pr_title: info.title, ci: info.ci },
+      source: { repo: repoUrl(ref), pr: ref.number, pr_url: info.url, pr_title: info.title, ci: info.ci },
       ...(f.fix ? { fix: { fetch: c.fetch } } : {}),
     }, t, p);
     let pushed: string | null = null;

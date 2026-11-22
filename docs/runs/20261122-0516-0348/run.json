@@ -7,7 +7,7 @@
   "bumpproof_version": "0.0.0",
   "kane_cli_version": "0.10.7",
   "source": {
-    "repo": "aimanmalib/bumpproof",
+    "repo": "https://github.com/aimanmalib/bumpproof",
     "pr": 1,
     "pr_url": "https://github.com/aimanmalib/bumpproof/pull/1",
     "pr_title": "Bump date-fns from 2.30.0 to 4.4.0 in /examples/shop",
