@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0453-53ba",
+  "synthetic": false,
+  "started_at": "2026-11-22T04:53:26.060Z",
+  "duration_s": 1354,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "aimanmalib/bumpproof",
+    "pr": 2,
+    "pr_url": "https://github.com/aimanmalib/bumpproof/pull/2",
+    "pr_title": "Bump @tanstack/react-query from 4.36.1 to 5.108.0 in /examples/shop",
+    "ci": "green"
+  },
+  "app_dir": "examples/shop",
+  "base": {
+    "ref": "8e1c5622f60fef8fd4e3c7fb14c115572478213d",
+    "sha": "8e1c5622f60fef8fd4e3c7fb14c115572478213d"
+  },
+  "head": {
+    "ref": "66c80efa01a3a33d1056f33ea1efb40e9de51b8d",
+    "sha": "66c80efa01a3a33d1056f33ea1efb40e9de51b8d"
+  },
+  "bumps": [
+    {
+      "name": "@tanstack/react-query",
+      "from": "4.36.1",
+      "to": "5.108.0",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 14.8,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 16.9,
+      "failed_at": null
+    },
+    {
+      "side": "fix",
+      "built": true,
+      "seconds": 16.8,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "account",
+      "base": {
+        "status": "passed",
+        "seconds": 80,
+        "credits": 1.008,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 295,
+        "credits": 54.022,
+        "healed": true,
+        "failed_step": "Open the orders tab",
+        "remark": "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown.",
+        "result_code": 740
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 53,
+        "credits": 0.397,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'orders')"
+      ],
+      "new_network_errors": []
+    },
+    {
+      "name": "browse",
+      "base": {
+        "status": "passed",
+        "seconds": 66,
+        "credits": 0.203,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 177,
+        "credits": 21.317,
+        "healed": true,
+        "failed_step": "Open the Tea shelf",
+        "remark": "The storefront stays blank because it crashes while loading the category shelves, so Tea cannot be selected.",
+        "result_code": 740
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 41,
+        "credits": 0.846,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'categories')"
+      ],
+      "new_network_errors": []
+    },
+    {
+      "name": "checkout",
+      "base": {
+        "status": "passed",
+        "seconds": 81,
+        "credits": 1.039,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "head": {
+        "status": "failed",
+        "seconds": 128,
+        "credits": 22.067,
+        "healed": true,
+        "failed_step": "Add a product to the cart",
+        "remark": "The Sencha 50 page crashes before it can show the product or the Add to cart button.",
+        "result_code": 740
+      },
+      "after_fix": {
+        "status": "passed",
+        "seconds": 35,
+        "credits": 1.08,
+        "healed": false,
+        "failed_step": null,
+        "remark": null,
+        "result_code": 100
+      },
+      "outcome": "regression",
+      "new_console_errors": [
+        "Cannot read properties of undefined (reading 'products')"
+      ],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "fixed",
+    "reason": "regression",
+    "evaluated": 3
+  },
+  "fix": {
+    "status": "fixed",
+    "attempts": 1,
+    "changed_lines": 2,
+    "cost_usd": 0.18,
+    "files": [
+      "BUMPPROOF_FIX.md",
+      "src/lib.jsx"
+    ],
+    "explanation": "# Bumpproof fix: @tanstack/react-query 4.36.1 -> 5.108.0\n\n## Change\n\n**File:** `src/lib.jsx` (the `gate` helper)\n\n**What changed:** The loading check `q.status === 'loading'` is now `q.status === 'pending'`.\n\nIn v5, a query that hasn't loaded yet reports `status: 'pending'` instead of `'loading'`. So `gate()` never showed the loading placeholder. Pages like Orders went on to read `orders.data.orders` while `data` was still `undefined`. That threw `Cannot read properties of undefined (reading 'orders')` and left the page blank. With the fix, the placeholder shows until the data arrives, as it did in v4.\n\n**Release note line:**\n> \"The `loading` status has been renamed to `pending`, and similarly the derived `isLoading` flag has been renamed to `isPending`.\"\n\n## Other notes\n\n- `useQuery` already uses the single-object signature, and the `QueryClient` options (`retry`, `refetchOnWindowFocus`) haven't changed. React is 18.3.1, which meets the v5 minimum of 18.0. No other changes were needed.\n- `package.json` is unchanged.\n- I found no instructions inside the release notes that tried to direct the agent.",
+    "patch_file": "fix.patch"
+  },
+  "credits_consumed": 101.979,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "8e1c5622f60fef8fd4e3c7fb14c115572478213d",
+        "head": "66c80efa01a3a33d1056f33ea1efb40e9de51b8d"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "@tanstack/react-query",
+        "from": "4.36.1",
+        "to": "5.108.0",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 16,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 14.8
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 139,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "account",
+        "status": "passed",
+        "s": 80
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 251,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "browse",
+        "status": "passed",
+        "s": 66
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 371,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "checkout",
+        "status": "passed",
+        "s": 81
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 391,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 16.9
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 728,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "account",
+        "status": "failed",
+        "s": 295
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 931,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "browse",
+        "status": "failed",
+        "s": 177
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 1077,
+      "key": "journey",
+      "vars": {
+        "side": "head",
+        "name": "checkout",
+        "status": "failed",
+        "s": 128
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 1084,
+      "key": "fixer_start",
+      "vars": {
+        "attempt": 1
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 1123,
+      "key": "built",
+      "vars": {
+        "side": "fix",
+        "s": 16.8
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1204,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "account",
+        "status": "passed",
+        "s": 53
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1271,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "browse",
+        "status": "passed",
+        "s": 41
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1345,
+      "key": "journey",
+      "vars": {
+        "side": "after_fix",
+        "name": "checkout",
+        "status": "passed",
+        "s": 35
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1354,
+      "key": "fixer_done",
+      "vars": {
+        "lines": 2
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 1354,
+      "key": "verdict",
+      "vars": {
+        "verdict": "fixed"
+      },
+      "tone": "ok"
+    }
+  ],
+  "shots": []
+}
