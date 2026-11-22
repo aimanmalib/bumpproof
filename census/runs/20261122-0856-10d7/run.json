@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0856-10d7",
+  "synthetic": false,
+  "started_at": "2026-11-22T09:01:15.400Z",
+  "duration_s": 230,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/julioczn/graphite",
+    "pr": 9,
+    "pr_url": "https://github.com/julioczn/graphite/pull/9",
+    "pr_title": "Bump vite from 6.4.6 to 8.3.8",
+    "ci": "red"
+  },
+  "app_dir": "",
+  "base": {
+    "ref": "2c892a2e204e17ee3ccd1c7091a28ffb54bf00ca",
+    "sha": "2c892a2e204e17ee3ccd1c7091a28ffb54bf00ca"
+  },
+  "head": {
+    "ref": "2b782b755d9fdf528123e4e4b6eb6565e9c2cf4e",
+    "sha": "2b782b755d9fdf528123e4e4b6eb6565e9c2cf4e"
+  },
+  "bumps": [
+    {
+      "name": "vite",
+      "from": "^6.4.4",
+      "to": "^8.3.8",
+      "type": "major"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 33.1,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": false,
+      "seconds": 6.4,
+      "failed_at": "install"
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "failed",
+        "seconds": 47,
+        "credits": 18.15,
+        "healed": false,
+        "failed_step": "The home page shows the app",
+        "remark": "The page loaded its files but then hit a startup error and showed no usable app content.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "failed",
+        "seconds": 58,
+        "credits": 24.418,
+        "healed": false,
+        "failed_step": "Follow the main navigation",
+        "remark": "The home page loads as a blank screen because it crashes while starting.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "failed",
+        "seconds": 37,
+        "credits": 11.082,
+        "healed": false,
+        "failed_step": "The connection screen loads",
+        "remark": "The connection page stayed blank, so neither required control was visible.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "unrunnable",
+    "reason": "no_baseline_journey",
+    "evaluated": 0
+  },
+  "fix": null,
+  "credits_consumed": 53.65,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "2c892a2e204e17ee3ccd1c7091a28ffb54bf00ca",
+        "head": "2b782b755d9fdf528123e4e4b6eb6565e9c2cf4e"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "vite",
+        "from": "^6.4.4",
+        "to": "^8.3.8",
+        "type": "major"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 33,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 33.1
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 94,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "failed",
+        "s": 47
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 165,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "failed",
+        "s": 58
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 218,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "failed",
+        "s": 37
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 230,
+      "key": "build_failed",
+      "vars": {
+        "side": "head",
+        "phase": "install"
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 230,
+      "key": "verdict",
+      "vars": {
+        "verdict": "unrunnable"
+      },
+      "tone": "warn"
+    }
+  ],
+  "shots": []
+}
