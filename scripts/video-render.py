@@ -155,6 +155,75 @@ def draw_image_shot(s: dict, lt: float) -> Image.Image:
     return frame
 
 
+SYMBOLS = set('✓✗│→…')
+
+
+@lru_cache(maxsize=8)
+def symbol_font(size: int):
+    return ImageFont.truetype(TL['symbol_font'], size)
+
+
+def mono_text(d: ImageDraw.ImageDraw, xy, text: str, size: int, fill):
+    """Plex Mono has no check marks or box lines; those characters are drawn with the symbol font in the same cell."""
+    x, y = xy
+    f, cell = font('mono', size), font('mono', size).getlength('M')
+    for ch in text:
+        if ch in SYMBOLS:
+            sf = symbol_font(size)
+            d.text((x + (cell - sf.getlength(ch)) / 2, y), ch, font=sf, fill=fill)
+        else:
+            d.text((x, y), ch, font=f, fill=fill)
+        x += cell
+
+
+def mono_rows(s: dict) -> list:
+    """Lines of a text file as (text, colour, marked) rows, wrapped to the panel width with a hanging indent."""
+    lines = (STATE['shots'] / s['file']).read_text(encoding='utf-8').rstrip('\n').split('\n')
+    a, b = s.get('lines', [1, len(lines)])
+    cols = int(s['w'] // font('mono', s['size']).getlength('M')) - 2
+    rows = []
+    for k, ln in enumerate(lines[a - 1:b], a):
+        mark = bool(s.get('mark')) and ln.startswith(s['mark'])
+        colour = next((c for pre, c in s.get('colours', []) if ln.lstrip().startswith(pre)), 'code_ink')
+        indent = ' ' * min(len(ln) - len(ln.lstrip()) + s.get('hang', 2), 24)
+        first = True
+        while True:
+            room = cols if first else cols - len(indent)
+            cut = len(ln) if len(ln) <= room else (ln.rfind(' ', 0, room) if ln.rfind(' ', 0, room) > room // 2 else room)
+            rows.append(((ln[:cut] if first else indent + ln[:cut]), colour, mark, k))
+            ln, first = ln[cut:].lstrip(), False
+            if not ln:
+                break
+    return rows
+
+
+def draw_mono(s: dict, lt: float) -> Image.Image:
+    """A text file drawn as a terminal or code panel. `reveal` [n0, n1] = how many source lines show at the start and the
+    end of the shot (the rest appear one by one, like output arriving); the panel scrolls to keep the newest line in view."""
+    frame = Image.new('RGB', (W, H), rgb(s.get('bg', 'paper'))[:3])
+    d = ImageDraw.Draw(frame)
+    x, y, w, h = s['box']
+    rounded(d, [x, y, x + w, y + h], 20, fill=rgb('ink'))
+    d.text((x + 28, y + 16), s['title'], font=font('mono', 22), fill=rgb('grey'))
+    rows = mono_rows({**s, 'w': w - 56})
+    if 'reveal' in s:
+        n0, n1 = s['reveal']
+        shown = n0 + int((n1 - n0) * min(lt / max(s['t1'] - s['t0'] - 0.8, 0.1), 1.0))
+        first = rows[0][3]
+        rows = [r for r in rows if r[3] - first < shown]
+    lh = round(s['size'] * 1.45)
+    fit = int((h - 80) // lh)
+    rows = rows[-fit:]
+    yy = y + 64
+    for text, colour, mark, _ in rows:
+        if mark:
+            d.rectangle([x + 8, yy - 4, x + w - 8, yy + lh - 4], fill=rgb('mark_bg'))
+            d.rectangle([x + 8, yy - 4, x + 14, yy + lh - 4], fill=rgb('amber'))
+        mono_text(d, (x + 28, yy), text, s['size'], rgb(colour))
+        yy += lh
+    return frame
+
+
 def text_w(f, t: str) -> float:
     return f.getlength(t)
 
@@ -221,6 +290,8 @@ def overlay(frame: Image.Image, o: dict, lt: float, scene_dur: float) -> Image.I
             yy += lh
     elif o['type'] == 'inset':
         img = still(o['img'])
+        if o.get('crop'):
+            img = img.crop(tuple(o['crop']))
         h = round(o['w'] * img.height / img.width)
         thumb = img.resize((o['w'], h), Image.BILINEAR)
         rounded(d, [x - 14, y - 70, x + o['w'] + 14, y + h + 14], 18, fill=rgb('ink', 245))
@@ -254,7 +325,12 @@ def caption(frame: Image.Image, t: float) -> Image.Image:
 
 def shot_frame(scene: dict, s: dict, t: float) -> Image.Image:
     lt = t - s['t0']
-    frame = draw_card(scene, s, t) if 'card' in s else draw_image_shot(s, min(lt, s['t1'] - s['t0']))
+    if 'card' in s:
+        frame = draw_card(scene, s, t)
+    elif 'file' in s:
+        frame = draw_mono(s, min(lt, s['t1'] - s['t0']))
+    else:
+        frame = draw_image_shot(s, min(lt, s['t1'] - s['t0']))
     for o in scene.get('overlays', []):
         frame = overlay(frame, o, t - scene['t0'], scene['t1'] - scene['t0'])
     return frame
