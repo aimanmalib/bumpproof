@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "run_id": "20261122-0907-c69d",
+  "synthetic": false,
+  "started_at": "2026-11-22T09:11:14.875Z",
+  "duration_s": 207,
+  "bumpproof_version": "0.0.0",
+  "kane_cli_version": "0.10.7",
+  "source": {
+    "repo": "https://github.com/Godwinzin/RepoGuard",
+    "pr": 10,
+    "pr_url": "https://github.com/Godwinzin/RepoGuard/pull/10",
+    "pr_title": "Bump react-router-dom from 7.18.5 to 7.18.6 in /client",
+    "ci": "green"
+  },
+  "app_dir": "client",
+  "base": {
+    "ref": "0b4ed37e32b69f68e69b00da7b515d92ba14f134",
+    "sha": "0b4ed37e32b69f68e69b00da7b515d92ba14f134"
+  },
+  "head": {
+    "ref": "2b27b6e67c003ea82f3f49e50862e07712dece30",
+    "sha": "2b27b6e67c003ea82f3f49e50862e07712dece30"
+  },
+  "bumps": [
+    {
+      "name": "react-router-dom",
+      "from": "^7.18.5",
+      "to": "^7.18.6",
+      "type": "patch"
+    }
+  ],
+  "builds": [
+    {
+      "side": "base",
+      "built": true,
+      "seconds": 11.2,
+      "failed_at": null
+    },
+    {
+      "side": "head",
+      "built": true,
+      "seconds": 10.7,
+      "failed_at": null
+    }
+  ],
+  "journeys": [
+    {
+      "name": "home",
+      "base": {
+        "status": "failed",
+        "seconds": 34,
+        "credits": 9.949,
+        "healed": false,
+        "failed_step": "The home page shows the app",
+        "remark": "The login page could not load because its session check received a server error.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "nav",
+      "base": {
+        "status": "failed",
+        "seconds": 47,
+        "credits": 17.362,
+        "healed": false,
+        "failed_step": "Follow the main navigation",
+        "remark": "The login page could not show its normal content because its session check failed with a server error.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    },
+    {
+      "name": "specific",
+      "base": {
+        "status": "failed",
+        "seconds": 48,
+        "credits": 11.748,
+        "healed": false,
+        "failed_step": "The login page loads",
+        "remark": "The login page could not load the RepoGuard welcome content because its session check returned an error.",
+        "result_code": 740
+      },
+      "head": null,
+      "after_fix": null,
+      "outcome": "baseline_red",
+      "new_console_errors": [],
+      "new_network_errors": []
+    }
+  ],
+  "verdict": {
+    "verdict": "unrunnable",
+    "reason": "no_baseline_journey",
+    "evaluated": 0
+  },
+  "fix": null,
+  "credits_consumed": 39.059,
+  "timeline": [
+    {
+      "at_s": 0,
+      "key": "started_local",
+      "vars": {
+        "base": "0b4ed37e32b69f68e69b00da7b515d92ba14f134",
+        "head": "2b27b6e67c003ea82f3f49e50862e07712dece30"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 0,
+      "key": "bump",
+      "vars": {
+        "name": "react-router-dom",
+        "from": "^7.18.5",
+        "to": "^7.18.6",
+        "type": "patch"
+      },
+      "tone": "info"
+    },
+    {
+      "at_s": 11,
+      "key": "built",
+      "vars": {
+        "side": "base",
+        "s": 11.2
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 62,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "home",
+        "status": "failed",
+        "s": 34
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 124,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "nav",
+        "status": "failed",
+        "s": 47
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 192,
+      "key": "journey",
+      "vars": {
+        "side": "base",
+        "name": "specific",
+        "status": "failed",
+        "s": 48
+      },
+      "tone": "fail"
+    },
+    {
+      "at_s": 205,
+      "key": "built",
+      "vars": {
+        "side": "head",
+        "s": 10.7
+      },
+      "tone": "ok"
+    },
+    {
+      "at_s": 207,
+      "key": "verdict",
+      "vars": {
+        "verdict": "unrunnable"
+      },
+      "tone": "warn"
+    }
+  ],
+  "shots": []
+}
