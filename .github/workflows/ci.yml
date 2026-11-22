@@ -45,8 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [20, 22]
-    # A clean Node container, the same place the commands were measured. On the Ubuntu runner itself npm 10 stopped
-    # with "GitFetcher requires an Arborist constructor" (docs/02-DECISIONS.md, decision 21).
+    # A clean Node container, the same place the commands were measured (docs/02-DECISIONS.md, decision 21).
     container: node:${{ matrix.node }}-alpine
     env:
       RUN_ID: 20261122-0453-53ba
@@ -84,9 +83,10 @@ jobs:
         run: |
           set -eo pipefail
           cd "$(mktemp -d)"
-          # The README form on a push; npx reads a bare tarball path as a command, so name the package for a pull request.
+          # On a push, the exact README line: npm 10 cannot npx a github: spec pinned to a commit ("GitFetcher requires an
+          # Arborist constructor"). On a pull request, the packed checkout; npx reads a bare tarball path as a command.
           case "$SPEC" in
-            github:*) npx -y "$SPEC" replay "docs/runs/$RUN_ID" | tee npx.txt ;;
+            github:*) npx -y "github:$GITHUB_REPOSITORY" replay "docs/runs/$RUN_ID" | tee npx.txt ;;
             *) npx -y --package="$SPEC" bumpproof replay "docs/runs/$RUN_ID" | tee npx.txt ;;
           esac
           grep -q '^Verdict: ' npx.txt
@@ -94,7 +94,7 @@ jobs:
         if: failure()
         shell: sh
         run: |
-          for f in "$HOME"/.npm/_logs/*.log; do grep -E 'verbose (stack|cwd|argv|title)|http fetch|git|error' "$f" | tail -60; done
+          for f in "$HOME"/.npm/_logs/*.log; do grep -E 'verbose (stack|argv)|http fetch|error' "$f" | tail -40; done
 
   example-shop:
     name: Build the demo shop
