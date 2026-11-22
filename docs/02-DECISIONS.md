@@ -364,3 +364,36 @@ Authoring the three journeys cost about 100 to 116 credits per repository; the c
   "could not run".
 - **No break was found in this first run.** These were patch and minor bumps that CI had already passed. That is the
   honest result. The broken and fixed runs so far come from this repository's own Dependabot pull requests (§17).
+
+Census run 2 (22 Nov, same method; from `census/results.json`):
+
+| Repository | Bump | CI | Verdict | Control | Credits | Time |
+|---|---|---|---|---|---|---|
+| eames1127/GitGreens #32 | vite ^5.0.0 → ^8.3.8 | red | broken (head does not install) | same | 159.636 | 1171 s |
+| TepMan/TarotApp #60 | vite ^8.3.5 → ^8.3.8 | green | safe | same | 166.064 | 1010 s |
+| Guhan3132/nodeloop #20 | tailwindcss 4.3.3 → 4.3.5 | green | safe | same | 195.179 | 1578 s |
+| julioczn/graphite #9 | vite ^6.4.4 → ^8.3.8 | red | could not run (no journey passed on the base) | not run | 117.195 | 512 s |
+| mgurov/lokito #879 | @tanstack/react-query ^5.87.1 → 5.107.1 | green | could not run (pull request closed) | not run | 0 | 1 s |
+| mohdaktham/tessera #12 | recharts ^3.10.1 → ^3.11.0 | red | could not run (base build failed) | not run | 0 | 7 s |
+| drachenpapa/wyrmhort #913 | i18next 27.1.5 → 27.2.1 | green | could not run (base build failed) | not run | 0 | 6 s |
+| Godwinzin/RepoGuard #10 | react-router-dom ^7.18.5 → ^7.18.6 | green | could not run (no journey passed on the base) | not run | 94.755 | 443 s |
+| Abhirajgautam28/Chatraj #1391 | antd ^6.7.0 → ^6.7.1 | red | safe | same | 147.502 | 985 s |
+
+Both runs together: 14 repositories run, 8 runnable, 7 safe, 1 broken, 0 broken behind a green CI, 0 false alarms in
+the control (8 of 8 the same). 1398.494 census credits and 11404 s of wall clock, inside `census.run_timebox_min`.
+
+- **GitGreens is a real break.** Dependabot raised vite to 8 and left `@vitejs/plugin-vue` at 5, whose peer range ends
+  at vite 6, so `npm ci` stops with a peer dependency error. The pull request's own build, lint and test checks fail too. The fix is
+  to raise `@vitejs/plugin-vue` as well (its latest release accepts vite 8). The fixer made no change in two attempts:
+  the guards only let it add a package, never change another package's version (§11). The row stays broken, not
+  fixed. graphite's head fails in the same way.
+- **Apps that need a server are mostly out of reach.** TarotApp and RepoGuard need their own API server. TarotApp's page
+  shell still loads, so its journey checks the page and its error state. RepoGuard's login page waits for a session
+  check and shows an error, so nothing passed on the base. graphite is an Electron app whose web view needs the desktop
+  bridge. tessera's base does not install with `npm ci`.
+- **wyrmhort needs Node 24.** The sandbox image is `sandbox.image` in config (Node 22), and npm refuses the install.
+  That is a limit of Bumpproof, not of the repository.
+- **A journey can fail when authored and pass on the replay.** TarotApp's generic home journey did this. It is compared
+  on the head, but it is not counted in the control, which needs a passing authored run.
+- **CI and the result are separate.** Chatraj's CI was red for this pull request and every journey behaved the same on
+  the head. The census reports what the app did, not what CI said.
