@@ -59,7 +59,22 @@ export function fileRoute(rel, ic) {
         return undefined;
     return normalRoute(`/${[...segs, ...(stem === 'index' ? [] : [stem])].join('/')}`);
 }
-/** Routes the source mentions, most-mentioned first. Only plain paths: no parameters, no wildcards. */
+/** True when the app uses a file-system router: a marker package in its dependencies or a marker config file. */
+export function usesFileRouter(appDir, ic) {
+    if (ic.file_route_markers.files.some((f) => existsSync(join(appDir, f))))
+        return true;
+    let pkg;
+    try {
+        pkg = JSON.parse(readFileSync(join(appDir, 'package.json'), 'utf8'));
+    }
+    catch {
+        return false;
+    }
+    const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+    return ic.file_route_markers.packages.some((p) => p in deps);
+}
+/** Routes the source mentions, most-mentioned first. Only plain paths: no parameters, no wildcards.
+ *  File paths count as routes only in file-router apps: in a Vite app src/pages/*.jsx are plain components. */
 export function findRoutes(appDir, ic) {
     const counts = new Map();
     const add = (r) => {
@@ -67,8 +82,10 @@ export function findRoutes(appDir, ic) {
             counts.set(r, (counts.get(r) ?? 0) + 1);
     };
     const patterns = ic.route_patterns.map((p) => new RegExp(p, 'g'));
+    const fileRouter = usesFileRouter(appDir, ic);
     for (const f of sourceFiles(appDir, ic)) {
-        add(fileRoute(relative(appDir, f), ic));
+        if (fileRouter)
+            add(fileRoute(relative(appDir, f), ic));
         const text = readFileSync(f, 'utf8');
         for (const re of patterns)
             for (const m of text.matchAll(re))

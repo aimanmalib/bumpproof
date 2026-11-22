@@ -430,6 +430,17 @@
     "file_route_parents": [
       "src"
     ],
+    "file_route_markers": {
+      "packages": [
+        "next"
+      ],
+      "files": [
+        "next.config.js",
+        "next.config.mjs",
+        "next.config.cjs",
+        "next.config.ts"
+      ]
+    },
     "max_page_journeys": 1
   }
 }

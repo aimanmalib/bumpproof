@@ -111,9 +111,28 @@ test('routes from Next file routers skip parameters, API routes and private file
   assert.equal(fileRoute(join('src', 'pages', 'pricing.js'), ic.init), '/pricing');
   assert.equal(fileRoute(join('src', 'components', 'page.tsx'), ic.init), undefined);
   assert.equal(fileRoute(join('src', 'page.tsx'), ic.init), undefined);
+  write(join(dir, 'package.json'), JSON.stringify({ dependencies: { next: '15.0.0' } }));
   write(join(dir, 'app', 'settings', 'page.tsx'), 'export default () => null');
   write(join(dir, 'node_modules', 'x', 'src', 'y.js'), 'path: "/hidden"');
   assert.deepEqual(findRoutes(dir, ic.init), ['/settings']);
   assert.equal(routeSlug('/account/orders'), 'account-orders');
   assert.equal(routeSlug('/nav'), 'page-nav');
+}));
+
+test('file paths are routes only in Next apps: a Vite app src/pages component is not a route', withTmp((dir) => {
+  const ic = loadDefaults() as unknown as { init: Parameters<typeof findRoutes>[1] };
+  const vite = join(dir, 'vite');
+  write(join(vite, 'package.json'), JSON.stringify({ dependencies: { react: '18.3.1' }, devDependencies: { vite: '5.4.0' } }));
+  write(join(vite, 'src', 'pages', 'Account.jsx'), 'export default function Account() { return null; }');
+  write(join(vite, 'src', 'App.jsx'), '<Route path="/account" element={<Account />} />');
+  assert.deepEqual(findRoutes(vite, ic.init), ['/account']);
+  const next = join(dir, 'next');
+  write(join(next, 'package.json'), JSON.stringify({ devDependencies: { next: '15.0.0' } }));
+  write(join(next, 'src', 'app', 'x', 'page.tsx'), 'export default () => null');
+  assert.deepEqual(findRoutes(next, ic.init), ['/x']);
+  const byConfig = join(dir, 'byconfig');
+  write(join(byConfig, 'package.json'), '{}');
+  write(join(byConfig, 'next.config.mjs'), 'export default {}');
+  write(join(byConfig, 'pages', 'pricing.js'), 'export default () => null');
+  assert.deepEqual(findRoutes(byConfig, ic.init), ['/pricing']);
 }));
