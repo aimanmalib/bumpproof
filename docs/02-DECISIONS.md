@@ -453,6 +453,9 @@ the run. `bumpproof init` printed "not built yet" and looked like a success.
   install the two collide (`ENOTEMPTY` in CI with a `#<sha>` spec). The build script is named `compile` for that reason.
 - The `readme-commands` CI job runs the README commands from an empty folder on Node 20 and 22. On a push it installs
   `github:<repo>#<sha>`. On a pull request it installs `npm pack` of the checkout, because npm cannot fetch a merge
-  commit.
+  commit. It runs inside `node:20-alpine` and `node:22-alpine`. On the Ubuntu runner itself the same install stopped
+  with `GitFetcher requires an Arborist constructor to pack a tarball`. Clean Node containers did not show it: Alpine
+  and Debian, root and a normal user, with and without SSH, Node 20 and 22, with and without a pinned commit. The
+  cause is not known yet. If a user hits it, `npx github:aimanmalib/bumpproof <command>` is the way around.
 - Undo: put `dist/` back in `.gitignore`, restore `prepare`, and change every install line to
   `npx github:aimanmalib/bumpproof <command>`. That form builds on first use and takes about 25 s.

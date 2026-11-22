@@ -78,6 +78,8 @@ bumpproof init                                  # writes .bumpproof/config.json 
 bumpproof pr <owner>/<repo>#<number> --fix      # check one pull request, fix what breaks
 ```
 
+If the global install fails, `npx github:aimanmalib/bumpproof <command>` runs the same commands.
+
 `--comment` posts the result on the pull request. `--push-fix` pushes the verified fix to the pull request branch.
 Both work only on repositories you list in `pr.write_repos`. Bumpproof never merges.
 

@@ -45,12 +45,13 @@ jobs:
       fail-fast: false
       matrix:
         node: [20, 22]
+    # A clean Node container, the same place the commands were measured. On the Ubuntu runner itself npm 10 stopped
+    # with "GitFetcher requires an Arborist constructor" (docs/02-DECISIONS.md, decision 21).
+    container: node:${{ matrix.node }}-alpine
     env:
       RUN_ID: 20261122-0453-53ba
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
+      - run: apk add --no-cache git
       - uses: actions/checkout@v4
         if: github.event_name != 'push'
       - name: Choose the package to install
@@ -65,8 +66,9 @@ jobs:
             echo "SPEC=$(ls "$RUNNER_TEMP"/bumpproof-*.tgz)" >> "$GITHUB_ENV"
           fi
       - name: Install globally, then replay by id and by path
+        shell: sh
         run: |
-          set -o pipefail
+          set -eo pipefail
           cd "$(mktemp -d)"
           # Without --install-links npm links a global git install to a temporary clone it then deletes.
           npm install -g --install-links "$SPEC"
@@ -78,8 +80,9 @@ jobs:
           if bumpproof replay no-such-run; then echo "an unknown run must fail"; exit 1; fi
           if bumpproof init; then echo "a command that is not built must fail"; exit 1; fi
       - name: npx replay from an empty folder
+        shell: sh
         run: |
-          set -o pipefail
+          set -eo pipefail
           cd "$(mktemp -d)"
           # The README form on a push; npx reads a bare tarball path as a command, so name the package for a pull request.
           case "$SPEC" in
