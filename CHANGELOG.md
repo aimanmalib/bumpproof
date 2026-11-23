@@ -1,7 +1,17 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 (23 Nov 2026)
 
+- Install from GitHub works without a build step: `dist/` is committed, and the install line uses `--install-links`
+  (a global git install without it was a link to a deleted clone). `replay` works from any folder.
+- `bumpproof init`: writes `.bumpproof/config.json` and two or three draft journeys from the app's routes (file routes
+  are read only in Next.js apps).
+- Kane CLI step screenshots are kept for each run (the failed step, and the same step on the base and after the fix)
+  and published on the run page.
+- Each fixed run publishes `fixer-prompt.md`, the exact prompt the fixer was given.
+- `pr --comment` says when a verified fix was left off the branch on purpose.
+- Report site: favicon, and link-preview tags (Open Graph and an X card) with an image of the real home page.
+- The pull request comment footer shows the real package version.
 - `scripts/video-shots.py`: captures the stills for the demo video from real states (the pull request on GitHub, the demo
   shop at the base, the bot's commit and the fix, the replay, the report pages) and writes the numbers it may quote to `facts.json`.
 
