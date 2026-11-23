@@ -10,28 +10,28 @@ Every number is from `docs/runs/*/run.json` and `census/results.json`, the same 
 Bumpproof
 <!-- name:end -->
 
-## One-liner (120 characters at most)
+## One-liner (170 characters at most)
 
 <!-- one-liner:start -->
-Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in Chrome, and Claude Code fixes what breaks.
+Green CI on a Dependabot PR is not proof. Bumpproof has Kane CLI use the app in Chrome before and after the bump. Claude Code fixes what broke, then Kane checks the fix.
 <!-- one-liner:end -->
 
 ## Project details (1500 characters at most)
 
 <!-- details:start -->
-Bumpproof is a CLI for anyone who merges Dependabot pull requests on a web app. CI being green does not mean the app still works.
+A green check on a Dependabot pull request means the code builds. It does not mean the app still works. Bumpproof is a CLI for anyone who merges those pull requests on a web app.
 
-One command takes a dependency pull request. It builds the base branch and the merge, each in its own Docker container. Kane CLI runs the same plain-English journeys in Chrome against both, and the base is the reference. The verdict is plain code over Kane CLI's results: safe, fixed, broken or could not run.
+One command builds the base branch and the pull request, each in its own Docker container. Kane CLI runs the app's plain-English journeys in Chrome on the base, as the reference, then on the pull request, and reports the step where a user gets stuck, and why. The verdict is plain code over Kane CLI's results. No model decides it.
 
-When the head breaks, Claude Code (headless, file tools only) gets Kane CLI's failed step, its remark, the new console errors and the release notes. It writes a patch. Guards reject patches that touch tests or CI, or change versions. The sandbox rebuilds the patch and Kane CLI replays every journey. Only when all of them pass is it "fixed". Then Bumpproof comments on the pull request and pushes the fix. It never merges.
+When a journey breaks, Claude Code (headless, file tools only) gets Kane CLI's failed step, its remark, the new console errors and the release notes. Guards reject patches that touch tests, CI or versions. A fix counts only when Kane CLI passes every journey again. Then Bumpproof comments on the pull request and can push the fix. It never merges.
 
 Real runs, on pull requests Dependabot opened on this repository:
-- #4 clsx 1 → 2: safe, 3 of 3 journeys same as base.
-- #3 react-router-dom 6 → 7: CI green, the account tabs broke. Kane CLI caught it three times. 8-line fix, 3 of 3 pass. The fix is left off the branch so anyone can replay the catch.
-- #2 @tanstack/react-query 4 → 5: CI green, but all three journeys failed on pages that crashed. 2-line fix, 3 of 3 pass.
+- #2 @tanstack/react-query 4 → 5: CI green, all three journeys failed on crashed pages. 2-line fix, 3 of 3 pass.
+- #3 react-router-dom 6 → 7: CI green, the account tabs broke. 8-line fix, 3 of 3 pass. The fix stays off the branch so anyone can replay the catch.
 - #1 date-fns 2 → 4: build failed. 6-line fix, 3 of 3 pass.
+- #4 clsx 1 → 2: safe, 3 of 3 the same as base.
 
-Census: 14 open pull requests in other people's repositories, run read-only. 8 could run. A base-against-base control gave 0 false alarms in 8.
+I also ran it read-only on 14 open pull requests in other people's repositories. 8 could run: 7 safe, 1 broken build. A base-against-base control gave 0 false alarms in 8.
 <!-- details:end -->
 
 ## Agent used (80 characters at most)
@@ -45,42 +45,48 @@ Claude Code
 <!-- else:start -->
 How the agent and Kane CLI talk to each other
 
-Kane CLI runs each journey with `testmd run --agent --headless --bug-detection continue`. Bumpproof reads the JSON event stream: each step, healing, the exit code, the failed step and Kane CLI's remark, and `credits_consumed`. It also reads the console and network errors from the evidence pack. For a regression, all of that goes into the fixer's prompt as the bug report. After the patch is built, Kane CLI replays the failing journey first, then every other journey. The loop stops at the first failure. The fix counts only when Kane CLI passes everything.
+Kane CLI runs each journey with `testmd run --agent --headless --bug-detection continue`. Bumpproof reads its JSON event stream: every step, healing, the failed step, Kane CLI's remark, its result code and `credits_consumed`. It also reads the console and network errors from the evidence pack. On a regression, all of that goes into Claude Code's prompt as the bug report. A guard rejects any patch that edits a journey, so the agent cannot pass by changing the test. After the patch is built, Kane CLI replays the failing journey first, then every other journey. The fix counts only when Kane CLI passes all of them. If it does not, Kane CLI's new failure goes back for a second attempt. After two attempts the pull request is reported as broken, with the evidence.
 
 What Kane CLI caught
 
-On pull request #2 (@tanstack/react-query 4.36.1 → 5.108.0) Dependabot's CI was green. Kane CLI failed all three journeys on pages that crashed. Its remark on the account journey: "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown." The console showed "Cannot read properties of undefined (reading 'orders')". The base passed the same journeys. Claude Code found the cause in the release notes: the `loading` status is now called `pending`. It changed one line in a loading check and wrote a note quoting the release note. Kane CLI then passed 3 of 3 on the patched build. Bumpproof commented and pushed the fix to the bot's branch.
+On pull request #2 (@tanstack/react-query 4.36.1 → 5.108.0) CI was green. Kane CLI failed all three journeys. Its remark on the account journey: "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown." The console showed "Cannot read properties of undefined (reading 'orders')". The base passed the same journeys. Claude Code found the cause in the release notes: the `loading` status is now called `pending`. It changed one loading check and quoted the release note. Kane CLI then passed 3 of 3 on the patched build, and Bumpproof pushed the fix to the bot's branch.
 
-The demo shop pins old major versions on purpose, so Dependabot's real pull requests meet real breaking changes. Nothing in the demo was broken by hand.
+On #3 (react-router-dom 6.30.1 → 7.18.6) CI was also green, and the account journey failed at "Use the tabs again". That fix is on the run page, not the branch, so the catch can be run again.
 
-Numbers, all counted by script from the run records
+The demo shop pins old major versions on purpose, so Dependabot's real pull requests meet real breaking changes. Nothing was broken by hand.
 
-- Credits per pull request: 6.4 (clsx, safe), 43.7 (react-router, fixed), 102 (react-query, fixed), 3.8 (date-fns, fixed).
+What Kane CLI did not catch
+
+In the census, no pull request had green CI and a broken app: 0 of 8. The one break there also failed its own CI, and the fixer did not fix it. The demo shop is the only place I have green-CI catches. I report that as it is.
+
+Numbers, counted by script from the run records
+
+- Kane CLI credits per pull request: 6.4 (clsx, safe), 43.7 (react-router, fixed), 102 (react-query, fixed), 3.8 (date-fns, fixed).
 - Fixer cost on the Claude API: $0.15, $0.18 and $0.16.
 - Median time from the failed check to Kane CLI passing on the patch: 6 min 16 s, over 4 fixes.
-- Census: 241 pull requests checked against the rules, 20 eligible, 14 run, 8 could run. CI green but broken: 0. False alarms in the control: 0 of 8.
-- In the census, writing a journey cost 33.4 credits on average and replaying a recording cost 8.1.
-- Breaks fixed: 4 of 4 on the demo app, 0 of 1 in the census.
+- Census: 241 pull requests checked against fixed rules, 20 eligible, 14 run, 8 could run. False alarms in the control: 0 of 8.
+- Writing a journey cost 33.4 credits on average. Replaying a recording cost 8.1.
+- 253 tests pass in CI.
 
 How to run it
 
-Without keys: open the report site, or run `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` from any folder. It replays the recorded run in the terminal. It needs no keys and no credits, and the network only to download the package.
+No keys: `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba`, from any folder. It replays the recorded run of pull request #2 in the terminal. No credits are used.
 
-Live: Node 20+, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. Then `bumpproof doctor`, `bumpproof init`, and `bumpproof pr <owner>/<repo>#<number> --fix`.
+Live: Node 20 or later, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. Then `bumpproof doctor`, `bumpproof init` and `bumpproof pr <owner>/<repo>#<number> --fix`.
 
 Safety
 
-The app under test runs in Docker as a normal user, with all capabilities dropped and install scripts off. The fixer has file tools only: no shell, no web, no MCP. Release notes reach it marked as untrusted. Comments and pushes work only on repositories listed in the config. In the census we opened no comments, issues or pull requests.
+The app under test runs in Docker as a normal user, with all capabilities dropped and install scripts off. The fixer has file tools only: no shell, no web, no MCP. Release notes reach it marked as untrusted. Comments and pushes work only on repositories listed in the config. In the census I opened no comments, issues or pull requests on other people's repositories.
 
 Limits
 
-One demo app with three journeys. Most census apps could not start in the sandbox, because they need a database, an API or secrets. A failing journey costs many times the credits of a passing one. npm only.
+One demo app with three journeys. 6 of the 14 census pull requests could not be run. A failing journey costs many times the credits of a passing one. A full check took 13 to 23 minutes. npm only. The loop starts from a developer's machine, not from CI.
 
 What's next
 
-Run the GitHub Action with Kane CLI journeys in CI, support pnpm and Yarn, and start apps that need a local database through Docker Compose.
+Run the Kane CLI journeys from the GitHub Action, support pnpm and Yarn, and start apps that need a local database with Docker Compose.
 
-How AI is used: the code was written with Claude Code, directed by the author. Claude Code is also the fixer inside the product. The demo video narration is the author's voice cloned with ElevenLabs.
+How AI is used: Claude Code wrote the code, from a plan I approved. Claude Code is also the fixer inside the product. Kane CLI is an AI agent too. The demo video narration is my voice, cloned with ElevenLabs.
 <!-- else:end -->
 
 ## Links
