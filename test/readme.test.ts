@@ -99,7 +99,7 @@ const README_LINES: Record<string, string> = {
   'src/kane.ts#L106': "case 'run_end'",
   'src/kane.ts#L139': 'export function testmdArgs',
   'src/kane.ts#L186': 'export function checkBudget',
-  'src/report/markdown.ts#L42': 'o.bugCode',
+  'src/report/markdown.ts#L44': 'o.bugCode',
 };
 
 test('README file#line links point at the code they name', () => {
