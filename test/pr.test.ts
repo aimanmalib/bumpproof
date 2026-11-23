@@ -216,7 +216,7 @@ test('pushFix refuses forks, empty fixes, paths outside the app and files that c
 
 test('a verified fix left off the branch says so, with the command that reproduces the break', () => {
   const fixed = readRun(join(import.meta.dirname, 'fixtures', 'synthetic-run'));
-  const o = { version: '0', runUrl: null, bugCode: 740, pushed: null, branch: 'dependabot/x', target: 'o/r#3' };
+  const o = { runUrl: null, bugCode: 740, pushed: null, branch: 'dependabot/x', target: 'o/r#3' };
   for (const lang of ['en', 'ms'] as const) {
     const t = makeTranslator(lang);
     const kept = prComment(fixed, t, o);

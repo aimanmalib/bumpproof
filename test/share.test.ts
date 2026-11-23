@@ -1,5 +1,5 @@
 // Link previews and the version people see: favicon, Open Graph and X card tags on every report page,
-// and the real package version in the pull request comment footer.
+// and honest version numbers: a released package version, and the version that ran the check in the comment footer.
 import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -11,7 +11,7 @@ import { makeTranslator } from '../src/i18n.ts';
 import { buildSite } from '../src/report/html.ts';
 import { siteUrl } from '../src/report/layout.ts';
 import { renderComment } from '../src/report/markdown.ts';
-import { readRun } from '../src/report/run.ts';
+import { parseRun } from '../src/report/run.ts';
 
 const FIXTURE = join(ROOT, 'test', 'fixtures', 'synthetic-run');
 const cfg = loadConfig(tmpdir());
@@ -76,11 +76,18 @@ test('every report page carries a favicon and preview tags that point at real fi
   }
 });
 
-test('the package version is a real release with a changelog entry, and the comment footer shows it', () => {
+test('the package version is a real release with a changelog entry', () => {
   const v = version();
   assert.match(v, /^\d+\.\d+\.\d+$/);
   assert.notEqual(v, '0.0.0', 'package.json still has the placeholder version');
   assert.match(readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8'), new RegExp(`^## ${v.replace(/\./g, '\\.')} \\(`, 'm'));
-  const md = renderComment(readRun(FIXTURE), en, { version: v, runUrl: null, bugCode: 740 });
-  assert.match(md.trimEnd().split('\n').at(-1)!, new RegExp(`Bumpproof ${v.replace(/\./g, '\\.')}</sub>$`));
+});
+
+test('the comment footer names the Bumpproof version that ran the check, never the 0.0.0 placeholder', () => {
+  const raw = JSON.parse(readFileSync(join(FIXTURE, 'run.json'), 'utf8')) as Record<string, unknown>;
+  const footer = (v: string, t = en): string =>
+    renderComment(parseRun({ ...raw, bumpproof_version: v }), t, { runUrl: null, bugCode: 740 }).trimEnd().split('\n').at(-1)!;
+  assert.equal(footer('0.1.0'), '<sub>Verified with Kane CLI 0.10.7 · Bumpproof 0.1.0</sub>');
+  assert.equal(footer('0.0.0'), '<sub>Verified with Kane CLI 0.10.7 · a Bumpproof build from before its first release</sub>');
+  assert.doesNotMatch(footer('0.0.0', makeTranslator('ms')), /0\.0\.0/);
 });

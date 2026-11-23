@@ -75,7 +75,7 @@ test('readRuns lists newest first and stops on a broken record', () => {
 
 test('the PR comment shows verdict, journeys, failure, fix and footer in both languages', () => {
   const run = readRun(FIXTURE);
-  const md = renderComment(run, en, { version: '1.2.3', runUrl: 'https://example.com/runs/x/', bugCode: 740 });
+  const md = renderComment(run, en, { runUrl: 'https://example.com/runs/x/', bugCode: 740 });
   assert.match(md, /^## 🛠️ Bumpproof: Fixed$/m);
   assert.match(md, /Synthetic example/);
   assert.equal(md.split('\n').filter((l) => l.startsWith('| `')).length, 3);
@@ -84,9 +84,9 @@ test('the PR comment shows verdict, journeys, failure, fix and footer in both la
   assert.match(md, /RangeError: Invalid time value/);
   assert.match(md, /`src\/pages\/Account\.jsx`/);
   assert.match(md, /https:\/\/example\.com\/runs\/x\//);
-  assert.match(md, /Verified with Kane CLI 0\.10\.7 · Bumpproof 1\.2\.3/);
+  assert.match(md, /Verified with Kane CLI 0\.10\.7 · /);
   assert.doesNotMatch(md, UNRESOLVED);
-  const bm = renderComment(run, ms, { version: '1.2.3', runUrl: null, bugCode: 740 });
+  const bm = renderComment(run, ms, { runUrl: null, bugCode: 740 });
   assert.match(bm, /Bumpproof: Dibaiki/);
   assert.match(bm, /\| Perjalanan \| Asas \|/);
   assert.doesNotMatch(bm, /Verified with|Synthetic example|Run page/);
@@ -97,7 +97,7 @@ test('the PR comment keeps untrusted text inside its table cell and drops the bu
   const r = raw();
   (r.source as Record<string, unknown>).pr_title = 'Bump x | y\n## injected';
   ((r.journeys as Record<string, unknown>[])[0]!).name = 'a|b`c';
-  const md = renderComment(parseRun(r), en, { version: '1', runUrl: null, bugCode: 999 });
+  const md = renderComment(parseRun(r), en, { runUrl: null, bugCode: 999 });
   assert.match(md, /Pull request: Bump x \\\| y ## injected/);
   assert.match(md, /\| `a\\\|b'c` \|/);
   assert.doesNotMatch(md, /product bug/);

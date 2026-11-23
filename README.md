@@ -169,7 +169,7 @@ Kane CLI has three jobs in every run. The verdict is our code reading its result
 | Job | What Kane CLI does | Where |
 |---|---|---|
 | Reference on the base | Replays each journey on the base branch first. A journey that fails there is left out of the verdict. | [`src/check-journeys.ts#L65`](src/check-journeys.ts#L65), [`src/compare.ts#L61`](src/compare.ts#L61) |
-| Detector on the pull request | Replays the same journeys on the head. Passed on the base and failed on the head is a regression. Its failed step, remark and result code go into the comment. | [`src/compare.ts#L43`](src/compare.ts#L43), [`src/report/markdown.ts#L42`](src/report/markdown.ts#L42) |
+| Detector on the pull request | Replays the same journeys on the head. Passed on the base and failed on the head is a regression. Its failed step, remark and result code go into the comment. | [`src/compare.ts#L43`](src/compare.ts#L43), [`src/report/markdown.ts#L44`](src/report/markdown.ts#L44) |
 | Proof after the fix | Its failed step, remark and console errors go into the fixer's prompt. Then it replays every journey on the patched app. The fix counts only when they all pass. | [`src/check-fix.ts#L34`](src/check-fix.ts#L34), [`src/check-fix.ts#L62`](src/check-fix.ts#L62) |
 
 How Bumpproof drives it:

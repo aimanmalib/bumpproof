@@ -34,12 +34,12 @@ export function parsePrArgs(argv: string[]): PrFlags {
   };
 }
 
-export interface PrCommentOptions { version: string; runUrl: string | null; bugCode: number; pushed: string | null; branch: string; target: string }
+export interface PrCommentOptions { runUrl: string | null; bugCode: number; pushed: string | null; branch: string; target: string }
 
 /** The pull request comment: the run, then where the fix is — pushed, or (when a fix was verified but not pushed) left out of
  * the branch on purpose, with the command that reproduces the break from the untouched branch. */
 export function prComment(report: RunReport, t: Translate, o: PrCommentOptions): string {
-  let body = renderComment(report, t, { version: o.version, runUrl: o.runUrl, bugCode: o.bugCode });
+  let body = renderComment(report, t, { runUrl: o.runUrl, bugCode: o.bugCode });
   if (o.pushed) body += `\n${t('pr.comment_pushed', { sha: o.pushed, short: shortSha(o.pushed), branch: o.branch })}\n`;
   else if (report.verdict.verdict === 'fixed') body += `\n${t('pr.comment_not_pushed', { branch: o.branch, target: o.target })}\n`;
   return body;
@@ -109,7 +109,7 @@ export async function runPr(c: PrCommand, f: PrFlags, t: Translate, p: Paint): P
     if (f.comment) {
       const runUrl = res.published ? `${cfg.report.pages_url.replace(/\/?$/, '/')}runs/${res.report.run_id}/` : null;
       const body = prComment(res.report, t, {
-        version: c.version, runUrl, bugCode: cfg.kane.bug_result_code, pushed, branch: info.head_ref, target: `${slug(ref)}#${ref.number}`,
+        runUrl, bugCode: cfg.kane.bug_result_code, pushed, branch: info.head_ref, target: `${slug(ref)}#${ref.number}`,
       });
       const url = await upsertComment(run, cfg, ref, body, scratch);
       c.out(t('pr.commented', { url }));

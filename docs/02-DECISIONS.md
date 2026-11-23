@@ -482,3 +482,15 @@ A reader could see Kane CLI's failure and the fix, but not what the agent was to
 - Seen while doing this: the prompt tells the agent the screenshots are "files in this folder", but the working copy
   does not include them. Left as it is for now; the published prompt shows the sentence as sent.
 - Undo: `git revert` the commit; old run records without `prompt_file` still read.
+
+## 23. Link previews, and which version a comment names (23 Nov 2026)
+
+- `bumpproof report` writes a favicon link and Open Graph and X card tags on every page. The preview image is the top
+  of the real home page (`scripts/share-assets.py`), 1200 × 630, under 300 KB because chat apps drop larger images.
+  Paths are config (`report.favicon`, `report.share_image`); `og:image` uses the absolute `pages_url`.
+- The comment footer names the Bumpproof version recorded in the run (`bumpproof_version`), not the version that
+  renders the comment. Comments on pull requests #1, #2 and #4 were rendered again later, and stamping the newer
+  version on them would claim a release that never ran those checks.
+- Runs recorded before the first release carry the npm placeholder `0.0.0`. The footer says "a Bumpproof build from
+  before its first release" instead of printing that number.
+- Undo: `git revert` the commit; the tags and footer are rendering only, no record changes.

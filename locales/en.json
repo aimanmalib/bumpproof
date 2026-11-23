@@ -188,6 +188,7 @@
     "run_page": "Run page with the timeline and the patch: {url}",
     "synthetic": "Synthetic example made for tests. Not a real run.",
     "footer": "Verified with Kane CLI {kane} · Bumpproof {version}",
+    "footer_unreleased": "Verified with Kane CLI {kane} · a Bumpproof build from before its first release",
     "none": "none"
   },
   "replay": {

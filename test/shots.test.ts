@@ -140,11 +140,11 @@ test('writeRunJson writes the shots and refuses an image that still carries an e
 test('the PR comment shows the screenshots from the run page, in both languages', () => {
   const r = report();
   r.shots = [{ journey: 'account', side: 'base', file: 'shots/account-base.jpg' }, { journey: 'account', side: 'head', file: 'shots/account-head.jpg' }];
-  const md = renderComment(r, makeTranslator('en'), { version: '1', runUrl: 'https://example.com/runs/x/', bugCode: 740 });
+  const md = renderComment(r, makeTranslator('en'), { runUrl: 'https://example.com/runs/x/', bugCode: 740 });
   assert.match(md, /\| Base branch \| Pull request \|/);
   assert.match(md, /!\[account · Pull request\]\(https:\/\/example\.com\/runs\/x\/shots\/account-head\.jpg\)/);
-  assert.match(renderComment(r, makeTranslator('ms'), { version: '1', runUrl: 'https://example.com/runs/x/', bugCode: 740 }), /Tangkapan skrin Kane CLI/);
-  assert.doesNotMatch(renderComment(r, makeTranslator('en'), { version: '1', runUrl: null, bugCode: 740 }), /!\[/, 'no run page, no images');
+  assert.match(renderComment(r, makeTranslator('ms'), { runUrl: 'https://example.com/runs/x/', bugCode: 740 }), /Tangkapan skrin Kane CLI/);
+  assert.doesNotMatch(renderComment(r, makeTranslator('en'), { runUrl: null, bugCode: 740 }), /!\[/, 'no run page, no images');
 });
 
 test('run page: the screenshots link to full size, with the failed step under the pull request one', async () => {

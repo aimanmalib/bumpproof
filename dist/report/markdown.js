@@ -1,4 +1,6 @@
 import { bumpList, duration, runCell, VERDICT_ICON } from "./words.js";
+/** package.json version before the first release; runs recorded then are not tied to any release. */
+const UNRELEASED = '0.0.0';
 /** Pipes and line breaks would break a table row; backticks would open code. */
 export function cell(s) {
     return s.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').replace(/`/g, "'").trim();
@@ -57,6 +59,10 @@ export function renderComment(run, t, o) {
     out.push(t('comment.cost', { credits: run.credits_consumed, time: duration(t, run.duration_s) }));
     if (o.runUrl)
         out.push('', t('comment.run_page', { url: o.runUrl }));
-    out.push('', '---', `<sub>${t('comment.footer', { kane: run.kane_cli_version ?? '?', version: o.version })}</sub>`);
+    // The version that ran this check, from the run record: a comment written again later must not claim a newer release.
+    const kane = run.kane_cli_version ?? '?';
+    const footer = run.bumpproof_version === UNRELEASED ? t('comment.footer_unreleased', { kane })
+        : t('comment.footer', { kane, version: run.bumpproof_version });
+    out.push('', '---', `<sub>${footer}</sub>`);
     return `${out.join('\n')}\n`;
 }

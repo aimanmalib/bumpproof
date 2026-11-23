@@ -188,6 +188,7 @@
     "run_page": "Halaman larian dengan garis masa dan patch: {url}",
     "synthetic": "Contoh sintetik untuk ujian. Bukan larian sebenar.",
     "footer": "Disahkan dengan Kane CLI {kane} · Bumpproof {version}",
+    "footer_unreleased": "Disahkan dengan Kane CLI {kane} · binaan Bumpproof sebelum keluaran pertamanya",
     "none": "tiada"
   },
   "replay": {

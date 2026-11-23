@@ -3,8 +3,10 @@ import type { Translate } from '../i18n.ts';
 import type { RunReport } from './run.ts';
 import { bumpList, duration, runCell, VERDICT_ICON } from './words.ts';
 
+/** package.json version before the first release; runs recorded then are not tied to any release. */
+const UNRELEASED = '0.0.0';
+
 export interface CommentOptions {
-  version: string;
   /** Public URL of the run page, when the run is published. */
   runUrl: string | null;
   /** Kane CLI result code for a confirmed product bug (config `kane.bug_result_code`). */
@@ -65,6 +67,10 @@ export function renderComment(run: RunReport, t: Translate, o: CommentOptions): 
   }
   out.push(t('comment.cost', { credits: run.credits_consumed, time: duration(t, run.duration_s) }));
   if (o.runUrl) out.push('', t('comment.run_page', { url: o.runUrl }));
-  out.push('', '---', `<sub>${t('comment.footer', { kane: run.kane_cli_version ?? '?', version: o.version })}</sub>`);
+  // The version that ran this check, from the run record: a comment written again later must not claim a newer release.
+  const kane = run.kane_cli_version ?? '?';
+  const footer = run.bumpproof_version === UNRELEASED ? t('comment.footer_unreleased', { kane })
+    : t('comment.footer', { kane, version: run.bumpproof_version });
+  out.push('', '---', `<sub>${footer}</sub>`);
   return `${out.join('\n')}\n`;
 }

@@ -20,7 +20,7 @@ export function runReport(cfg: Config, t: Translate, values: Record<string, unkn
     if (comment) {
       const run = readRun(at(io.cwd, comment));
       const runUrl = run.synthetic ? null : `${cfg.report.pages_url.replace(/\/?$/, '/')}runs/${run.run_id}/`;
-      io.out(renderComment(run, t, { version: version(), runUrl, bugCode: cfg.kane.bug_result_code }));
+      io.out(renderComment(run, t, { runUrl, bugCode: cfg.kane.bug_result_code }));
       return 0;
     }
     const outDir = at(io.cwd, str(values.out) ?? cfg.report.out_dir);
