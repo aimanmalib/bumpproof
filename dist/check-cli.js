@@ -100,7 +100,7 @@ export async function runJourneyCommand(c, t, p) {
     let files = [];
     let afterFix = null;
     if (c.fix && fixNeeded(res.report)) {
-        c.out(`\n${t('fix.running', { attempts: cfg.fixer.max_attempts })}`);
+        c.out(`\n${t('fix.running', { agent: cfg.fixer.name, attempts: cfg.fixer.max_attempts })}`);
         ({ patch, files, afterFix, prompt } = await runFixStage({ ...c.deps, fetch: c.fix.fetch }, res, c.opts.repo, c.opts.dir, cfg.fixer.patch_file));
         c.out(renderFix(res.report, t, p));
     }

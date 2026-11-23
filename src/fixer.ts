@@ -183,6 +183,13 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
     const agent = await runAgent(d.run, cfg, fixerInvocation(cfg, workDir, prompt, `${d.name ?? 'bumpproof-fixer'}-${n}`), d.env);
     const after = snapshotTree(workDir, cfg.fixer.snapshot_skip);
     const changes = diffTrees(before, after);
+    if (changes.length === 0 && !agent.ok) {
+      // Nothing to judge: say why the agent stopped (a rate limit, a login problem) instead of "no BUMPPROOF_FIX.md".
+      attempts.push({ n, agent: strip(agent), violations: [], changed_lines: 0 });
+      rejected.push(`the agent changed no file and stopped with an error: ${agentError(agent)}`);
+      d.onEvent?.('fixer_rejected', { attempt: n, reason: rejected[rejected.length - 1] ?? '' }, 'fail');
+      continue;
+    }
     const violations = checkGuards(before, after, changes, cfg);
     const changedLines = changes.filter((c) => c.path !== cfg.fixer.explanation_file)
       .reduce((s, c) => s + c.added.length + c.removed.length, 0);
@@ -203,6 +210,12 @@ export async function fixLoop(d: FixDeps, workDir: string, input: FixInput): Pro
     restoreTree(workDir, before, changes);
   }
   return { status: 'failed', attempts, patch: '', explanation: '', changes: [], prompts };
+}
+
+/** The agent's last stderr line, or the reason its output could not be read. */
+export function agentError(a: { error?: string; stderr?: string; result: string }): string {
+  const line = (a.stderr ?? '').split('\n').map((l) => l.trim()).filter((l) => l !== '').pop();
+  return (line ?? a.error ?? (a.result.trim() || 'no output')).slice(0, 300);
 }
 
 function strip(a: AgentReport & { stdout?: string; stderr?: string }): AgentReport {

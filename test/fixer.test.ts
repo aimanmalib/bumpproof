@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { deepMerge, loadConfig, ROOT, type Config, type JsonObject } from '../src/config.ts';
 import {
-  buildPrompt, describeFailure, fillTemplate, fixerInvocation, fixLoop, parseAgentOutput, PromptError, readPrompt,
+  agentError, buildPrompt, describeFailure, fillTemplate, fixerInvocation, fixLoop, parseAgentOutput, PromptError, readPrompt,
   type FixInput,
 } from '../src/fixer.ts';
 import type { Runner } from '../src/proc.ts';
@@ -137,6 +137,35 @@ test('fixLoop: when verification keeps failing, it stops at max_attempts and lea
   assert.match(a.prompts[1]!, /check still fails: checkout still fails at step 4/);
   assert.equal(existsSync(join(dir, 'BUMPPROOF_FIX.md')), false);
   assert.equal(readFileSync(join(dir, 'src/date.js'), 'utf8'), 'export const show = (d) => format(d);\n');
+});
+
+test('fixLoop: an agent that stops with an error and edits nothing is reported with its error, not as a missing BUMPPROOF_FIX.md', async () => {
+  const dir = app();
+  const prompts: string[] = [];
+  const run: Runner = async (_cmd, args) => {
+    prompts.push(args[args.length - 1]!);
+    return { ok: false, code: 1, stdout: '', stderr: 'Reconnecting... 5/5\nERROR: exceeded retry limit, last status: 429 Too Many Requests\n' };
+  };
+  const reasons: string[] = [];
+  const r = await fixLoop({ cfg: base, run, env: {}, verify: async () => ({ ok: true, detail: 'unused' }),
+    onEvent: (k, v) => { if (k === 'fixer_rejected') reasons.push(String(v.reason)); } }, dir, INPUT);
+  assert.equal(r.status, 'failed');
+  assert.equal(r.attempts.length, base.fixer.max_attempts);
+  assert.deepEqual(r.attempts.map((a) => a.violations), [[], []]);
+  assert.equal(reasons[0], 'the agent changed no file and stopped with an error: ERROR: exceeded retry limit, last status: 429 Too Many Requests');
+  assert.match(prompts[1]!, /429 Too Many Requests/);
+});
+
+test('agentError falls back to the parse error, then the result text', () => {
+  assert.equal(agentError({ stderr: '', error: 'unreadable agent output', result: 'x' }), 'unreadable agent output');
+  assert.equal(agentError({ result: '  ' }), 'no output');
+});
+
+test('the fixer is named from config in the "Fixing" line', () => {
+  assert.equal(base.fixer.name, 'Claude Code');
+  const en = JSON.parse(readFileSync(new URL('../locales/en.json', import.meta.url), 'utf8')) as { fix: { running: string } };
+  assert.match(en.fix.running, /\{agent\}/);
+  assert.doesNotMatch(en.fix.running, /Claude Code/);
 });
 
 test('prompt templates live in prompts/, not in code', () => {

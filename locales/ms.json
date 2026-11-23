@@ -130,7 +130,7 @@
     "canary_leak": "Kanari gagal: token sampai kepada ejen. Mod hos ditolak; tetapkan fixer.mode kepada \"container\". ({date})",
     "canary_error": "Kanari tidak dapat menjalankan fixer: {detail}",
     "denied": "Panggilan alat ditolak: {tools}",
-    "running": "Membaiki: Claude Code menerima kegagalan dan nota keluaran (hingga {attempts} cubaan)…",
+    "running": "Membaiki: {agent} menerima kegagalan dan nota keluaran (hingga {attempts} cubaan)…",
     "fixed": "Dibaiki selepas {attempts} cubaan: {lines} baris berubah dalam {files}. Tampalan ada dalam fix.patch bersebelahan run.json.",
     "failed": "Tidak dibaiki selepas {attempts} cubaan: setiap tampalan ditolak pengawal atau masih gagal satu perjalanan."
   },

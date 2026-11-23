@@ -43,7 +43,7 @@ export interface Config {
   };
   evidence: { image_exts: string[] };
   fixer: {
-    command: string; model: string; max_attempts: number; max_patch_lines: number;
+    name: string; command: string; model: string; max_attempts: number; max_patch_lines: number;
     mode: 'host' | 'container'; timeout_s: number; args: string[]; explanation_file: string; patch_file: string; prompt_file: string;
     protected_paths: string[]; deny_patterns: string[]; snapshot_skip: string[]; build_log_lines: number;
     canary_path: string; container: { image: string; command: string[]; work_dir: string; env: string[] };

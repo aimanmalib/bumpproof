@@ -130,7 +130,7 @@
     "canary_leak": "Canary failed: the token reached the agent. Host mode is refused; set fixer.mode to \"container\". ({date})",
     "canary_error": "Canary could not run the fixer: {detail}",
     "denied": "Tool calls refused: {tools}",
-    "running": "Fixing: Claude Code gets the failure and the release notes (up to {attempts} attempts)…",
+    "running": "Fixing: {agent} gets the failure and the release notes (up to {attempts} attempts)…",
     "fixed": "Fixed after {attempts} attempt(s): {lines} line(s) changed in {files}. The patch is in fix.patch next to run.json.",
     "failed": "Not fixed after {attempts} attempt(s): every patch was refused by the guards or still failed a journey."
   },
