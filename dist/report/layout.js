@@ -21,6 +21,31 @@ function langSwitch(s) {
     const buttons = s.languages.map((l, i) => `<button type="button" data-set="${esc(l)}" aria-pressed="${i === 0}">${esc(l === 'ms' ? 'BM' : l.toUpperCase())}</button>`).join('');
     return `<div class="lang" role="group" aria-label="${esc(t('site.lang_label'))} / ${esc(s.translators.get('ms')?.('site.lang_label') ?? '')}">${buttons}</div>`;
 }
+/** Address of a site file as published; the home page is the bare site address. */
+export const siteUrl = (pagesUrl, path) => pagesUrl.replace(/\/?$/, '/') + path.replace(/(^|\/)index\.html$/, '$1');
+const OG_LOCALE = { en: 'en_US', ms: 'ms_MY' };
+/** Favicon and link-preview tags (Open Graph, X card), in the first language. */
+function shareTags(title, t, s) {
+    const image = siteUrl(s.pagesUrl, s.shareImage);
+    const meta = (attr, k, v) => `<meta ${attr}="${k}" content="${esc(v)}">`;
+    const [first, ...rest] = s.languages;
+    return [
+        `<link rel="icon" href="${s.root}${esc(s.favicon)}" sizes="any">`,
+        meta('property', 'og:type', 'website'),
+        meta('property', 'og:site_name', 'Bumpproof'),
+        meta('property', 'og:title', title),
+        meta('property', 'og:description', t('site.tagline')),
+        meta('property', 'og:url', siteUrl(s.pagesUrl, s.path)),
+        meta('property', 'og:image', image),
+        meta('property', 'og:image:alt', t('site.share_alt')),
+        meta('property', 'og:locale', OG_LOCALE[first] ?? first),
+        ...rest.map((l) => meta('property', 'og:locale:alternate', OG_LOCALE[l] ?? l)),
+        meta('name', 'twitter:card', 'summary_large_image'),
+        meta('name', 'twitter:title', title),
+        meta('name', 'twitter:description', t('site.tagline')),
+        meta('name', 'twitter:image', image),
+    ].join('\n');
+}
 export function renderPage(spec, s) {
     const en = s.translators.get(s.languages[0]);
     const copies = s.languages.map((lang, i) => {
@@ -39,6 +64,7 @@ export function renderPage(spec, s) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(spec.title(en))}</title>
 <meta name="description" content="${esc(en('site.tagline'))}">
+${shareTags(spec.title(en), en, s)}
 <link rel="preload" href="${s.root}assets/fonts/ibm-plex-sans-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${s.root}assets/site.css">
 </head>

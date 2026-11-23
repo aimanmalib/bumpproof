@@ -215,6 +215,7 @@
     "nav_judges": "For judges",
     "skip": "Skip to content",
     "tagline": "Dependency bumps, checked in a real browser before you merge.",
+    "share_alt": "The Bumpproof home page: Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it.",
     "hero_title": "Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it.",
     "hero_body": "Bumpproof builds your app twice in a Docker sandbox, once on the base branch and once on the bump. Kane CLI walks the same user journeys in Chrome against both. Plain code compares the runs. When the bump breaks a journey, Claude Code writes a fix and Kane CLI runs every journey again.",
     "how_title": "How a check runs",

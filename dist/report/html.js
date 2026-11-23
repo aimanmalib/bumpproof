@@ -70,16 +70,18 @@ export function buildSite(cfg, o) {
         runs, census, metrics, repoUrl: cfg.report.repo_url, installCommand: cfg.report.install_command,
         replayCommand: cfg.report.replay_command, proofLinks: cfg.report.proof_links,
     };
-    const site = (root) => ({ version: o.version, repoUrl: cfg.report.repo_url, root, languages: cfg.languages,
-        translators: o.translators });
+    const site = (path) => ({ version: o.version, repoUrl: cfg.report.repo_url, root: '../'.repeat(path.split('/').length - 1),
+        path, pagesUrl: cfg.report.pages_url, favicon: cfg.report.favicon, shareImage: cfg.report.share_image,
+        languages: cfg.languages, translators: o.translators });
     const pages = new Map([
-        ['index.html', renderPage(homePage(data), site(''))],
-        ['census.html', renderPage(censusPage(data), site(''))],
-        ['judges.html', renderPage(judgesPage(data), site(''))],
+        ['index.html', renderPage(homePage(data), site('index.html'))],
+        ['census.html', renderPage(censusPage(data), site('census.html'))],
+        ['judges.html', renderPage(judgesPage(data), site('judges.html'))],
     ]);
     for (const r of runs) {
         const page = runPage(r, patchOf(o.runsDir, r), cfg.report.replay_command, promptOf(o.runsDir, r));
-        pages.set(`runs/${r.run_id}/index.html`, renderPage(page, site('../../')));
+        const path = `runs/${r.run_id}/index.html`;
+        pages.set(path, renderPage(page, site(path)));
     }
     const en = o.translators.get('en');
     const oldReadme = o.readmePath && en && existsSync(o.readmePath) ? readFileSync(o.readmePath, 'utf8') : null;
@@ -97,6 +99,10 @@ export function buildSite(cfg, o) {
         writeFileSync(path, html);
     }
     copyAssets(o.outDir);
+    // Browsers and preview bots also ask for /favicon.ico at the site root.
+    const icon = join(o.outDir, cfg.report.favicon);
+    if (resolve(icon) !== resolve(o.outDir, 'favicon.ico'))
+        copyFileSync(icon, join(o.outDir, 'favicon.ico'));
     if (!existsSync(join(o.outDir, '.nojekyll')))
         writeFileSync(join(o.outDir, '.nojekyll'), '');
     return { pages: [...pages.keys()], runs: runs.length, census: census !== null, readme: readme !== null, findings };

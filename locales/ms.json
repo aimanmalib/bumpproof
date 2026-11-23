@@ -215,6 +215,7 @@
     "nav_judges": "Untuk juri",
     "skip": "Langkau ke kandungan",
     "tagline": "Naik taraf kebergantungan, disemak dalam pelayar sebenar sebelum digabung.",
+    "share_alt": "Halaman utama Bumpproof: Dependabot kata naik taraf itu selamat. Bumpproof meminta Kane CLI membuktikannya.",
     "hero_title": "Dependabot kata naik taraf itu selamat. Bumpproof meminta Kane CLI membuktikannya.",
     "hero_body": "Bumpproof membina aplikasi anda dua kali dalam kotak pasir Docker, sekali pada cawangan asas dan sekali pada naik taraf. Kane CLI menjalankan perjalanan pengguna yang sama dalam Chrome terhadap kedua-duanya. Kod biasa membandingkan larian itu. Bila naik taraf merosakkan satu perjalanan, Claude Code menulis pembaikan dan Kane CLI menjalankan setiap perjalanan sekali lagi.",
     "how_title": "Cara satu semakan berjalan",
