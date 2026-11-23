@@ -236,6 +236,8 @@ Kane CLI, which drives Chrome, is an AI agent too.
 AI disclosure: code and docs written with an AI coding agent; the fixer is an AI agent; the demo video narration is the
 author's voice cloned with ElevenLabs.
 
+The full declaration is in [AI_USAGE.md](AI_USAGE.md).
+
 ## Built during the KaneCLI Online Hackathon
 
 Built during the KaneCLI Online Hackathon (12–26 Nov 2026). First commit:
