@@ -11,7 +11,8 @@
 - Each fixed run publishes `fixer-prompt.md`, the exact prompt the fixer was given.
 - `pr --comment` says when a verified fix was left off the branch on purpose.
 - Report site: favicon, and link-preview tags (Open Graph and an X card) with an image of the real home page.
-- The pull request comment footer shows the real package version.
+- The pull request comment footer names the Bumpproof version recorded in the run, and says "a build from before its
+  first release" instead of the `0.0.0` placeholder.
 - `scripts/video-shots.py`: captures the stills for the demo video from real states (the pull request on GitHub, the demo
   shop at the base, the bot's commit and the fix, the replay, the report pages) and writes the numbers it may quote to `facts.json`.
 
