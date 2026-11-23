@@ -13,3 +13,5 @@ CLAUDE.md
 CLAUDE.local.md
 .bumpproof/runs/
 __pycache__/
+/video/*
+!/video/JANA.json

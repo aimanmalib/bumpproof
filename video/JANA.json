@@ -1,0 +1,143 @@
+{
+ "enjin": "pakej-juri",
+ "versi": "e30d642d4b43",
+ "masa": "2026-11-23T00:51:40Z",
+ "mp4": "video/demo.mp4",
+ "sha256_mp4": "9a5095b90acb8ecce4a6eff8588f6d6d0eff6670fcba6d24cde67d3b82a8d33e",
+ "bait_mp4": 27778084,
+ "ukur": {
+  "fail": "video/demo.mp4",
+  "tempoh_video": 196.867,
+  "tempoh_audio": 196.857,
+  "lufs": -16.5,
+  "puncak_dbtp": -1.9,
+  "lebar": 1920,
+  "tinggi": 1080,
+  "semak": {
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "lulus": true
+ },
+ "sebelum": {
+  "lufs": -16.8,
+  "puncak_dbtp": -1.9
+ },
+ "suara": {
+  "penjana": "vp",
+  "id": "Ote1SdIQw1HEueVQdGnX",
+  "model": "eleven_v3",
+  "bahasa": "en",
+  "baris": [
+   {
+    "id": "s01",
+    "sha256": "7483b3abb53e85ba278a198ec3982d85b850557056463a21d4c25c30ba18e7ef"
+   },
+   {
+    "id": "s03",
+    "sha256": "e8e3fd22e66f4214c54a24c85507fb1462292dd528a73db7abeb27508b84735d"
+   },
+   {
+    "id": "s04",
+    "sha256": "41b18b6f7d3cffb7539de982dde88509aefa105a7e7b7df04556bf4324da753c"
+   },
+   {
+    "id": "r01",
+    "sha256": "ed589ea692133792247050ca5f832f530df1f0c7ee482b68988068e3bf391c48"
+   },
+   {
+    "id": "s05",
+    "sha256": "fd537262f0723f0685f9af6dd2901b065dc5243cdc048eeb74be46638935e98d"
+   },
+   {
+    "id": "s06",
+    "sha256": "3f5dbc98cd2685ea45b745e3534f2dcd87525b1ef37449400d5c6402586d5da9"
+   },
+   {
+    "id": "s07",
+    "sha256": "6292af31fdaca56ce4764cb0db99b58b1bcce9df8bce5fe76bfc69fb6ba1b26d"
+   },
+   {
+    "id": "p01",
+    "sha256": "7780845e208c0863036279fafb2de206899aa15ebb0bb9e0c7ec443965518133"
+   },
+   {
+    "id": "s08",
+    "sha256": "748b2e1099b2839ce92e8a4b7f79a13e6dd3e2ee19fa9e719173ea58d256f13a"
+   },
+   {
+    "id": "s09",
+    "sha256": "bf313acb28cae9474ede484fd66fd44a612908de4fbe4a2c2a34aa105445d218"
+   },
+   {
+    "id": "s10",
+    "sha256": "fd84efbc8d8d3e9c70600e0dd80f065be3cec988b61f92b6401bf2adbd88bdf0"
+   },
+   {
+    "id": "s11",
+    "sha256": "615348bc4b2637f554b5d663511f38753f33b2e6e2208104afe1543be7a51f77"
+   },
+   {
+    "id": "c01",
+    "sha256": "cc35e4f76c128acdf441a1a5d3ca6e8b9c54e86c8c23c903e29d73dd8087ee7c"
+   },
+   {
+    "id": "c02",
+    "sha256": "30f28c40f2b047775136abc0368346fc1a863edf628346369009346cc9b73fed"
+   },
+   {
+    "id": "c03",
+    "sha256": "1f91ce1dae403f7195f3c220ed851633015bca637fa67249320576c3a91c8b31"
+   },
+   {
+    "id": "s12",
+    "sha256": "a5e7e7e8a65ef5ded65a845b4403ba22c8708b2977974e26fb0e92ec62908ea2"
+   },
+   {
+    "id": "s13",
+    "sha256": "4225250d7d44aef16aa499743372cf97b704472e7d94f228c398bf0d65be1a02"
+   },
+   {
+    "id": "s14",
+    "sha256": "ee45c36852c1b0cf27506497cb919748ee7627736501902154b341043183415b"
+   },
+   {
+    "id": "s15",
+    "sha256": "0476879bc8e22168ebb4ff9bad1602010b5c71dc02a98386f9fefddc22e90636"
+   },
+   {
+    "id": "s16",
+    "sha256": "e6d7975889b9afb373604dcf525397cbdc212b23fc952ee1324c38e2c9823e25"
+   },
+   {
+    "id": "s17",
+    "sha256": "b9d9b54f3218a839d659227d45d3255476df62c45df3b0a580da7ac0dbd588b9"
+   },
+   {
+    "id": "e01",
+    "sha256": "1c8eb6dcbc52393c3414234cf2ff169508dcfea938dd0f3fd631b33eae8e1c17"
+   },
+   {
+    "id": "s18",
+    "sha256": "16a87c40b08ef6bc7d5cfcfd624ab3e440d1266f356ae3800f516e1316526b5d"
+   }
+  ]
+ },
+ "hyperframes": "0.9.52",
+ "filem": null,
+ "tema": {
+  "fail": [],
+  "token": {
+   "latar": "sandaran",
+   "dakwat": "sandaran",
+   "aksen": "sandaran",
+   "lembut": "sandaran",
+   "garis": "sandaran",
+   "fon_teks": "sandaran",
+   "fon_paparan": "sandaran",
+   "fon_mono": "sandaran"
+  },
+  "fon_dibuang": []
+ }
+}

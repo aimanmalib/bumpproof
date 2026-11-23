@@ -429,6 +429,9 @@ draw highlights, cards and captions, then pipe the frame to ffmpeg. A slow or bu
 - The voice is the author's voice cloned with ElevenLabs. The end card and the README say so.
 - Audio: each line is placed at its scene start, then normalised in two passes to -16.5 LUFS, true peak -2 dBTP.
   No music.
+- A final pass (23 Nov) measured the rendered file at -16.8 LUFS and normalised the audio to -16.5 LUFS, -1.9 dBTP.
+  The picture was copied, not encoded again. `video/JANA.json` records the measurements, the mp4 hash and a hash for
+  each narration line. The voice clips themselves are not in the repository.
 - Every number on screen comes from `docs/runs/20261122-0453-53ba/run.json`, `census/results.json` or README.md.
 
 ## 21. Installing from GitHub works with no build step (22 Nov 2026)
