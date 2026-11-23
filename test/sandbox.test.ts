@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { deepMerge, loadConfig, type Config, type JsonObject } from '../src/config.ts';
@@ -8,12 +7,13 @@ import {
   dockerRunArgs, lastPhase, planApp, removeLabelled, sandboxUser, SandboxError, setupScript, startApp, tail,
 } from '../src/sandbox.ts';
 import { fakeDocker, phases } from './support/fake-docker.ts';
+import { tempDir } from './support/tmp.ts';
 
 const base = loadConfig('/nonexistent');
 const cfgWith = (over: JsonObject): Config => deepMerge(base as unknown as JsonObject, over) as unknown as Config;
 
 function app(files: Record<string, string>): string {
-  const dir = mkdtempSync(join(tmpdir(), 'bumpproof-plan-'));
+  const dir = tempDir('bumpproof-plan-');
   for (const [name, body] of Object.entries(files)) writeFileSync(join(dir, name), body);
   return dir;
 }

@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { runCanary } from '../src/canary.ts';
 import { deepMerge, loadConfig, type Config, type JsonObject } from '../src/config.ts';
 import { run as realRun, type Runner } from '../src/proc.ts';
+import { tempDir } from './support/tmp.ts';
 
 const base = loadConfig('/nonexistent');
-const home = () => mkdtempSync(join(tmpdir(), 'bumpproof-home-'));
+const home = () => tempDir('bumpproof-home-');
 const json = (o: object) => JSON.stringify(o);
 
 test('canary passes when the agent is refused and the token stays out', async () => {

@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { test } from 'node:test';
 import { renderFix, verdictExit, writeRunJson } from '../src/check-cli.ts';
@@ -12,11 +11,12 @@ import type { ProcResult, Runner } from '../src/proc.ts';
 import { makePaint } from '../src/ui.ts';
 import { fakeDocker, phases, type Step } from './support/fake-docker.ts';
 import { makeFixtureRepo } from './support/fixture-repo.ts';
+import { tempDir } from './support/tmp.ts';
 
 const FIX = new URL('./fixtures/', import.meta.url);
 const fixture = (name: string) => readFileSync(new URL(name, FIX), 'utf8');
 const ok = (stdout: string, code = 0): ProcResult => ({ ok: code === 0, code, stdout, stderr: '' });
-const tmp = () => mkdtempSync(join(tmpdir(), 'bumpproof-cf-'));
+const tmp = () => tempDir('bumpproof-cf-');
 const PASS = fixture('synthetic-testmd-pass.ndjson');
 const FAIL = fixture('synthetic-testmd-regression.ndjson');
 

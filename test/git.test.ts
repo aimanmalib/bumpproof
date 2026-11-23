@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { cleanSubdir, exportTree, GitError, gitEnv, resolveRef } from '../src/git.ts';
 import { run } from '../src/proc.ts';
 import { makeFixtureRepo } from './support/fixture-repo.ts';
+import { tempDir } from './support/tmp.ts';
 
 test('gitEnv drops GIT_* from a calling hook and turns prompts off', () => {
   const env = gitEnv({ PATH: '/bin', GIT_DIR: '/real/.git', GIT_INDEX_FILE: 'x', GIT_WORK_TREE: '/real' });
@@ -27,7 +27,7 @@ test('resolveRef gives full shas and rejects unknown or option-like refs', async
 
 test('exportTree writes only the app folder at that commit, without .git', async () => {
   const repo = makeFixtureRepo();
-  const dest = join(mkdtempSync(join(tmpdir(), 'bumpproof-export-')), 'base');
+  const dest = join(tempDir('bumpproof-export-'), 'base');
   await exportTree(run, repo.dir, repo.git('rev-parse', 'base'), 'app', dest);
   assert.ok(existsSync(join(dest, 'package.json')));
   assert.ok(!existsSync(join(dest, '.git')));

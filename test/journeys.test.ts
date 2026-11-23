@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { test } from 'node:test';
@@ -11,11 +11,12 @@ import { parseRun } from '../src/report/run.ts';
 import type { ProcResult, Runner } from '../src/proc.ts';
 import { fakeDocker, phases } from './support/fake-docker.ts';
 import { makeFixtureRepo } from './support/fixture-repo.ts';
+import { tempDir } from './support/tmp.ts';
 
 const FIX = new URL('./fixtures/', import.meta.url);
 const fixture = (name: string) => readFileSync(new URL(name, FIX), 'utf8');
 const ok = (stdout: string, code = 0): ProcResult => ({ ok: code === 0, code, stdout, stderr: '' });
-const tmp = () => mkdtempSync(join(tmpdir(), 'bumpproof-jt-'));
+const tmp = () => tempDir('bumpproof-jt-');
 
 /** A Kane CLI stand-in: `balance` drops by `charge` after every testmd run; testmd answers from `answer(cwd, file)`. */
 function fakeKane(answer: (cwd: string, file: string) => [string, number], charge = 10) {

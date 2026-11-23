@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { deepMerge, loadConfig, ROOT, type Config, type JsonObject } from '../src/config.ts';
@@ -9,6 +8,7 @@ import {
   type FixInput,
 } from '../src/fixer.ts';
 import type { Runner } from '../src/proc.ts';
+import { tempDir } from './support/tmp.ts';
 
 const base = loadConfig('/nonexistent');
 const cfgWith = (over: JsonObject): Config => deepMerge(base as unknown as JsonObject, over) as unknown as Config;
@@ -79,7 +79,7 @@ test('parseAgentOutput reads the JSON summary and survives junk', () => {
 });
 
 function app(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'bumpproof-fix-'));
+  const dir = tempDir('bumpproof-fix-');
   const files: Record<string, string> = {
     'package.json': JSON.stringify({ name: 'shop', dependencies: { 'date-fns': '4.1.0' } }),
     'src/date.js': 'export const show = (d) => format(d);\n',

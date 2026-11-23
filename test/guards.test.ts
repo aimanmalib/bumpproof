@@ -1,7 +1,6 @@
 // "The agent cannot cheat": every patch guard has a case that must be rejected.
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, readFileSync, existsSync, symlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, existsSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { loadConfig } from '../src/config.ts';
@@ -9,13 +8,14 @@ import {
   checkGuards, diffTrees, globToRegExp, lineDiff, packageJsonProblems, renderPatch, restoreTree, snapshotTree,
   type GuardRule,
 } from '../src/guards.ts';
+import { tempDir } from './support/tmp.ts';
 
 const cfg = loadConfig('/nonexistent');
 const PKG = JSON.stringify({ name: 'shop', scripts: { build: 'vite build' }, dependencies: { 'date-fns': '4.4.0', react: '18.3.1' } }, null, 2);
 const NOTE = 'BUMPPROOF_FIX.md';
 
 function app(files: Record<string, string>): string {
-  const dir = mkdtempSync(join(tmpdir(), 'bumpproof-guard-'));
+  const dir = tempDir('bumpproof-guard-');
   for (const [rel, body] of Object.entries(files)) {
     mkdirSync(dirname(join(dir, rel)), { recursive: true });
     writeFileSync(join(dir, rel), body);
