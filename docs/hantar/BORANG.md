@@ -94,7 +94,8 @@ How AI is used: Claude Code wrote the code, from a plan I approved. Claude Code 
 <!-- links:start -->
 - GitHub URL: https://github.com/aimanmalib/bumpproof
 - Live URL: https://aimanmalib.github.io/bumpproof/
-- Demo video file (the YouTube upload is the same file): https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4
+- Demo video: https://youtu.be/w-J5-bGW2to
+- Demo video file (the same file as the YouTube upload): https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4
 <!-- links:end -->
 
 ## Attachments

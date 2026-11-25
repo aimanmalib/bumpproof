@@ -12,7 +12,7 @@ Built in Malaysia by Aiman Malib</p>
 
 ![Replay of a recorded run: the bump breaks every journey, Claude Code writes a two-line fix, Kane CLI passes all three again](docs/media/bumpproof-loop.gif)
 
-- Demo video, 3 minutes, narrated: https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4
+- Demo video, 3 minutes, narrated: https://youtu.be/w-J5-bGW2to (the same file on the report site: https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4)
 - Report site: https://aimanmalib.github.io/bumpproof/
 - Census of other people's pull requests: https://aimanmalib.github.io/bumpproof/census.html
 - For judges, one page: https://aimanmalib.github.io/bumpproof/judges.html
