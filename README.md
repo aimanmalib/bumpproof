@@ -138,6 +138,31 @@ Kane CLI reads `KANE_USERNAME` and `KANE_ACCESS_KEY` from the environment, or us
 The fixer runs `claude -p`; set `ANTHROPIC_API_KEY` or log in to Claude Code first.
 Every setting is in [`config/defaults.json`](config/defaults.json). A `.bumpproof/config.json` in your app overrides it.
 
+### Use your own agent
+
+The fixer is a command. Bumpproof passes the prompt as the last argument, runs it in a copy of the app, and then judges
+only the files it changed: the same guards, then a rebuild and a Kane CLI replay of every journey. The agent's own output
+is not needed. If it changes no file and exits with an error, that error is the reason given
+([`src/fixer.ts#L186`](src/fixer.ts#L186)). This `.bumpproof/config.json` runs OpenAI Codex CLI:
+
+```json
+{
+  "fixer": {
+    "name": "Codex",
+    "command": "codex",
+    "args": ["exec", "--sandbox", "workspace-write", "--skip-git-repo-check", "--ephemeral", "--color", "never"]
+  }
+}
+```
+
+The "file tools only" rule in [Safety](#safety) comes from Claude Code's flags. Another agent can do what its own
+settings allow. With `workspace-write`, Codex can run shell commands inside the copy.
+
+Measured once, on 23 Nov 2026, on a local copy of #3 (no comment, no push). Kane CLI caught the same `account` failure
+at "Use the tabs again" (50.0 credits). Both Codex attempts stopped with HTTP 429 (the account's rate limit) before
+changing any file, so nothing was fixed. The limit had not cleared when checked again on 25 Nov. Codex has not yet
+fixed a run here.
+
 ## How it works
 
 `bumpproof pr <owner>/<repo>#<number> --fix` takes one dependency pull request and:

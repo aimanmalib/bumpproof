@@ -18,6 +18,8 @@ The verdict on each pull request is plain code, not a model.
   [`config/defaults.json`](config/defaults.json). It gets file tools only: Read, Edit, Write, Glob and Grep. No shell, no web,
   no MCP servers. Its prompt template is [`prompts/fixer.md`](prompts/fixer.md). Release notes go into the prompt marked as
   untrusted text.
+- The fixer command can be another agent (`fixer.command`). One run with OpenAI Codex CLI is described in the README,
+  [Use your own agent](README.md#use-your-own-agent): it was rate-limited and fixed nothing.
 - Each fixed run in [`docs/runs/`](docs/runs/) keeps the prompt the fixer was given (`fixer-prompt.md`) and its patch.
 - Guards in code reject patches that touch tests, journeys or CI, change dependency versions, or add `child_process`,
   `eval` or `new Function`.
@@ -37,5 +39,6 @@ The verdict on each pull request is plain code, not a model.
 
 Kod, ujian dan dokumen repo ini ditulis dengan Claude Code (Opus 5.5) sebagai ejen pengekod, diarahkan oleh penulis. Dalam
 produk, Kane CLI ialah ejen pelayar dan Claude Code (mod tanpa kepala, alat fail sahaja) ialah pembaik. Verdict setiap PR
-ditentukan oleh kod biasa, bukan model. Narasi video ialah suara penulis yang diklon dengan ElevenLabs. Penulis memilih
+ditentukan oleh kod biasa, bukan model. Pembaik boleh ditukar ke ejen lain (`fixer.command`); satu larian OpenAI Codex CLI
+terkena had kadar akaun dan tidak membaiki apa-apa. Narasi video ialah suara penulis yang diklon dengan ElevenLabs. Penulis memilih
 idea, membuat keputusan reka bentuk, menyemak hasil dan menghantar entri.

@@ -94,6 +94,7 @@ const README_LINES: Record<string, string> = {
   'src/compare.ts#L61': 'export function compareJourney',
   'src/evidence.ts#L27': 'export function readPack',
   'src/evidence.ts#L117': 'export function summarize',
+  'src/fixer.ts#L186': 'changes.length === 0 && !agent.ok',
   'src/journeys.ts#L92': 'export async function runJourney',
   'src/kane.ts#L57': 'export function parseNdjson',
   'src/kane.ts#L106': "case 'run_end'",
