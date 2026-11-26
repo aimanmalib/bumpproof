@@ -1,23 +1,17 @@
-<p align="center"><img src="brand/logo-512.png" width="112" height="112" alt="Bumpproof"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aimanmalib/bumpproof/main/brand/logo-512.png" width="112" height="112" alt="Bumpproof"></p>
 
 <h1 align="center">Bumpproof</h1>
 
-<p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b><br>
-<a href="https://aimanmalib.github.io/bumpproof/"><b>Report site</b></a> · <a href="#judge-it-in-2-minutes">Judge it in 2 minutes</a> · <a href="#run-it-live">Run it live</a> · <a href="#limitations">Limitations</a> · <a href="#bahasa-melayu">Bahasa Melayu</a><br>
-Built in Malaysia by Aiman Malib</p>
+<p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://github.com/aimanmalib/bumpproof/releases/latest"><img src="https://img.shields.io/github/v/release/aimanmalib/bumpproof" alt="Latest release"></a> <a href="https://github.com/aimanmalib/bumpproof/blob/main/LICENSE"><img src="https://img.shields.io/github/license/aimanmalib/bumpproof" alt="Licence: Apache-2.0"></a></p>
 
-<p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a></p>
+<p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b> · <i>Dependabot kata naik taraf itu selamat. Bumpproof menyuruh Kane CLI membuktikannya dalam pelayar sebenar, dan ejen pengekod anda membaiki yang rosak.</i><br>
+<a href="https://youtu.be/w-J5-bGW2to"><b>&#9654;&#xFE0E; demo video, 3 min</b></a> · <a href="#judge-it-in-2-minutes">judge it in 2 minutes</a> · <a href="#run-it-live">install</a> · <a href="https://aimanmalib.github.io/bumpproof/">report site</a> · <a href="https://aimanmalib.github.io/bumpproof/judges.html">for judges</a> · <a href="https://aimanmalib.github.io/bumpproof/census.html">census</a> · <a href="https://github.com/aimanmalib/bumpproof/blob/main/CHANGELOG.md">changelog</a> · <a href="#bahasa-melayu">Bahasa Melayu</a> · Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
 
-<p align="center"><a href="https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/"><img src="docs/hantar/before-after.png" width="760" alt="Two Kane CLI screenshots of the same step in pull request #2: an empty page on the pull request, the Past orders list after the fix"></a></p>
+<p align="center">Of four real Dependabot pull requests on this repository, two had green CI and a broken app. Kane CLI caught both in Chrome, Claude Code fixed both, and every journey passed again on each fix (<a href="#results">results</a>).</p>
 
-![Replay of a recorded run: the bump breaks every journey, Claude Code writes a two-line fix, Kane CLI passes all three again](docs/media/bumpproof-loop.gif)
+<p align="center"><a href="https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/"><img src="https://raw.githubusercontent.com/aimanmalib/bumpproof/main/docs/hantar/before-after.png" width="838" alt="Two Kane CLI screenshots of the same step in pull request #2: an empty page on the pull request, the Past orders list after the fix"></a></p>
 
-- Demo video, 3 minutes, narrated: https://youtu.be/w-J5-bGW2to (the same file on the report site: https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4)
-- Report site: https://aimanmalib.github.io/bumpproof/
-- Census of other people's pull requests: https://aimanmalib.github.io/bumpproof/census.html
-- For judges, one page: https://aimanmalib.github.io/bumpproof/judges.html
-
-<p align="center"><img src="docs/images/screenshot-desktop.png" width="640" alt="The report site on desktop: the overview page"> <img src="docs/images/screenshot-mobile.png" width="180" alt="The report site on an iPhone"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aimanmalib/bumpproof/main/docs/images/screenshot-desktop.png" width="640" alt="The report site on desktop: the overview page"> <img src="https://raw.githubusercontent.com/aimanmalib/bumpproof/main/docs/images/screenshot-mobile.png" width="180" alt="The report site on an iPhone"></p>
 
 ## For judges
 
@@ -66,6 +60,11 @@ No keys and no credits. The replay needs the network once, to download the packa
    ```sh
    npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba
    ```
+
+   It prints the run as it happened: the bump breaks every journey, Claude Code writes a two-line fix, and Kane CLI passes
+   all three again.
+
+   ![Replay of a recorded run: the bump breaks every journey, Claude Code writes a two-line fix, Kane CLI passes all three again](https://raw.githubusercontent.com/aimanmalib/bumpproof/main/docs/media/bumpproof-loop.gif)
 
 3. Check the numbers against the files they come from: [`docs/runs/*/run.json`](docs/runs) and
    [`census/results.json`](census/results.json).
@@ -270,6 +269,8 @@ The full declaration is in [AI_USAGE.md](AI_USAGE.md).
 
 Built during the KaneCLI Online Hackathon (12–26 Nov 2026). First commit:
 [`813035c`](https://github.com/aimanmalib/bumpproof/commit/813035c), 21 Nov 2026.
+The narrated demo video is on [YouTube](https://youtu.be/w-J5-bGW2to); the same file is on the
+[report site](https://aimanmalib.github.io/bumpproof/media/bumpproof-demo.mp4).
 Changes are listed in [CHANGELOG.md](CHANGELOG.md). Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Bahasa Melayu
