@@ -66,7 +66,7 @@ Numbers, counted by script from the run records
 - Median time from the failed check to Kane CLI passing on the patch: 6 min 16 s, over 4 fixes.
 - Census: 241 pull requests checked against fixed rules, 20 eligible, 14 run, 8 could run. False alarms in the control: 0 of 8.
 - Writing a journey cost 33.4 credits on average. Replaying a recording cost 8.1.
-- 253 tests pass in CI.
+- 259 tests pass in CI.
 
 How to run it
 
