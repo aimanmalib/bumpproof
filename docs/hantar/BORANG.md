@@ -49,7 +49,7 @@ Kane CLI runs each journey with `testmd run --agent --headless --bug-detection c
 
 What Kane CLI caught
 
-On pull request #2 (@tanstack/react-query 4.36.1 → 5.108.0) CI was green. Kane CLI failed all three journeys. Its remark on the account journey: "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown." The console showed "Cannot read properties of undefined (reading 'orders')". The base passed the same journeys. Claude Code found the cause in the release notes: the `loading` status is now called `pending`. It changed one loading check and quoted the release note. Kane CLI then passed 3 of 3 on the patched build, and Bumpproof pushed the fix to the bot's branch.
+On pull request #2 (@tanstack/react-query 4.36.1 → 5.108.0) CI was green. Kane CLI failed all three journeys. Its remark on the account journey: "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown." The console showed "Cannot read properties of undefined (reading 'orders')". The base passed the same journeys. Claude Code found the cause in the release notes: the `loading` status is now called `pending`. It changed one loading check, quoting the release note. Kane CLI then passed 3 of 3 on the patched build, and Bumpproof pushed the fix to the bot's branch.
 
 On #3 (react-router-dom 6.30.1 → 7.18.6) CI was also green, and the account journey failed at "Use the tabs again". That fix is on the run page, not the branch, so the catch can be run again.
 
@@ -57,7 +57,7 @@ The demo shop pins old major versions on purpose, so Dependabot's real pull requ
 
 What Kane CLI did not catch
 
-In the census, no pull request had green CI and a broken app: 0 of 8. The one break there also failed its own CI, and the fixer did not fix it. The demo shop is the only place I have green-CI catches. I report that as it is.
+In the census, no pull request had green CI and a broken app: 0 of 8. The one break there also failed its own CI, and the fixer did not fix it. The demo shop is the only place I have green-CI catches.
 
 Numbers, counted by script from the run records
 
@@ -70,7 +70,7 @@ Numbers, counted by script from the run records
 
 How to run it
 
-No keys: `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba`, from any folder. It replays the recorded run of pull request #2 in the terminal. No credits are used.
+No keys, no credits: `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba`, from any folder. It replays the recorded run of pull request #2 in the terminal.
 
 Live: Node 20 or later, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. Then `bumpproof doctor`, `bumpproof init` and `bumpproof pr <owner>/<repo>#<number> --fix`.
 
@@ -84,7 +84,7 @@ One demo app with three journeys. 6 of the 14 census pull requests could not be 
 
 What's next
 
-Run the Kane CLI journeys from the GitHub Action, support pnpm and Yarn, and start apps that need a local database with Docker Compose.
+Run the Kane CLI journeys from the GitHub Action, support pnpm and Yarn, and start apps that need a database with Docker Compose.
 
 How AI is used: Claude Code wrote the code, from a plan I approved. Claude Code is also the fixer inside the product. Kane CLI is an AI agent too. The demo video narration is my voice, cloned with ElevenLabs.
 <!-- else:end -->
