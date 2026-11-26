@@ -94,6 +94,9 @@ Verdict Broken, 8 min 43 s, 25.0 Kane CLI credits. It was the third time that st
   (`Missing "./esm/addDays" specifier`). 2 min 59 s, 1.6 credits.
 - #2: `bumpproof check --base 8ff77fe --head 5243b1d --dir examples/shop`. All three journeys fail. 11 min 06 s, 101.7 credits.
 
+Dependabot may later move #3 to a newer release. The original commits stay in every clone as the tags `pr1-as-opened`,
+`pr2-as-opened` and `pr3-as-opened`, so these commands keep working.
+
 ## Run it live
 
 Needs Node 20 or later, Docker, `gh` logged in, Kane CLI logged in, and Claude Code for `--fix`.
