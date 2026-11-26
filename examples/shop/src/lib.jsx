@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
+import { format } from 'date-fns/format';
+import { parseISO } from 'date-fns/parseISO';
 import strings from './strings.json';
 
 // Text lives in strings.json; {name} placeholders are filled from vars.
