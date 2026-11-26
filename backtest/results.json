@@ -1,0 +1,447 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/backtest.py collect",
+  "cases": [
+    {
+      "id": "nodeflow",
+      "repo": "jlab-sensing/NodeFlow",
+      "pr": 105,
+      "revert": 124,
+      "dir": "frontend",
+      "change": "react-router-dom 7.18.4 → 7.18.5",
+      "note": "The revert pull request gives no reason, so this may be a break our two journeys do not reach.",
+      "pr_url": "https://github.com/jlab-sensing/NodeFlow/pull/105",
+      "revert_url": "https://github.com/jlab-sensing/NodeFlow/pull/124",
+      "bump_commit": "df0cc9a1a295f4f42fa58f684dece53ffebbf8c0",
+      "base_commit": "7c3031b058c3358db0c4677babfe7fca98bf6f0c",
+      "pure": true,
+      "changed_files": [
+        "frontend/package-lock.json",
+        "frontend/package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "green",
+      "run_id": "20261126-1603-c99b",
+      "verdict": "safe",
+      "verdict_reason": "ok",
+      "head_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "passed",
+          "base_remark": null,
+          "head": "passed",
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "passed",
+          "base_remark": null,
+          "head": "passed",
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 110.672,
+      "seconds": 520,
+      "kane_cli_version": "0.10.7",
+      "result": "safe"
+    },
+    {
+      "id": "lovedbyrobots",
+      "repo": "Loved-by-Robots/lovedbyrobots-com",
+      "pr": 20,
+      "revert": 28,
+      "dir": "",
+      "change": "react-router 7.5.2 → 7.18.2",
+      "pr_url": "https://github.com/Loved-by-Robots/lovedbyrobots-com/pull/20",
+      "revert_url": "https://github.com/Loved-by-Robots/lovedbyrobots-com/pull/28",
+      "bump_commit": "dfb4e445737bbcc723f2e0f5d02d90a4413936c6",
+      "base_commit": "4d476fa078f1575be3177c5454e8416e10c4cc8d",
+      "pure": true,
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "red",
+      "run_id": "20261126-1617-12be",
+      "verdict": "unrunnable",
+      "verdict_reason": "base_build_failed",
+      "head_build": {
+        "built": null,
+        "failed_at": null
+      },
+      "base_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "journeys": [],
+      "kane_credits": 0,
+      "seconds": 7,
+      "kane_cli_version": null,
+      "result": "could_not_run"
+    },
+    {
+      "id": "axfr",
+      "repo": "Stenstromen/axfr-frontend",
+      "pr": 45,
+      "revert": 58,
+      "dir": "",
+      "change": "react 18.3.1 → 19.1.1",
+      "pr_url": "https://github.com/Stenstromen/axfr-frontend/pull/45",
+      "revert_url": "https://github.com/Stenstromen/axfr-frontend/pull/58",
+      "bump_commit": "d85bb9a7383493ffd58e2ba0b94ccecdb3768807",
+      "base_commit": "6bbc47f65750bb89c686920257d25cf25d5b200f",
+      "pure": false,
+      "changed_files": [
+        "package-lock.json",
+        "package.json",
+        "src/components/NavBar.jsx"
+      ],
+      "authors": [
+        "Stenstromen",
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1552-b5d2",
+      "verdict": "broken",
+      "verdict_reason": "head_build_failed",
+      "head_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "passed",
+          "base_remark": null,
+          "head": null,
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "failed",
+          "base_remark": "Opening the site’s .SE navigation link shows an application error instead of page content.",
+          "head": null,
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 56.637,
+      "seconds": 228,
+      "kane_cli_version": "0.10.7",
+      "result": "excluded_not_pure"
+    },
+    {
+      "id": "contentful",
+      "repo": "contentful/marketplace-partner-apps",
+      "pr": 4757,
+      "revert": 5144,
+      "dir": "apps/vwo-fme",
+      "change": "react 18.3.1 → 19.1.0",
+      "pr_url": "https://github.com/contentful/marketplace-partner-apps/pull/4757",
+      "revert_url": "https://github.com/contentful/marketplace-partner-apps/pull/5144",
+      "bump_commit": "68a209e1406d9261614c861ae02dcc9f3beff35a",
+      "base_commit": "cf5c36cde5a130d052fa4aa3f4a5c20b6ca1296a",
+      "pure": true,
+      "changed_files": [
+        "apps/vwo-fme/package-lock.json",
+        "apps/vwo-fme/package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1618-1243",
+      "verdict": "unrunnable",
+      "verdict_reason": "no_baseline_journey",
+      "head_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "failed",
+          "base_remark": "After repeated waits, only an empty root is present and no app content rendered.",
+          "head": null,
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "failed",
+          "base_remark": "Child agent failed: Final verification failed: \"the home page still shows its content\"",
+          "head": null,
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 42.34,
+      "seconds": 424,
+      "kane_cli_version": "0.10.7",
+      "result": "could_not_run"
+    },
+    {
+      "id": "openpv",
+      "repo": "open-pv/website",
+      "pr": 433,
+      "revert": 439,
+      "dir": "",
+      "change": "react-dom 18.3.1 → 19.0.0",
+      "pr_url": "https://github.com/open-pv/website/pull/433",
+      "revert_url": "https://github.com/open-pv/website/pull/439",
+      "bump_commit": "7897f01c36c9bbad9dd68ed884490dbaaab72e22",
+      "base_commit": "439cb3f94b34fe92794c754c9221b7f33963ee46",
+      "pure": true,
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1556-4ef2",
+      "verdict": "broken",
+      "verdict_reason": "head_build_failed",
+      "head_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "passed",
+          "base_remark": null,
+          "head": null,
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "passed",
+          "base_remark": null,
+          "head": null,
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 40.551,
+      "seconds": 216,
+      "kane_cli_version": "0.10.7",
+      "result": "blocked_install"
+    },
+    {
+      "id": "webcface",
+      "repo": "na-trium-144/webcface-webui",
+      "pr": 362,
+      "revert": 370,
+      "dir": "",
+      "change": "react-konva 18.2.10 → 19.0.2",
+      "pr_url": "https://github.com/na-trium-144/webcface-webui/pull/362",
+      "revert_url": "https://github.com/na-trium-144/webcface-webui/pull/370",
+      "bump_commit": "096ffcc493579539af6a32378a9aadb81559c3a9",
+      "base_commit": "3ebaa578f9aa4f7e7783c09bc0823ed01375a762",
+      "pure": true,
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1625-6766",
+      "verdict": "broken",
+      "verdict_reason": "regression",
+      "head_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "passed",
+          "base_remark": null,
+          "head": "failed",
+          "head_remark": "The homepage loads as a blank page because its startup components use incompatible React versions."
+        },
+        {
+          "name": "nav",
+          "base": "passed",
+          "base_remark": null,
+          "head": "failed",
+          "head_remark": "The home page loads as a blank screen instead of showing its content."
+        }
+      ],
+      "kane_credits": 80.564,
+      "seconds": 458,
+      "kane_cli_version": "0.10.7",
+      "result": "blocked_browser"
+    },
+    {
+      "id": "league",
+      "repo": "dachrisch/leaguesphere",
+      "pr": 57,
+      "revert": 63,
+      "dir": "liveticker",
+      "change": "react-dom 18.3.1 → 19.0.0",
+      "pr_url": "https://github.com/dachrisch/leaguesphere/pull/57",
+      "revert_url": "https://github.com/dachrisch/leaguesphere/pull/63",
+      "bump_commit": "434d355ab8d5e659df6029511ba0b08fcfeb2832",
+      "base_commit": "af164538c75eeff973a3710b4b78343b6794fbaa",
+      "pure": true,
+      "changed_files": [
+        "liveticker/package-lock.json",
+        "liveticker/package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1612-6ba6",
+      "verdict": "broken",
+      "verdict_reason": "head_build_failed",
+      "head_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "passed",
+          "base_remark": null,
+          "head": null,
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "passed",
+          "base_remark": null,
+          "head": null,
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 46.685,
+      "seconds": 282,
+      "kane_cli_version": "0.10.7",
+      "result": "blocked_install"
+    },
+    {
+      "id": "observe",
+      "repo": "gemini-hlsw/observe",
+      "pr": 1582,
+      "revert": 1592,
+      "dir": "modules/web/client",
+      "change": "react 18.3.1 → 19.0.0",
+      "pr_url": "https://github.com/gemini-hlsw/observe/pull/1582",
+      "revert_url": "https://github.com/gemini-hlsw/observe/pull/1592",
+      "bump_commit": "140690324f22a35ae446058b531a6b284ecd0d02",
+      "base_commit": "e96f386fdd8c77eb9d3dd518d9e8d1549a3a03be",
+      "pure": true,
+      "changed_files": [
+        "modules/web/client/package-lock.json",
+        "modules/web/client/package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1633-a741",
+      "verdict": "unrunnable",
+      "verdict_reason": "base_build_failed",
+      "head_build": {
+        "built": null,
+        "failed_at": null
+      },
+      "base_build": {
+        "built": false,
+        "failed_at": "install"
+      },
+      "journeys": [],
+      "kane_credits": 0,
+      "seconds": 10,
+      "kane_cli_version": null,
+      "result": "could_not_run"
+    },
+    {
+      "id": "laura",
+      "repo": "lauraAlabau/portfolio-2024",
+      "pr": 81,
+      "revert": 82,
+      "dir": "",
+      "change": "react-router-dom 7.6.2 → 7.9.6",
+      "pr_url": "https://github.com/lauraAlabau/portfolio-2024/pull/81",
+      "revert_url": "https://github.com/lauraAlabau/portfolio-2024/pull/82",
+      "bump_commit": "c889d3517b22fa3f67272df45ecf1e72580da59e",
+      "base_commit": "8f50ec354033ceb87f9f4e4fe16e4c1c0d482a06",
+      "pure": true,
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ],
+      "authors": [
+        "dependabot[bot]"
+      ],
+      "ci_on_bump": "none",
+      "run_id": "20261126-1600-0ebf",
+      "verdict": "unrunnable",
+      "verdict_reason": "no_baseline_journey",
+      "head_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "base_build": {
+        "built": true,
+        "failed_at": null
+      },
+      "journeys": [
+        {
+          "name": "home",
+          "base": "failed",
+          "base_remark": "The homepage loads its files but then crashes before showing any app content.",
+          "head": null,
+          "head_remark": null
+        },
+        {
+          "name": "nav",
+          "base": "failed",
+          "base_remark": "The home page loaded as a blank screen, so there was no content to verify or navigation to follow.",
+          "head": null,
+          "head_remark": null
+        }
+      ],
+      "kane_credits": 46.213,
+      "seconds": 200,
+      "kane_cli_version": "0.10.7",
+      "result": "could_not_run"
+    }
+  ]
+}

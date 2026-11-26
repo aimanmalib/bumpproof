@@ -7,7 +7,7 @@
 <p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b> · <i>Dependabot kata naik taraf itu selamat. Bumpproof menyuruh Kane CLI membuktikannya dalam pelayar sebenar, dan ejen pengekod anda membaiki yang rosak.</i><br>
 <a href="https://youtu.be/w-J5-bGW2to"><b>&#9654;&#xFE0E; demo video, 3 min</b></a> · <a href="#judge-it-in-2-minutes">judge it in 2 minutes</a> · <a href="#run-it-live">install</a> · <a href="https://aimanmalib.github.io/bumpproof/">report site</a> · <a href="https://aimanmalib.github.io/bumpproof/judges.html">for judges</a> · <a href="https://aimanmalib.github.io/bumpproof/census.html">census</a> · <a href="https://github.com/aimanmalib/bumpproof/blob/main/CHANGELOG.md">changelog</a> · <a href="#bahasa-melayu">Bahasa Melayu</a> · Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
 
-<p align="center">Of four real Dependabot pull requests on this repository, two had green CI and a broken app. Kane CLI caught both in Chrome, Claude Code fixed both, and every journey passed again on each fix (<a href="#results">results</a>).</p>
+<p align="center">Of four real Dependabot pull requests on this repository, two had green CI and a broken app. Kane CLI caught both in Chrome, Claude Code fixed both, and every journey passed again on each fix (<a href="#results">results</a>). On eight Dependabot bumps that other maintainers merged and then had to revert, it blocks three (<a href="backtest/README.md">backtest</a>).</p>
 
 <p align="center"><a href="https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/"><img src="https://raw.githubusercontent.com/aimanmalib/bumpproof/main/docs/hantar/before-after.png" width="838" alt="Two Kane CLI screenshots of the same step in pull request #2: an empty page on the pull request, the Past orders list after the fix"></a></p>
 
@@ -23,7 +23,7 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 | P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. The run page shows Kane CLI's screenshot of that step on the base, on the pull request and after the fix. |
 | P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L34`](src/check-fix.ts#L34)). Read the prompt for #2, with Kane CLI's lines marked: [`fixer-prompt.md`](docs/runs/20261122-0453-53ba/fixer-prompt.md). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L62`](src/check-fix.ts#L62)). |
 | K1 | Ships | `npx bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder. The same package from GitHub (`npx github:aimanmalib/bumpproof …`) is installed and replayed by CI from an empty folder on Node 20 and 22 on every push, with the full test suite. |
-| K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. |
+| K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. The [backtest](backtest/README.md) replays eight bumps that other maintainers merged and then reverted: three blocked, one of them only in Chrome. |
 | K3 | Closed loop | One command goes from the pull request to a fix that Kane CLI has passed. The fix is pushed only after that ([`src/pr.ts`](src/pr.ts)). |
 | K4 | Craft | Docker sandbox, file-only fixer with guards ([`test/guards.test.ts`](test/guards.test.ts)), English and Malay output, every number below counted from JSON. |
 
@@ -49,6 +49,16 @@ The other numbers, counted the same way as on the report site:
 - **H6 Breaks fixed: 4 of 5.** Among runs with the fixer switched on: 4 of 4 on the demo app, 0 of 1 in the census. 6 attempts in all. Source: `docs/runs/*/run.json · census/runs/*/run.json`.
 
 <!-- bumpproof:numbers:end -->
+
+### Backtest on bumps other maintainers reverted
+
+Nine Dependabot pull requests that maintainers in other public repositories merged and later reverted, checked base
+against bump with the two generic journeys. Of the eight pure bumps, Bumpproof blocks three before merge. In
+[webcface-webui#362](https://github.com/na-trium-144/webcface-webui/pull/362) (react-konva 18 → 19) both sides install and
+build, both journeys pass on the base, and on the bump Kane CLI reports: "The homepage loads as a blank page because its
+startup components use incompatible React versions." Two more do not install. One is safe on our journeys, four could
+not run in the sandbox. Every case, the rules and the Kane CLI remarks: [backtest/README.md](backtest/README.md), from
+[`backtest/results.json`](backtest/results.json).
 
 ## Judge it in 2 minutes
 

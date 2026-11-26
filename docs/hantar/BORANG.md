@@ -25,13 +25,13 @@ One command builds the base branch and the pull request, each in its own Docker 
 
 When a journey breaks, Claude Code (headless, file tools only) gets Kane CLI's failed step, its remark, the new console errors and the release notes. Guards reject patches that touch tests, CI or versions. A fix counts only when Kane CLI passes every journey again. Then Bumpproof comments on the pull request and can push the fix. It never merges.
 
-Real runs, on pull requests Dependabot opened on this repository:
+Real runs on Dependabot's pull requests in this repository:
 - #2 @tanstack/react-query 4 → 5: CI green, all three journeys failed on crashed pages. 2-line fix, 3 of 3 pass.
 - #3 react-router-dom 6 → 7: CI green, the account tabs broke. 8-line fix, 3 of 3 pass. The fix stays off the branch so anyone can replay the catch.
 - #1 date-fns 2 → 4: build failed. 6-line fix, 3 of 3 pass.
 - #4 clsx 1 → 2: safe, 3 of 3 the same as base.
 
-I also ran it read-only on 14 open pull requests in other people's repositories. 8 could run: 7 safe, 1 broken build. A base-against-base control gave 0 false alarms in 8.
+Elsewhere: of 8 Dependabot bumps that maintainers merged and then reverted, it blocks 3, one only visible in Chrome. A base-against-base control on 14 open pull requests: 0 false alarms in 8.
 <!-- details:end -->
 
 ## Agent used (80 characters at most)
@@ -51,21 +51,21 @@ What Kane CLI caught
 
 On pull request #2 (@tanstack/react-query 4.36.1 → 5.108.0) CI was green. Kane CLI failed all three journeys. Its remark on the account journey: "Opening Orders leads to a blank page, so the Past orders heading and expected orders cannot be shown." The console showed "Cannot read properties of undefined (reading 'orders')". The base passed the same journeys. Claude Code found the cause in the release notes: the `loading` status is now called `pending`. It changed one loading check, quoting the release note. Kane CLI then passed 3 of 3 on the patched build, and Bumpproof pushed the fix to the bot's branch.
 
-On #3 (react-router-dom 6.30.1 → 7.18.6) CI was also green, and the account journey failed at "Use the tabs again". That fix is on the run page, not the branch, so the catch can be run again.
-
 The demo shop pins old major versions on purpose, so Dependabot's real pull requests meet real breaking changes. Nothing was broken by hand.
 
 What Kane CLI did not catch
 
 In the census, no pull request had green CI and a broken app: 0 of 8. The one break there also failed its own CI, and the fixer did not fix it. The demo shop is the only place I have green-CI catches.
 
+Backtest in other people's repositories
+
+9 Dependabot pull requests that maintainers merged and later reverted, checked base against bump. Of the 8 pure bumps, Bumpproof blocks 3. In webcface-webui #362 (react-konva 18 → 19) both sides build, both journeys pass on the base, and on the bump Kane CLI says: "The homepage loads as a blank page because its startup components use incompatible React versions." 2 more do not install. 1 safe, 4 could not run. Every case: backtest/README.md.
+
 Numbers, counted by script from the run records
 
 - Kane CLI credits per pull request: 6.4 (clsx, safe), 43.7 (react-router, fixed), 102 (react-query, fixed), 3.8 (date-fns, fixed).
-- Fixer cost on the Claude API: $0.15, $0.18 and $0.16.
 - Median time from the failed check to Kane CLI passing on the patch: 6 min 16 s, over 4 fixes.
 - Census: 241 pull requests checked against fixed rules, 20 eligible, 14 run, 8 could run. False alarms in the control: 0 of 8.
-- Writing a journey cost 33.4 credits on average. Replaying a recording cost 8.1.
 - 259 tests pass in CI.
 
 How to run it
@@ -76,15 +76,15 @@ Live: Node 20+, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. `
 
 Safety
 
-The app under test runs in Docker as a normal user, with all capabilities dropped and install scripts off. The fixer has file tools only: no shell, no web, no MCP. Release notes reach it marked as untrusted. Comments and pushes work only on repositories listed in the config. In the census I opened no comments, issues or pull requests on other people's repositories.
+The app under test runs in Docker as a normal user, all capabilities dropped, install scripts off. The fixer has file tools only: no shell, no web. Comments and pushes work only on repositories in the config. Nothing was posted on other people's repositories.
 
 Limits
 
-One demo app with three journeys. 6 of the 14 census pull requests could not be run. A failing journey costs many times the credits of a passing one. A full check took 13 to 23 minutes. npm only. The loop starts from a developer's machine, not from CI.
+One demo app with three journeys. Many apps could not run in the sandbox (6 of 14 in the census, 4 of 8 in the backtest). A full check took 13 to 23 minutes. npm only. The loop starts from a developer's machine, not from CI.
 
 What's next
 
-Run the Kane CLI journeys from the GitHub Action, support pnpm and Yarn, and start apps that need a database with Docker Compose.
+Kane CLI journeys in the GitHub Action, pnpm and Yarn, and apps that need a database.
 
 How AI is used: Claude Code wrote the code, from a plan I approved. Claude Code is also the fixer inside the product. Kane CLI is an AI agent too. The demo video narration is my voice, cloned with ElevenLabs.
 <!-- else:end -->
