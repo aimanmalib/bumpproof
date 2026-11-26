@@ -70,9 +70,9 @@ Numbers, counted by script from the run records
 
 How to run it
 
-No keys, no credits: `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba`, from any folder. It replays the recorded run of pull request #2 in the terminal.
+No keys, no credits: `npx bumpproof replay docs/runs/20261122-0453-53ba`, from any folder. It replays the recorded run of pull request #2 in the terminal.
 
-Live: Node 20 or later, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. Then `bumpproof doctor`, `bumpproof init` and `bumpproof pr <owner>/<repo>#<number> --fix`.
+Live: Node 20+, Docker, `gh`, Kane CLI logged in, and Claude Code for `--fix`. `npm install -g bumpproof`, then `bumpproof doctor`, `bumpproof init` and `bumpproof pr <owner>/<repo>#<number> --fix`.
 
 Safety
 

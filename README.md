@@ -2,7 +2,7 @@
 
 <h1 align="center">Bumpproof</h1>
 
-<p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://github.com/aimanmalib/bumpproof/releases/latest"><img src="https://img.shields.io/github/v/release/aimanmalib/bumpproof" alt="Latest release"></a> <a href="https://github.com/aimanmalib/bumpproof/blob/main/LICENSE"><img src="https://img.shields.io/github/license/aimanmalib/bumpproof" alt="Licence: Apache-2.0"></a></p>
+<p align="center"><a href="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/bumpproof/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://www.npmjs.com/package/bumpproof"><img src="https://img.shields.io/npm/v/bumpproof" alt="npm"></a> <a href="https://github.com/aimanmalib/bumpproof/releases/latest"><img src="https://img.shields.io/github/v/release/aimanmalib/bumpproof" alt="Latest release"></a> <a href="https://github.com/aimanmalib/bumpproof/blob/main/LICENSE"><img src="https://img.shields.io/github/license/aimanmalib/bumpproof" alt="Licence: Apache-2.0"></a></p>
 
 <p align="center"><b>Dependabot says the bump is safe. Bumpproof makes Kane CLI prove it in a real browser, and has your coding agent fix what breaks.</b> · <i>Dependabot kata naik taraf itu selamat. Bumpproof menyuruh Kane CLI membuktikannya dalam pelayar sebenar, dan ejen pengekod anda membaiki yang rosak.</i><br>
 <a href="https://youtu.be/w-J5-bGW2to"><b>&#9654;&#xFE0E; demo video, 3 min</b></a> · <a href="#judge-it-in-2-minutes">judge it in 2 minutes</a> · <a href="#run-it-live">install</a> · <a href="https://aimanmalib.github.io/bumpproof/">report site</a> · <a href="https://aimanmalib.github.io/bumpproof/judges.html">for judges</a> · <a href="https://aimanmalib.github.io/bumpproof/census.html">census</a> · <a href="https://github.com/aimanmalib/bumpproof/blob/main/CHANGELOG.md">changelog</a> · <a href="#bahasa-melayu">Bahasa Melayu</a> · Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
@@ -22,7 +22,7 @@ The three bars and the four dimensions of the KaneCLI Online Hackathon, and wher
 | P1 | It works end to end | Pull request [#2](https://github.com/aimanmalib/bumpproof/pull/2): Dependabot opened it, CI was green, Bumpproof commented and pushed a verified fix. [Run page](https://aimanmalib.github.io/bumpproof/runs/20261122-0453-53ba/). |
 | P2 | Kane CLI caught or proved something | On #2 Kane CLI found the Orders page blank after the bump, while the base passed. Its bug detection gave the failed step and the reason. The run page shows Kane CLI's screenshot of that step on the base, on the pull request and after the fix. |
 | P3 | The agent and Kane CLI talked to each other | Kane CLI's failed step, remark and console errors go into the fixer's prompt ([`src/check-fix.ts#L34`](src/check-fix.ts#L34)). Read the prompt for #2, with Kane CLI's lines marked: [`fixer-prompt.md`](docs/runs/20261122-0453-53ba/fixer-prompt.md). Kane CLI then replays every journey on the patch ([`src/check-fix.ts#L62`](src/check-fix.ts#L62)). |
-| K1 | Ships | `npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder on Node 20 and 22. CI runs it that way, and the full test suite, on every push. |
+| K1 | Ships | `npx bumpproof replay docs/runs/20261122-0453-53ba` runs from an empty folder. The same package from GitHub (`npx github:aimanmalib/bumpproof …`) is installed and replayed by CI from an empty folder on Node 20 and 22 on every push, with the full test suite. |
 | K2 | Verified | The verdict is plain code over Kane CLI's results ([`src/compare.ts`](src/compare.ts)), with the base branch as the reference. The census also runs base against base, as a control. |
 | K3 | Closed loop | One command goes from the pull request to a fix that Kane CLI has passed. The fix is pushed only after that ([`src/pr.ts`](src/pr.ts)). |
 | K4 | Craft | Docker sandbox, file-only fixer with guards ([`test/guards.test.ts`](test/guards.test.ts)), English and Malay output, every number below counted from JSON. |
@@ -58,7 +58,7 @@ No keys and no credits. The replay needs the network once, to download the packa
 2. Replay a recorded run in your terminal:
 
    ```sh
-   npx github:aimanmalib/bumpproof replay docs/runs/20261122-0453-53ba
+   npx bumpproof replay docs/runs/20261122-0453-53ba
    ```
 
    It prints the run as it happened: the bump breaks every journey, Claude Code writes a two-line fix, and Kane CLI passes
@@ -77,7 +77,7 @@ the break again with your own account. It needs Node 20 or later, Docker and a K
 patched, so no Anthropic key is needed.
 
 ```sh
-npm install -g --install-links github:aimanmalib/bumpproof
+npm install -g bumpproof
 git clone https://github.com/aimanmalib/bumpproof
 cd bumpproof
 bumpproof check --base 8ff77fe --head 05f11be --dir examples/shop
@@ -101,7 +101,7 @@ Dependabot may later move #3 to a newer release. The original commits stay in ev
 Needs Node 20 or later, Docker, `gh` logged in, Kane CLI logged in, and Claude Code for `--fix`.
 
 ```sh
-npm install -g --install-links github:aimanmalib/bumpproof
+npm install -g bumpproof
 bumpproof doctor
 bumpproof init                                  # writes .bumpproof/config.json and draft journeys
 bumpproof pr <owner>/<repo>#<number> --fix      # check one pull request, fix what breaks
