@@ -1,7 +1,27 @@
 {
   "name": "bumpproof",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Checks dependency-bump pull requests in a real browser with Kane CLI, and has a coding agent fix what breaks.",
+  "keywords": [
+    "dependabot",
+    "renovate",
+    "dependency-updates",
+    "kane-cli",
+    "e2e-testing",
+    "browser-testing",
+    "claude-code",
+    "pull-requests",
+    "cli"
+  ],
+  "homepage": "https://aimanmalib.github.io/bumpproof/",
+  "bugs": {
+    "url": "https://github.com/aimanmalib/bumpproof/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aimanmalib/bumpproof.git"
+  },
+  "author": "Aiman Malib",
   "license": "Apache-2.0",
   "type": "module",
   "bin": {

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 (26 Nov 2026)
+
+- On npm: `npx bumpproof` and `npm install -g bumpproof`. The package carries the recorded runs, so `replay` works offline.
+- Fixer: when the agent stops without changing a file and exits with an error, that error is the reason given, and it
+  reaches the next attempt's prompt. The "Fixing:" line names the agent from `fixer.name`.
+- README: "Use your own agent", with the config for OpenAI Codex CLI and the one measured run; the tags `pr1-as-opened`,
+  `pr2-as-opened` and `pr3-as-opened` keep the commits Dependabot first opened, for the live replays.
+- `AI_USAGE.md`: how AI is used to build and to run Bumpproof.
+- Tests remove their temporary folders.
+
 ## 0.1.1 (23 Nov 2026)
 
 - Install from GitHub works without a build step: `dist/` is committed, and the install line uses `--install-links`
